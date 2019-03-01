@@ -1,14 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
@@ -22,10 +14,30 @@
     <Filter Include="Managers\Source Files">
       <UniqueIdentifier>{d7b29a8f-c57c-4dd5-8d27-15547d82cc21}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Entities">
+      <UniqueIdentifier>{9f99dec5-c5ce-4220-99d2-22a487dc992a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entities\Header Files">
+      <UniqueIdentifier>{4742a249-8be4-4357-acb2-4d4244011fad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entities\Source Files">
+      <UniqueIdentifier>{42ba1550-a6ba-46e2-963e-519f31a5ab30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{7f44d02d-3326-4f99-b4d4-6d55ad8584c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Core\Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Core\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ExceptionManager.cpp">
       <Filter>Managers\Source Files</Filter>
@@ -34,7 +46,7 @@
       <Filter>Managers\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Constants.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Core\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="BattleManager.cpp">
       <Filter>Managers\Source Files</Filter>
@@ -42,10 +54,22 @@
     <ClCompile Include="ResourceManager.cpp">
       <Filter>Managers\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="HexManager.cpp">
+      <Filter>Managers\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Tile.cpp">
+      <Filter>Entities\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityManager.cpp">
+      <Filter>Managers\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AI.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdlibs.h">
-      <Filter>Source Files</Filter>
+      <Filter>Core\Source Files</Filter>
     </ClInclude>
     <ClInclude Include="ExceptionManager.h">
       <Filter>Managers\Header Files</Filter>
@@ -54,13 +78,25 @@
       <Filter>Managers\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Constants.h">
-      <Filter>Header Files</Filter>
+      <Filter>Core\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="BattleManager.h">
       <Filter>Managers\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ResourceManager.h">
       <Filter>Managers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HexManager.h">
+      <Filter>Managers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Tile.h">
+      <Filter>Entities\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityManager.h">
+      <Filter>Managers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AI.h">
+      <Filter>Core\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

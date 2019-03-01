@@ -122,19 +122,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AI.cpp" />
     <ClCompile Include="BattleManager.cpp" />
     <ClCompile Include="Constants.cpp" />
+    <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="ExceptionManager.cpp" />
+    <ClCompile Include="HexManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="Tile.cpp" />
     <ClCompile Include="WindowManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AI.h" />
     <ClInclude Include="BattleManager.h" />
     <ClInclude Include="Constants.h" />
+    <ClInclude Include="EntityManager.h" />
     <ClInclude Include="ExceptionManager.h" />
+    <ClInclude Include="HexManager.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="stdlibs.h" />
+    <ClInclude Include="Tile.h" />
     <ClInclude Include="WindowManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

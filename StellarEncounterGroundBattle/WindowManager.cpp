@@ -61,6 +61,9 @@ void WindowManager::OnLoop() {
 	SDL_Rect mousePos = SDL_Rect();
 
 	while (!quit) {
+		SDL_RenderClear(ren);
+
+
 		while (SDL_PollEvent(&e) == 1) {
 			if (e.type == SDL_MOUSEBUTTONDOWN) {
 
