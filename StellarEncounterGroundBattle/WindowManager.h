@@ -1,6 +1,7 @@
 #pragma once
 #include "stdlibs.h"
 #include "ExceptionManager.h"
+#include "EntityManager.h"
 #include "ResourceManager.h"
 #include "Constants.h"
 

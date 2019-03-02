@@ -10,7 +10,7 @@ namespace constants {
 
 	enum WindowState { Starting, MainMenu, Battle, Quitting };
 
-	vector<Character> SetLevel1() {
+	static vector<Character> SetLevel1() {
 		vector<Character> level;
 		level.push_back(Character(5, 5, 100, 50, 10, true, IMG_Load("face.png")));
 		level.push_back(Character(10, 5, 100, 50, 10, false,IMG_Load("face.png")));

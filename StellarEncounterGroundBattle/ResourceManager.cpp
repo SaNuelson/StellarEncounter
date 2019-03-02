@@ -1,5 +1,9 @@
 #include "ResourceManager.h"
 
+std::map<int, SDL_Texture*> ResourceManager::TileTexMap;
+std::map<int, SDL_Texture*> ResourceManager::CharacterTexMap;
+int ResourceManager::FreeID = 0;
+
 SDL_Texture * ResourceManager::loadTex(const std::string &file, SDL_Renderer * ren) {
 	SDL_Texture * tex = IMG_LoadTexture(ren, file.c_str());
 	if (tex == nullptr) {
@@ -47,4 +51,36 @@ void ResourceManager::renderTex(SDL_Texture * tex, SDL_Renderer * ren, int x, in
 		SDL_QueryTexture(tex, nullptr, nullptr, &dst.w, &dst.h);
 	}
 	renderTex(tex, ren, dst, clip);
+}
+
+int ResourceManager::GetNewID()
+{
+	return FreeID++;
+}
+
+bool ResourceManager::GenerateTextures(SDL_Renderer * ren)
+{
+	TileTexMap.clear();
+	CharacterTexMap.clear();
+	for (std::string path : Constants::GetTileTextures()) {
+		SDL_Texture* tex = IMG_LoadTexture(ren, path.c_str());
+		if (tex == nullptr)
+			return false;
+		TileTexMap[GetNewID()] = tex;
+	}
+	for (std::string path : Constants::GetCharacterTextures()) {
+		SDL_Texture* tex = IMG_LoadTexture(ren, path.c_str());
+		if (tex == nullptr)
+			return false;
+		TileTexMap[GetNewID()] = tex;
+	}
+	return true;
+}
+
+SDL_Texture * ResourceManager::GetTexture(int ID)
+{
+	SDL_Texture * tex = TileTexMap[ID];
+	if (tex == nullptr)
+		return CharacterTexMap[ID];
+	return tex;
 }

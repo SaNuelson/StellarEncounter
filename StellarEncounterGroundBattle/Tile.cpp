@@ -2,15 +2,14 @@
 
 
 
-Tile::Tile()
+Tile::Tile(SDL_Texture * srctex)
 {
+	tex = srctex;
+	ID = UID::GetNewTileUID();
+	OccID = UID::GetEmptyUID();
 }
 
 
 Tile::~Tile()
 {
-}
-
-void Tile::Dispose() {
-	
 }

@@ -9,6 +9,8 @@ namespace Managers {
 
 		static void logSDLError(std::ostream& o, std::string msg);
 
+		static void logError(std::string msg);
+
 	};
 
 }

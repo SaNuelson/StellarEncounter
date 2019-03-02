@@ -54,9 +54,6 @@
     <ClCompile Include="ResourceManager.cpp">
       <Filter>Managers\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="HexManager.cpp">
-      <Filter>Managers\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Tile.cpp">
       <Filter>Entities\Source Files</Filter>
     </ClCompile>
@@ -64,6 +61,12 @@
       <Filter>Managers\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="AI.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Character.cpp">
+      <Filter>Entities\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UID.cpp">
       <Filter>Core\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -86,9 +89,6 @@
     <ClInclude Include="ResourceManager.h">
       <Filter>Managers\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="HexManager.h">
-      <Filter>Managers\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Tile.h">
       <Filter>Entities\Header Files</Filter>
     </ClInclude>
@@ -96,6 +96,12 @@
       <Filter>Managers\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="AI.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Character.h">
+      <Filter>Entities\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UID.h">
       <Filter>Core\Header Files</Filter>
     </ClInclude>
   </ItemGroup>

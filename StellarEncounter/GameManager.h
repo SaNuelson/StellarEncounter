@@ -7,7 +7,5 @@ public:
 	GameManager();
 	~GameManager();
 
-	std::vector<
-
 };
 

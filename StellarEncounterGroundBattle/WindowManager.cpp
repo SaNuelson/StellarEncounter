@@ -13,13 +13,13 @@ int WindowManager::OnInit()
 		OnCleanup();
 		return 1;
 	}
-	/*
-	if (IMG_Init(IMG_INIT_PNG) != 0) {
+	
+	if ((IMG_Init(IMG_INIT_PNG)) & IMG_INIT_PNG != IMG_INIT_PNG) {
 		ExceptionManager::logSDLError(std::cerr, "IMG_Init");
 		OnCleanup();
 		return 2;
 	}
-	*/
+
 
 	win = SDL_CreateWindow("Stellar Encounter - GroundBrawl 0.1", 50, 50, 800, 640, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 	if (win == nullptr) {
@@ -44,7 +44,7 @@ int WindowManager::OnInit()
 }
 
 void WindowManager::OnLoop() {
-
+	
 	int xTiles = 8;
 	int yTiles = 8;
 	int xMargin = 50;
@@ -67,33 +67,8 @@ void WindowManager::OnLoop() {
 		while (SDL_PollEvent(&e) == 1) {
 			if (e.type == SDL_MOUSEBUTTONDOWN) {
 
-				mousePos = GetClickTilePos(&e);
+				mousePos = EntityManager::GetMouseHex(&e);
 			}
-			/*
-			int x = 0, y = 0;
-			SDL_GetMouseState(&x, &y);
-
-			x -= 50;
-			y -= 50;
-			
-			mousePos.y = y / 48;
-			x -= 40 * mousePos.y;
-			mousePos.x = x / 80;
-			if (x < 0)
-				mousePos.x--;
-			/*
-			if (e.type == SDL_QUIT) {
-				quit = true;
-			}
-			else if (e.type == SDL_MOUSEBUTTONDOWN) {
-				SDL_Rect newpos = GetClickTilePos(&e);
-				xpos = newpos.x * Constants::xTileSize + xMargin;
-				ypos = newpos.y * Constants::yTileSize + yMargin;
-			}
-			else if (e.type == SDL_MOUSEMOTION) {
-				mousePos = GetClickTilePos(&e);
-			}
-			*/
 		}
 
 		// red tiles

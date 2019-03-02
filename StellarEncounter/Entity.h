@@ -26,8 +26,6 @@ public:
 
 	bool isControllable;
 
-	int 
-
 	int current_health;
 	int max_health;
 

@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.168
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StellarEncounter", "StellarEncounter\StellarEncounter.vcxproj", "{3B22F01E-26AE-4B1A-82E2-9282C491C7C6}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StellarEncounterGroundBattle", "StellarEncounterGroundBattle\StellarEncounterGroundBattle.vcxproj", "{05CF914E-1D43-44B2-AFDA-6D6DAABA10AD}"
 EndProject
 Global
@@ -17,16 +15,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{3B22F01E-26AE-4B1A-82E2-9282C491C7C6}.Debug|Any CPU.ActiveCfg = Debug|Win32
-		{3B22F01E-26AE-4B1A-82E2-9282C491C7C6}.Debug|x64.ActiveCfg = Debug|x64
-		{3B22F01E-26AE-4B1A-82E2-9282C491C7C6}.Debug|x64.Build.0 = Debug|x64
-		{3B22F01E-26AE-4B1A-82E2-9282C491C7C6}.Debug|x86.ActiveCfg = Debug|Win32
-		{3B22F01E-26AE-4B1A-82E2-9282C491C7C6}.Debug|x86.Build.0 = Debug|Win32
-		{3B22F01E-26AE-4B1A-82E2-9282C491C7C6}.Release|Any CPU.ActiveCfg = Release|Win32
-		{3B22F01E-26AE-4B1A-82E2-9282C491C7C6}.Release|x64.ActiveCfg = Release|x64
-		{3B22F01E-26AE-4B1A-82E2-9282C491C7C6}.Release|x64.Build.0 = Release|x64
-		{3B22F01E-26AE-4B1A-82E2-9282C491C7C6}.Release|x86.ActiveCfg = Release|Win32
-		{3B22F01E-26AE-4B1A-82E2-9282C491C7C6}.Release|x86.Build.0 = Release|Win32
 		{05CF914E-1D43-44B2-AFDA-6D6DAABA10AD}.Debug|Any CPU.ActiveCfg = Debug|Win32
 		{05CF914E-1D43-44B2-AFDA-6D6DAABA10AD}.Debug|x64.ActiveCfg = Debug|x64
 		{05CF914E-1D43-44B2-AFDA-6D6DAABA10AD}.Debug|x64.Build.0 = Debug|x64
