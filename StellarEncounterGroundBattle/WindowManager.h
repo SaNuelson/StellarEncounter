@@ -7,6 +7,7 @@
 #include "ResourceManager.h"
 #include "Constants.h"
 #include "Button.h"
+#include "Scenes.h"
 
 namespace Managers {
 
@@ -24,6 +25,7 @@ namespace Managers {
 		static void OnCleanup() {};
 
 		static void OnMenuLoop();
+		static void OnNewGameLoop();
 		static void OnBattleLoop();
 		// other window states...
 
@@ -32,6 +34,8 @@ namespace Managers {
 	private:
 
 		static SDL_Event e;
+
+		static std::vector<std::shared_ptr<Scene>> scenes;
 
 	};
 

@@ -34,6 +34,15 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="Experimental">
+      <UniqueIdentifier>{aadb7744-d83b-4ab1-b602-b8551999a19a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Experimental\Header Files">
+      <UniqueIdentifier>{0321b62a-0e64-4d0e-8ac2-8b275e45cdd9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Experimental\Source Files">
+      <UniqueIdentifier>{79d8a45e-03f8-4bd7-8122-ee1e6427e7a5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -87,6 +96,9 @@
     <ClCompile Include="Button.cpp">
       <Filter>Core\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Scenes.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ExceptionManager.h">
@@ -135,6 +147,9 @@
       <Filter>Core\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Button.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes.h">
       <Filter>Core\Header Files</Filter>
     </ClInclude>
   </ItemGroup>

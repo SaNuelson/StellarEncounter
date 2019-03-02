@@ -56,6 +56,65 @@ namespace Constants {
 		return ret;
 	}
 
+	// Red, Green, Blue, Purple, Yellow, Cyan, Grey, White, Brown, Pink, Black
+	static SDL_Color GetColor(std::string color_name) {
+		SDL_Color color;
+		color.r = 0;
+		color.g = 0;
+		color.b = 0;
+		color.a = 255;
+		if (color_name == "Red") {
+			color.r = 255;
+			return color;
+		}
+		else if (color_name == "Green") {
+			color.g = 255;
+			return color;
+		}
+		else if (color_name == "Blue") {
+			color.b = 255;
+			return color;
+		}
+		else if (color_name == "Purple") {
+			color.r = 255;
+			color.b = 255;
+			return color;
+		}
+		else if (color_name == "Yellow") {
+			color.r = 255;
+			color.g = 255;
+			return color;
+		}
+		else if (color_name == "Cyan") {
+			color.g = 255;
+			color.b = 255;
+			return color;
+		}
+		else if (color_name == "Grey") {
+			color.r = 128;
+			color.g = 128;
+			color.b = 128;
+			return color;
+		}
+		else if (color_name == "White") {
+			color.r = 255;
+			color.g = 255;
+			color.b = 255;
+			return color;
+		}
+		else if (color_name == "Brown") {
+			color.r = 128;
+			color.g = 64;
+			return color;
+		}
+		else if (color_name == "Pink") {
+			color.r = 255;
+			color.b = 128;
+			return color;
+		}
+		return color;
+	}
+
 	/*
 	level string composition:
 	- units:

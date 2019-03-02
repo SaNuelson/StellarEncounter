@@ -137,6 +137,7 @@
     <ClCompile Include="IListener.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="Scenes.cpp" />
     <ClCompile Include="stdlibs.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="UID.cpp" />
@@ -155,6 +156,7 @@
     <ClInclude Include="ExceptionManager.h" />
     <ClInclude Include="IListener.h" />
     <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="Scenes.h" />
     <ClInclude Include="stdlibs.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="UID.h" />

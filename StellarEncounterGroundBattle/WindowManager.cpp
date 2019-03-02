@@ -45,7 +45,7 @@ int WindowManager::OnInit()
 		return 4;
 	}
 
-	windowState = Constants::WindowState::Menu;
+	windowState = Constants::WindowState::MainMenu;
 
 	OnStateChange();
 
@@ -56,8 +56,11 @@ int WindowManager::OnInit()
 void WindowManager::OnStateChange() {
 
 	switch (windowState) {
-	case Constants::WindowState::Menu:
+	case Constants::WindowState::MainMenu:
 		OnMenuLoop();
+		break;
+	case Constants::WindowState::NewGameMenu:
+		OnNewGameLoop();
 		break;
 	case Constants::WindowState::Battle:
 		OnBattleLoop();
@@ -178,77 +181,80 @@ void Managers::WindowManager::OnMenuLoop() {
 				click = false;
 			}
 			if ((e.type == SDL_MOUSEBUTTONUP && hover != -1) || (e.type == SDL_KEYDOWN && (e.key.keysym.sym == SDLK_RETURN || e.key.keysym.sym == SDLK_SPACE))) {
-				// TODO: Handle Button Clicks
-				std::cout << "Click" << std::endl;
-			}
-			else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_DOWN && e.key.repeat == 0) {
-				hover++;
-			}
-			else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_UP && e.key.repeat == 0) {
-				hover--;
+				switch (hover) {
+				case 0:
+					// New Game
+					break;
+				case 1:
+					// Load Game
+					break;
+				case 2:
+					// Options
+					break;
+				case 3:
+					windowState == Constants::WindowState::Quitting;
+					change = true;
+					break;
+				}
 			}
 			else if (e.type == SDL_QUIT) {
+				windowState == Constants::WindowState::Quitting;
 				change = true;
 			}
 		}
 	}
 
 }
-/*
-void Managers::WindowManager::OnMenuLoop()
+
+void Managers::WindowManager::OnNewGameLoop()
 {
+	TTF_Font * font = TTF_OpenFont("Resources/Raleway-Medium.ttf", 20);
+	SDL_Surface * surf = TTF_RenderText_Blended(font, "Hey there! This is a debug version, so no complicated game mechanics for now...", Constants::GetColor("Green"));
+	SDL_Texture * tex = SDL_CreateTextureFromSurface(ren, surf);
+
 	int btn_x = Constants::WinWidth / 2 - Constants::BtnWidth / 2;
 	int btn_y = Constants::WinHeight / 2 - Constants::BtnHeight / 2;
 
-	std::vector<std::string> btn_captions = { "New Game", "Load Game", "Options", "Quit Game" };
-	std::vector<SDL_Rect> btn_rects;
-	std::vector<SDL_Texture*> btns;
-	std::vector<SDL_Texture*> btns_hover;
-	std::vector<SDL_Texture*> btns_clicked;
+	std::vector<Button> buttons;
+	buttons.push_back(Button(btn_x, btn_y, Constants::BtnWidth, Constants::BtnHeight, "Back", ren));
 
-	int hover = -1;
-	bool click = false;
-	bool is_on_button = false;
-	
-
-	for (int i = 0; i < btn_captions.size(); ++i) {
-		SDL_Rect rect = ResourceManager::CreateRect(btn_x, btn_y + i * (Constants::BtnHeight + Constants::BtnOffset), Constants::BtnWidth, Constants::BtnHeight);
-		btn_rects.push_back(rect);
-		btns.push_back(ResourceManager::CreateButton(ren, rect, btn_captions[i], ""));
-		btns_hover.push_back(ResourceManager::CreateButton(ren, rect, btn_captions[i], "hover"));
-		btns_clicked.push_back(ResourceManager::CreateButton(ren, rect, btn_captions[i], "clicked"));
-	}
-	
 	bool change = false;
+	bool click = false;
+	bool key_pressed = false;
+	int hover = 0;
 
 	while (!change) {
 		SDL_RenderClear(ren);
-		for (int i = 0; i < btns.size(); i++) {
-			if (i == hover && !click) {
-				SDL_RenderCopy(ren, btns_hover[i], nullptr, &btn_rects[i]);
+
+		if (hover < 0)
+			hover = 0;
+		else if (hover >= buttons.size())
+			hover = buttons.size() - 1;
+
+		for (int i = 0; i < buttons.size(); i++) {
+			if (hover == i) {
+				if (click)
+					buttons[i].buttonState = Constants::ButtonState::Clicked;
+				else
+					buttons[i].buttonState = Constants::ButtonState::Focused;
 			}
-			else if (i == hover && click) {
-				SDL_RenderCopy(ren, btns_clicked[i], nullptr, &btn_rects[i]);
-			}
-			else {
-				SDL_RenderCopy(ren, btns[i], nullptr, &btn_rects[i]);
-			}
-		}
-		SDL_RenderPresent(ren); 
-		
-		int x, y;
-		SDL_GetMouseState(&x, &y);
-		is_on_button = false;
-		for (int i = 0; i < btn_rects.size(); i++) {
-			if (btn_rects[i].x < x && x < btn_rects[i].x + btn_rects[i].w && btn_rects[i].y < y && y < btn_rects[i].y + btn_rects[i].h) {
-				// mouse click is in this button
-				hover = i;
-				is_on_button = true;
-			}
+			else
+				buttons[i].buttonState = Constants::ButtonState::Idle;
 		}
 
-		if (!is_on_button)
-			hover = -1;
+		for (int i = 0; i < buttons.size(); i++) {
+			SDL_RenderCopy(ren, buttons[i].GetTexture(), nullptr, &buttons[i].rect);
+		}
+		SDL_RenderPresent(ren);
+
+		int x, y;
+		SDL_GetMouseState(&x, &y);
+
+		for (int i = 0; i < buttons.size(); i++) {
+			if (buttons[i].IsPointInBounds(x, y)) {
+				hover = i;
+			}
+		}
 
 		while (SDL_PollEvent(&e)) {
 			if (e.button.button == SDL_BUTTON_LEFT && hover != -1) {
@@ -257,17 +263,32 @@ void Managers::WindowManager::OnMenuLoop()
 			else {
 				click = false;
 			}
-			if (e.type == SDL_MOUSEBUTTONUP && hover != -1) {
-				// TODO: Handle Button Clicks
+			if ((e.type == SDL_MOUSEBUTTONUP && hover != -1) || (e.type == SDL_KEYDOWN && (e.key.keysym.sym == SDLK_RETURN || e.key.keysym.sym == SDLK_SPACE))) {
+				switch (hover) {
+				case 0:
+					// New Game
+					break;
+				case 1:
+					// Load Game
+					break;
+				case 2:
+					// Options
+					break;
+				case 3:
+					windowState == Constants::WindowState::Quitting;
+					change = true;
+					break;
+				}
 			}
-			if (e.type == SDL_QUIT) {
+			else if (e.type == SDL_QUIT) {
+				windowState == Constants::WindowState::Quitting;
 				change = true;
 			}
 		}
 	}
 
 }
-*/
+
 void Managers::WindowManager::OnBattleLoop()
 {
 }
