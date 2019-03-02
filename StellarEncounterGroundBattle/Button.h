@@ -11,6 +11,8 @@ public:
 
 	SDL_Texture * GetTexture();
 
+	bool IsPointInBounds(int x, int y);
+
 	SDL_Rect rect;
 	std::string caption;
 

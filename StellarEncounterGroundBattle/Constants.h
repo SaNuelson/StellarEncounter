@@ -5,7 +5,7 @@
 
 namespace Constants {
 
-	enum WindowState { Initializing, Menu, Battle, Quitting};
+	enum WindowState { Initializing, MainMenu, NewGameMenu, LoadGameMenu, OptionsMenu, WorldMap, Battle, Quitting};
 	enum BattleState { Starting, PlayerTurn, EnemyTurn, PlayerWin, EnemyWin };
 	enum ButtonState { Idle, Focused, Clicked };
 	enum EVENT_TYPE {
@@ -13,6 +13,7 @@ namespace Constants {
 		HealEntity = 1, 
 		DamageEntity = 2 
 	};
+	enum ButtonType { NewGame, LoadGame, Options, Quit };
 
 	static int WinWidth = 1024;
 	static int WinHeight = 768;
@@ -87,7 +88,6 @@ namespace Constants {
 			return "";
 		}
 	}
-
 }
 
 #endif

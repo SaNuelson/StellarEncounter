@@ -121,6 +121,80 @@ void WindowManager::OnLoopOld() {
 
 }
 
+void Managers::WindowManager::OnMenuLoop() {
+
+	int btn_x = Constants::WinWidth / 2 - Constants::BtnWidth / 2;
+	int btn_y = Constants::WinHeight / 2 - Constants::BtnHeight / 2;
+
+	std::vector<Button> buttons;
+	buttons.push_back(Button(btn_x, btn_y, Constants::BtnWidth, Constants::BtnHeight, "New Game", ren));
+	buttons.push_back(Button(btn_x, btn_y + Constants::BtnHeight + Constants::BtnOffset, Constants::BtnWidth, Constants::BtnHeight, "Load Game", ren));
+	buttons.push_back(Button(btn_x, btn_y + Constants::BtnHeight * 2 + Constants::BtnOffset * 2, Constants::BtnWidth, Constants::BtnHeight, "Options", ren));
+	buttons.push_back(Button(btn_x, btn_y + Constants::BtnHeight * 3 + Constants::BtnOffset * 3, Constants::BtnWidth, Constants::BtnHeight, "Quit", ren));
+
+	bool change = false;
+	bool click = false;
+	bool key_pressed = false;
+	int hover = 0;
+
+	while (!change) {
+		SDL_RenderClear(ren);
+
+		if (hover < 0)
+			hover = 0;
+		else if (hover >= buttons.size())
+			hover = buttons.size() - 1;
+
+		for (int i = 0; i < buttons.size(); i++) {
+			if (hover == i) {
+				if (click)
+					buttons[i].buttonState = Constants::ButtonState::Clicked;
+				else
+					buttons[i].buttonState = Constants::ButtonState::Focused;
+			}
+			else
+				buttons[i].buttonState = Constants::ButtonState::Idle;
+		}
+
+		for (int i = 0; i < buttons.size(); i++) {
+			SDL_RenderCopy(ren, buttons[i].GetTexture(), nullptr, &buttons[i].rect);
+		}
+		SDL_RenderPresent(ren);
+
+		int x, y;
+		SDL_GetMouseState(&x, &y);
+
+		for (int i = 0; i < buttons.size(); i++) {
+			if (buttons[i].IsPointInBounds(x,y)) {
+				hover = i;
+			}
+		}
+
+		while (SDL_PollEvent(&e)) {
+			if (e.button.button == SDL_BUTTON_LEFT && hover != -1) {
+				click = true;
+			}
+			else {
+				click = false;
+			}
+			if ((e.type == SDL_MOUSEBUTTONUP && hover != -1) || (e.type == SDL_KEYDOWN && (e.key.keysym.sym == SDLK_RETURN || e.key.keysym.sym == SDLK_SPACE))) {
+				// TODO: Handle Button Clicks
+				std::cout << "Click" << std::endl;
+			}
+			else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_DOWN && e.key.repeat == 0) {
+				hover++;
+			}
+			else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_UP && e.key.repeat == 0) {
+				hover--;
+			}
+			else if (e.type == SDL_QUIT) {
+				change = true;
+			}
+		}
+	}
+
+}
+/*
 void Managers::WindowManager::OnMenuLoop()
 {
 	int btn_x = Constants::WinWidth / 2 - Constants::BtnWidth / 2;
@@ -193,7 +267,7 @@ void Managers::WindowManager::OnMenuLoop()
 	}
 
 }
-
+*/
 void Managers::WindowManager::OnBattleLoop()
 {
 }

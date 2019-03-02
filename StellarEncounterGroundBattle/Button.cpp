@@ -1,7 +1,6 @@
 #include "Button.h"
 
-Button::Button(int x, int y, int w, int h, std::string caption, SDL_Renderer * ren)
-{
+Button::Button(int x, int y, int w, int h, std::string caption, SDL_Renderer * ren) {
 	rect = ResourceManager::CreateRect(x, y, w, h);
 	buttonState = Constants::ButtonState::Idle;
 	caption = caption;
@@ -10,8 +9,7 @@ Button::Button(int x, int y, int w, int h, std::string caption, SDL_Renderer * r
 	tex_clicked = ResourceManager::CreateButton(ren, rect, caption, "clicked");
 }
 
-SDL_Texture * Button::GetTexture()
-{
+SDL_Texture * Button::GetTexture() {
 	switch (buttonState) {
 	case Constants::ButtonState::Idle:
 		return tex;
@@ -20,4 +18,10 @@ SDL_Texture * Button::GetTexture()
 	case Constants::ButtonState::Clicked:
 		return tex_clicked;
 	}
+}
+
+bool Button::IsPointInBounds(int x, int y) {
+	if (rect.x < x && x < rect.x + rect.w && rect.y < y && y < rect.y + rect.h)
+		return true;
+	return false;
 }
