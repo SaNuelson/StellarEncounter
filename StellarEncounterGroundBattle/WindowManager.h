@@ -1,4 +1,6 @@
-#pragma once
+#ifndef SE_WINDOW_MANAGER
+#define SE_WINDOW_MANAGER
+
 #include "stdlibs.h"
 #include "ExceptionManager.h"
 #include "EntityManager.h"
@@ -19,11 +21,11 @@ namespace Managers {
 		static void OnRender() {};
 		static void OnCleanup() {};
 
-		static SDL_Rect GetClickTilePos(SDL_Event * e);
-
 		static Constants::WindowState windowState;
 
 	};
 
 
 }
+
+#endif

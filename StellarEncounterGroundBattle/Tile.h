@@ -1,4 +1,6 @@
-#pragma once
+#ifndef SE_TILE
+#define SE_TILE
+
 #include "stdlibs.h"
 #include "EntityManager.h"
 #include "UID.h"
@@ -17,3 +19,4 @@ public:
 
 };
 
+#endif

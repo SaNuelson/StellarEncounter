@@ -1,4 +1,6 @@
-#pragma once
+#ifndef SE_EXCEPTION_MANAGER
+#define SE_EXCEPTION_MANAGER
+
 #include "stdlibs.h"
 
 namespace Managers {
@@ -14,3 +16,5 @@ namespace Managers {
 	};
 
 }
+
+#endif

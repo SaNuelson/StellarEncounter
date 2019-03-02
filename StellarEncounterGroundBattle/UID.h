@@ -1,4 +1,6 @@
-#pragma once
+#ifndef SE_UID
+#define SE_UID
+
 #include "ExceptionManager.h"
 
 struct UID
@@ -21,6 +23,10 @@ public:
 		if (id < right.id)
 			return true;
 		return false;
+	}
+
+	std::string toString() {
+		return type + "." + id;
 	}
 
 private:
@@ -52,8 +58,6 @@ private:
 	char type;
 	int id;
 
-private:
-
 	enum Type {
 		Texture = 0,
 		Entity = 1,
@@ -68,3 +72,4 @@ private:
 
 };
 
+#endif

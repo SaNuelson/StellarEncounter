@@ -1,4 +1,6 @@
-#pragma once
+#ifndef SE_RESOURCE_MANAGER
+#define SE_RESOURCE_MANAGER
+
 #include "stdlibs.h"
 #include "Constants.h"
 
@@ -27,3 +29,4 @@ private:
 	static int FreeID;
 };
 
+#endif

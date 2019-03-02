@@ -19,7 +19,7 @@ SDL_Rect Managers::EntityManager::GetMouseHex(SDL_Event * e)
 	x -= Constants::xMargin;
 	y -= Constants::yMargin;
 
-	pos.y = y / Constants::yTileSize;
+	pos.y = y / Constants::yTileSize * 4 / 3;
 	x -= Constants::xTileSize / 2 * pos.y;
 	pos.x = x / Constants::xTileSize;
 	if (x < 0)

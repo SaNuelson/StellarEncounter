@@ -80,6 +80,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <FunctionLevelLinking>true</FunctionLevelLinking>
+      <ShowIncludes>true</ShowIncludes>
     </ClCompile>
     <Link>
       <AdditionalDependencies>SDL2.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2main.lib;SDL2test.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -126,11 +127,16 @@
     <ClCompile Include="AI.cpp" />
     <ClCompile Include="BattleManager.cpp" />
     <ClCompile Include="Character.cpp" />
+    <ClCompile Include="Components.cpp" />
     <ClCompile Include="Constants.cpp" />
     <ClCompile Include="EntityManager.cpp" />
+    <ClCompile Include="Event.cpp" />
+    <ClCompile Include="EventManager.cpp" />
     <ClCompile Include="ExceptionManager.cpp" />
+    <ClCompile Include="IListener.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="stdlibs.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="UID.cpp" />
     <ClCompile Include="WindowManager.cpp" />
@@ -139,16 +145,30 @@
     <ClInclude Include="AI.h" />
     <ClInclude Include="BattleManager.h" />
     <ClInclude Include="Character.h" />
+    <ClInclude Include="Components.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="EntityManager.h" />
+    <ClInclude Include="Event.h" />
+    <ClInclude Include="EventManager.h" />
     <ClInclude Include="ExceptionManager.h" />
+    <ClInclude Include="IListener.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="stdlibs.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="UID.h" />
     <ClInclude Include="WindowManager.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\packages\boost.1.69.0.0\build\boost.targets" Condition="Exists('..\packages\boost.1.69.0.0\build\boost.targets')" />
   </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\boost.1.69.0.0\build\boost.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\boost.1.69.0.0\build\boost.targets'))" />
+  </Target>
 </Project>

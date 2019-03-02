@@ -69,11 +69,23 @@
     <ClCompile Include="UID.cpp">
       <Filter>Core\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="IListener.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Event.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Components.cpp">
+      <Filter>Entities\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EventManager.cpp">
+      <Filter>Managers\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stdlibs.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="stdlibs.h">
-      <Filter>Core\Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="ExceptionManager.h">
       <Filter>Managers\Header Files</Filter>
     </ClInclude>
@@ -104,5 +116,23 @@
     <ClInclude Include="UID.h">
       <Filter>Core\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="IListener.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Event.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Components.h">
+      <Filter>Entities\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EventManager.h">
+      <Filter>Managers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stdlibs.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

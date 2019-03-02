@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SE_ENTITY_MANAGER
+#define SE_ENTITY_MANAGER
 #include "stdlibs.h"
 #include "Tile.h"
 #include "Character.h"
@@ -29,3 +30,4 @@ namespace Managers {
 
 }
 
+#endif

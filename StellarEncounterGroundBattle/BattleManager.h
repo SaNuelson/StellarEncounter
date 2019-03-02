@@ -1,4 +1,6 @@
-#pragma once
+#ifndef SE_BATTLE_MANAGER
+#define SE_BATTLE_MANAGER
+
 #include "stdlibs.h"
 #include "Constants.h"
 
@@ -17,3 +19,5 @@ namespace Managers {
 	};
 
 }
+
+#endif

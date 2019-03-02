@@ -1,4 +1,6 @@
-#pragma once
+#ifndef SE_STD_LIBS
+#define SE_STD_LIBS
+
 #include <SDL.h>
 #undef main
 #include <SDL_image.h>
@@ -9,3 +11,5 @@
 
 #include <iostream>
 #include <string>
+
+#endif

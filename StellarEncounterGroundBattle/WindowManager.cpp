@@ -93,20 +93,3 @@ void WindowManager::OnLoop() {
 	OnCleanup();
 
 }
-
-SDL_Rect WindowManager::GetClickTilePos(SDL_Event * e) {
-	SDL_Rect pos;
-	int x = 0, y = 0;
-	SDL_GetMouseState(&x, &y);
-
-	x -= 50;
-	y -= 50;
-
-	pos.y = y / 48;
-	x -= 40 * pos.y;
-	pos.x = x / 80;
-	if (x < 0)
-		pos.x--;
-
-	return pos;
-}
