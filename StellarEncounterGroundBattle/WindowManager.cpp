@@ -5,9 +5,13 @@ using namespace Managers;
 SDL_Renderer * WindowManager::ren = nullptr;
 SDL_Window * WindowManager::win = nullptr;
 Constants::WindowState WindowManager::windowState = Constants::WindowState::Initializing;
+SDL_Event WindowManager::e;
 
 int WindowManager::OnInit()
 {
+
+	windowState = Constants::Initializing;
+
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
 		ExceptionManager::logSDLError(std::cerr, "SDL_Init");
 		OnCleanup();
@@ -20,8 +24,14 @@ int WindowManager::OnInit()
 		return 2;
 	}
 
+	if (TTF_Init() != 0) {
+		ExceptionManager::logSDLError(std::cerr, "TTF_Init");
+		OnCleanup();
+		return 3;
+	}
 
-	win = SDL_CreateWindow("Stellar Encounter - GroundBrawl 0.1", 50, 50, 800, 640, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+
+	win = SDL_CreateWindow("Stellar Encounter - GroundBrawl 0.1", 50, 50, Constants::WinWidth, Constants::WinHeight, SDL_WINDOW_SHOWN);
 	if (win == nullptr) {
 		ExceptionManager::logSDLError(std::cerr, "SDL_CreateWindow");
 		OnCleanup();
@@ -35,23 +45,39 @@ int WindowManager::OnInit()
 		return 4;
 	}
 
-	windowState = Constants::Initializing;
+	windowState = Constants::WindowState::Menu;
 
-	OnLoop();
+	OnStateChange();
 
 	return 0;
 
 }
 
-void WindowManager::OnLoop() {
+void WindowManager::OnStateChange() {
+
+	switch (windowState) {
+	case Constants::WindowState::Menu:
+		OnMenuLoop();
+		break;
+	case Constants::WindowState::Battle:
+		OnBattleLoop();
+		break;
+	case Constants::WindowState::Quitting:
+		return;
+	}
+
+}
+
+void WindowManager::OnLoopOld() {
 	
 	int xTiles = 8;
 	int yTiles = 8;
 	int xMargin = 50;
 	int yMargin = 50;
 
-	auto tex = ResourceManager::loadTex("Graphics/Tiles.png", ren);
-	auto player = ResourceManager::loadTex("Graphics/Player.png",ren);
+	auto tex = ResourceManager::loadTex("Graphics/t1.png", ren);
+	auto tex2 = ResourceManager::loadTex("Graphics/t2.png", ren);;
+	auto player = ResourceManager::loadTex("Graphics/demon.png",ren);
 	int xpos = 50 + Constants::xTileSize / 2;
 	int ypos = 50;
 
@@ -68,6 +94,7 @@ void WindowManager::OnLoop() {
 			if (e.type == SDL_MOUSEBUTTONDOWN) {
 
 				mousePos = EntityManager::GetMouseHex(&e);
+				std::cout << mousePos.x << " " << mousePos.y << std::endl;
 			}
 		}
 
@@ -81,7 +108,7 @@ void WindowManager::OnLoop() {
 		// green tiles
 		for (int x = 0; x < xTiles; ++x) {
 			for (int y = 0; y < yTiles; ++y) {
-				ResourceManager::renderTex(tex, ren, 80, 0, 80, 64, xMargin + (x + 0.5f) * Constants::xTileSize, yMargin + (y + 0.5f) * Constants::yTileSize*1.5f, 80, 64);
+				ResourceManager::renderTex(tex2, ren, 0, 0, 80, 64, xMargin + (x + 0.5f) * Constants::xTileSize, yMargin + (y + 0.5f) * Constants::yTileSize*1.5f, 80, 64);
 			}
 		}
 
@@ -92,4 +119,81 @@ void WindowManager::OnLoop() {
 
 	OnCleanup();
 
+}
+
+void Managers::WindowManager::OnMenuLoop()
+{
+	int btn_x = Constants::WinWidth / 2 - Constants::BtnWidth / 2;
+	int btn_y = Constants::WinHeight / 2 - Constants::BtnHeight / 2;
+
+	std::vector<std::string> btn_captions = { "New Game", "Load Game", "Options", "Quit Game" };
+	std::vector<SDL_Rect> btn_rects;
+	std::vector<SDL_Texture*> btns;
+	std::vector<SDL_Texture*> btns_hover;
+	std::vector<SDL_Texture*> btns_clicked;
+
+	int hover = -1;
+	bool click = false;
+	bool is_on_button = false;
+	
+
+	for (int i = 0; i < btn_captions.size(); ++i) {
+		SDL_Rect rect = ResourceManager::CreateRect(btn_x, btn_y + i * (Constants::BtnHeight + Constants::BtnOffset), Constants::BtnWidth, Constants::BtnHeight);
+		btn_rects.push_back(rect);
+		btns.push_back(ResourceManager::CreateButton(ren, rect, btn_captions[i], ""));
+		btns_hover.push_back(ResourceManager::CreateButton(ren, rect, btn_captions[i], "hover"));
+		btns_clicked.push_back(ResourceManager::CreateButton(ren, rect, btn_captions[i], "clicked"));
+	}
+	
+	bool change = false;
+
+	while (!change) {
+		SDL_RenderClear(ren);
+		for (int i = 0; i < btns.size(); i++) {
+			if (i == hover && !click) {
+				SDL_RenderCopy(ren, btns_hover[i], nullptr, &btn_rects[i]);
+			}
+			else if (i == hover && click) {
+				SDL_RenderCopy(ren, btns_clicked[i], nullptr, &btn_rects[i]);
+			}
+			else {
+				SDL_RenderCopy(ren, btns[i], nullptr, &btn_rects[i]);
+			}
+		}
+		SDL_RenderPresent(ren); 
+		
+		int x, y;
+		SDL_GetMouseState(&x, &y);
+		is_on_button = false;
+		for (int i = 0; i < btn_rects.size(); i++) {
+			if (btn_rects[i].x < x && x < btn_rects[i].x + btn_rects[i].w && btn_rects[i].y < y && y < btn_rects[i].y + btn_rects[i].h) {
+				// mouse click is in this button
+				hover = i;
+				is_on_button = true;
+			}
+		}
+
+		if (!is_on_button)
+			hover = -1;
+
+		while (SDL_PollEvent(&e)) {
+			if (e.button.button == SDL_BUTTON_LEFT && hover != -1) {
+				click = true;
+			}
+			else {
+				click = false;
+			}
+			if (e.type == SDL_MOUSEBUTTONUP && hover != -1) {
+				// TODO: Handle Button Clicks
+			}
+			if (e.type == SDL_QUIT) {
+				change = true;
+			}
+		}
+	}
+
+}
+
+void Managers::WindowManager::OnBattleLoop()
+{
 }

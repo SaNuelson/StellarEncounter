@@ -17,11 +17,20 @@ namespace Managers {
 		static SDL_Renderer * ren;
 
 		static int OnInit();
-		static void OnLoop();
+		static void OnStateChange();
+		static void OnLoopOld(); // obsolete
 		static void OnRender() {};
 		static void OnCleanup() {};
 
+		static void OnMenuLoop();
+		static void OnBattleLoop();
+		// other window states...
+
 		static Constants::WindowState windowState;
+
+	private:
+
+		static SDL_Event e;
 
 	};
 

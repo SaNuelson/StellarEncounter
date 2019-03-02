@@ -2,7 +2,7 @@
 
 Character::Character()
 {
-	std::vector<Component*> Components;
+	std::vector<Component> Components;
 }
 
 
@@ -10,8 +10,9 @@ Character::~Character()
 {
 }
 
-void Character::AddComponent(Component * comp) { 
-	Components.push_back(comp); 
+void Character::AddComponent(std::shared_ptr<Component> ptr)
+{
+	Components.push_back(ptr);
 }
 
-void Character::ReceiveEvent(UID, Event) {}
+// void Character::ReceiveEvent(UID, Event) {}

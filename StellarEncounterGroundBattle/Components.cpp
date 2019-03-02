@@ -7,7 +7,7 @@ int HealthComponent::GetCurrentHealth() { return CurrentHP; }
 int HealthComponent::GetMaxHealth() { return MaxHP; }
 
 bool HealthComponent::GetIsAlive() { return IsAlive; }
-
+/*
 void HealthComponent::ReceiveEvent(UID caller, Event e)
 {
 	if (e.event_type == Constants::EVENT_TYPE::DamageEntity) {
@@ -20,7 +20,7 @@ void HealthComponent::ReceiveEvent(UID caller, Event e)
 		Managers::ExceptionManager::logError("Incompatible Event received (" + caller.toString() +")");
 	}
 }
-
+*/
 void HealthComponent::OwnerDied() {  }
 
 void HealthComponent::ReceiveDamage(int amount) {
@@ -42,3 +42,4 @@ ArmorComponent::ArmorComponent(int AP, UID owner) : CurrentAP(AP), MaxAP(AP), ow
 ShieldComponent::ShieldComponent(int SP, UID owner) : CurrentSP(SP), MaxSP(SP), ownerID(owner) {}
 
 InfoComponent::InfoComponent(std::string name, std::string desc) : Name(name), Desc(desc) {}
+

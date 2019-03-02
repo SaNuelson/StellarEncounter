@@ -7,11 +7,19 @@ namespace Constants {
 
 	enum WindowState { Initializing, Menu, Battle, Quitting};
 	enum BattleState { Starting, PlayerTurn, EnemyTurn, PlayerWin, EnemyWin };
+	enum ButtonState { Idle, Focused, Clicked };
 	enum EVENT_TYPE {
 		None = 0,
 		HealEntity = 1, 
 		DamageEntity = 2 
 	};
+
+	static int WinWidth = 1024;
+	static int WinHeight = 768;
+
+	static int BtnWidth = 200;
+	static int BtnHeight = 50;
+	static int BtnOffset = 20;
 
 	static int xTileSize = 80;
 	static int yTileSize = 64;
@@ -40,12 +48,19 @@ namespace Constants {
 		return ret;
 	}
 
+	static std::vector<std::string> GetFontTextures() {
+		std::vector<std::string> ret;
+		ret.push_back("Resources/Raleway_Medium.ttf");
+		// ...
+		return ret;
+	}
+
 	/*
 	level string composition:
 	- units:
-		- indicated with letter after the tile on which they stand. at the start of file, letter is repeated with all attributes of the enemy
+		- indicated with letter after the tile on which they stand. at the start of file, letter is defined after it by all components with needed values
 		unit format:
-			<LETTER>+<ATTRIB>=<VALUE> delimiter(,) end of section(;)
+			<LETTER>,<COMPONENT>(<VALUE>,<VALUE>, ... ) + <LETTER> ... delimiter(,) end of section(;)
 	- terrain:
 		0 - water/canyon (unpassable, passable with flying, standable with flying)
 		1 - solid land (passable, standable)

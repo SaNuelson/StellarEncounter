@@ -12,7 +12,8 @@ public:
 	static UID GetNewTexUID() { return UID(0); };
 	static UID GetNewEntUID() { return UID(1); };
 	static UID GetNewTileUID() { return UID(2); };
-	static UID GetNewOtherUID() { return UID(3); };
+	static UID GetNewFontUID() { return UID(3); };
+	static UID GetNewOtherUID() { return UID(4); };
 	static UID GetEmptyUID() { return UID(-1); };
 
 	bool operator <(const UID &right) const {
@@ -47,6 +48,9 @@ private:
 			id = til_ctr++;
 			break;
 		case 3:
+			id = ttf_ctr++;
+			break;
+		case 4:
 			id = oth_ctr++;
 			break;
 		default:
@@ -68,6 +72,7 @@ private:
 	static int tex_ctr;
 	static int ent_ctr;
 	static int til_ctr;
+	static int ttf_ctr;
 	static int oth_ctr;
 
 };

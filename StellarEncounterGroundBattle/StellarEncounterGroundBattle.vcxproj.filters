@@ -84,6 +84,9 @@
     <ClCompile Include="stdlibs.cpp">
       <Filter>Core\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ExceptionManager.h">
@@ -129,6 +132,9 @@
       <Filter>Managers\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="stdlibs.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.h">
       <Filter>Core\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
