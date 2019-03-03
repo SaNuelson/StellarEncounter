@@ -9,6 +9,8 @@
 #include "Button.h"
 #include "Scenes.h"
 
+class Scene;
+
 namespace Managers {
 
 	class WindowManager
@@ -28,6 +30,9 @@ namespace Managers {
 		static void OnNewGameLoop();
 		static void OnBattleLoop();
 		// other window states...
+
+		// experiment with scenes
+		static void ExperimentalSceneLoop();
 
 		static Constants::WindowState windowState;
 

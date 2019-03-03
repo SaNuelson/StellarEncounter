@@ -5,6 +5,7 @@ using namespace Managers;
 SDL_Renderer * WindowManager::ren = nullptr;
 SDL_Window * WindowManager::win = nullptr;
 Constants::WindowState WindowManager::windowState = Constants::WindowState::Initializing;
+std::vector<std::shared_ptr<Scene>> WindowManager::scenes;
 SDL_Event WindowManager::e;
 
 int WindowManager::OnInit()
@@ -47,7 +48,9 @@ int WindowManager::OnInit()
 
 	windowState = Constants::WindowState::MainMenu;
 
-	OnStateChange();
+	ExperimentalSceneLoop();
+
+	//OnStateChange();
 
 	return 0;
 
@@ -291,4 +294,17 @@ void Managers::WindowManager::OnNewGameLoop()
 
 void Managers::WindowManager::OnBattleLoop()
 {
+}
+
+void Managers::WindowManager::ExperimentalSceneLoop()
+{
+	scenes.push_back(std::make_shared<MainMenuScene>(ren));
+	while (!scenes.empty()) {
+		scenes.push_back(scenes[scenes.size() - 1]->Run());
+		if (scenes[scenes.size() - 1] == nullptr) {
+			scenes.pop_back();
+			scenes.pop_back();
+		}
+	}
+	OnCleanup();
 }

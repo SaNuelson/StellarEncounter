@@ -22,4 +22,6 @@ public:
 
 	Constants::ButtonState buttonState;
 
+	static void GenerateButtonStack(SDL_Renderer*ren, SDL_Rect &srcpos, int offset, bool horizontally, std::vector<std::string> &captions, std::vector<Button> &dst);
+
 };

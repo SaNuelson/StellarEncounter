@@ -25,3 +25,17 @@ bool Button::IsPointInBounds(int x, int y) {
 		return true;
 	return false;
 }
+
+void Button::GenerateButtonStack(SDL_Renderer * ren, SDL_Rect & srcpos, int offset, bool horizontally, std::vector<std::string>& captions, std::vector<Button>& dst)
+{
+	int x = srcpos.x;
+	int y = srcpos.y;
+
+	for (auto caption : captions) {
+		dst.push_back(Button(x, y, Constants::BtnWidth, Constants::BtnHeight, caption, ren));
+		if (horizontally)
+			x += Constants::BtnWidth + offset;
+		else
+			y += Constants::BtnHeight + offset;
+	}
+}
