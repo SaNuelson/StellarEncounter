@@ -300,10 +300,12 @@ void Managers::WindowManager::ExperimentalSceneLoop()
 {
 	scenes.push_back(std::make_shared<MainMenuScene>(ren));
 	while (!scenes.empty()) {
-		scenes.push_back(scenes[scenes.size() - 1]->Run());
-		if (scenes[scenes.size() - 1] == nullptr) {
+		auto new_scene = scenes[scenes.size() - 1]->Run();
+		if (new_scene == nullptr) {
 			scenes.pop_back();
-			scenes.pop_back();
+		}
+		else {
+			scenes.push_back(new_scene);
 		}
 	}
 	OnCleanup();

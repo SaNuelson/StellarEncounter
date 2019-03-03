@@ -26,7 +26,26 @@ public:
 
 	
 	MainMenuScene() = default;
-	MainMenuScene(SDL_Renderer * renderer);;
+	MainMenuScene(SDL_Renderer * renderer);
+
+	std::shared_ptr<Scene> Run() override;
+	std::shared_ptr<Scene> GetNewScene(Button*);
+
+private:
+
+	std::vector<std::string> btn_captions;
+	std::vector<Button> buttons;
+
+	SDL_Renderer * ren;
+	SDL_Event e;
+
+};
+
+class DemoGameScene : public Scene {
+public:
+
+	DemoGameScene() = default;
+	DemoGameScene(SDL_Renderer * ren);
 
 	std::shared_ptr<Scene> Run() override;
 	std::shared_ptr<Scene> GetNewScene(Button*);
