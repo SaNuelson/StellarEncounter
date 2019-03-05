@@ -11,6 +11,7 @@ public:
 	virtual ~Scene() {};
 	Scene(SDL_Renderer* renderer) : ren(renderer) {};
 
+	// main method of scene, each inherited class does it's job and returns appropriate scene or nullptr to go back a scene
 	virtual std::shared_ptr<Scene> Run() { return nullptr; };
 
 	std::shared_ptr<Scene> getptr() { return shared_from_this(); };
@@ -28,7 +29,10 @@ public:
 	MainMenuScene() = default;
 	MainMenuScene(SDL_Renderer * renderer);
 
+	// the whole loop handling input, rendering...
 	std::shared_ptr<Scene> Run() override;
+
+	// This was a former way to handle if some button was clicked. Should be rebuilt either with pointer functions in buttons (as in SEUI) or using Events
 	std::shared_ptr<Scene> GetNewScene(Button*);
 
 private:
@@ -41,6 +45,7 @@ private:
 
 };
 
+// not currently implemented, should simulate pre-defined battle
 class DemoGameScene : public Scene {
 public:
 

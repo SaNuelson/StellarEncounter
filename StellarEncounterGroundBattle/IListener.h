@@ -5,6 +5,8 @@
 #include "EventManager.h"
 #include "Constants.h"
 
+// interface for listening to events, couldn't make it work, maybe will work in SEUI with less things to worry about.
+
 class IListener {
 
 public:

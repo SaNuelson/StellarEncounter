@@ -8,6 +8,8 @@
 #include "IListener.h"
 #include "Constants.h"
 
+// not working because of IListener interface
+
 class IListener;
 class Event;
 

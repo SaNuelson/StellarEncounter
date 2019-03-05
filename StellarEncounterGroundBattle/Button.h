@@ -3,6 +3,7 @@
 #include "ResourceManager.h"
 #include "Constants.h"
 
+// Button done much better in SEUI
 class Button
 {
 public:

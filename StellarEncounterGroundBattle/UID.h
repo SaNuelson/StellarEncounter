@@ -3,11 +3,16 @@
 
 #include "ExceptionManager.h"
 
+// universal identificator. Currently not actually useful in the code, only used in ResourceManager in resource maps.
+
 struct UID
 {
 public:
 
 	UID() : id(-1), type(-1) {};
+
+	// methods return different UIDs for different types of objects that are managed.
+	// if UID stays in, it should be a template method that will return specific ID based on type of caller
 
 	static UID GetNewTexUID() { return UID(0); };
 	static UID GetNewEntUID() { return UID(1); };

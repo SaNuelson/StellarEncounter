@@ -6,6 +6,8 @@
 #include "Constants.h"
 #include "UID.h"
 
+// currently not used, should take care of creating and keeping track of tiles and units (from components hopefully).
+
 class Tile;
 class Character;
 

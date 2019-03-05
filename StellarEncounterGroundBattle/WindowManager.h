@@ -11,6 +11,8 @@
 
 class Scene;
 
+// main class (wasn't supposed to be), takes care of gamestate and appropriate loops, also initialization and cleanup
+
 namespace Managers {
 
 	class WindowManager
@@ -20,18 +22,20 @@ namespace Managers {
 		static SDL_Window * win;
 		static SDL_Renderer * ren;
 
+		// former methods, used in direct sequence
 		static int OnInit();
-		static void OnStateChange();
-		static void OnLoopOld(); // obsolete
+		static void OnLoopOld(); // obsolete, only used to try rendering hex grid and reading hex clicks, works
 		static void OnRender() {};
 		static void OnCleanup() {};
 
+		// 2nd gamestate implementation, works (I think), but is too coupled
+		static void OnStateChange();
 		static void OnMenuLoop();
 		static void OnNewGameLoop();
 		static void OnBattleLoop();
-		// other window states...
+		// ...other window states...
 
-		// experiment with scenes
+		// experiment with scenes, currently in use
 		static void ExperimentalSceneLoop();
 
 		static Constants::WindowState windowState;

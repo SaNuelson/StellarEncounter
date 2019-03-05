@@ -5,6 +5,8 @@
 #include "Constants.h"
 #include "UID.h"
 
+// creates textures based on parameters, keeps track of them, should dispose of them when no one uses them
+
 class ResourceManager
 {
 public:

@@ -3,6 +3,8 @@
 
 #include "stdlibs.h"
 
+// Here is everything that didn't find it's place anywhere else. Don't know where that thing is? Most likely somewhere here. Adventure Time!
+
 namespace Constants {
 
 	enum WindowState { Initializing, MainMenu, NewGameMenu, LoadGameMenu, OptionsMenu, WorldMap, Battle, Quitting};

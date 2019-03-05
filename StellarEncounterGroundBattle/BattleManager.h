@@ -4,6 +4,8 @@
 #include "stdlibs.h"
 #include "Constants.h"
 
+// currently not in use, should take care of turns, AI, movement on map... probably redundant and ought to be removed soon.
+
 namespace Managers {
 
 	class BattleManager
