@@ -26,9 +26,9 @@ public:
 		btn.idle_func = nullptr;
 		btn.hover_func = nullptr;
 		btn.click_func = nullptr;
-		btn.idle_tex = ResourceManager::LoadTexture("Resources/button_idle.png");
-		btn.hover_tex = ResourceManager::LoadTexture("Resources/button_hover.png");
-		btn.click_tex = ResourceManager::LoadTexture("Resources/button_click.png");
+		btn.idle_tex = ResourceManager::LoadTextureWithCaption("Resources/button_idle.png",btn.caption);
+		btn.hover_tex = ResourceManager::LoadTextureWithCaption("Resources/button_hover.png",btn.caption);
+		btn.click_tex = ResourceManager::LoadTextureWithCaption("Resources/button_click.png",btn.caption);
 
 		return btn;
 	}
@@ -129,22 +129,29 @@ public:
 	};
 
 	void ResolveInput(SDL_Event &e) {
+		// idle if not mouse on
+		// hover if mouse on && not lmb down
+		// click if mouse on && lmb down
 		if (IsMouseOn()) {
-			if (e.button.button == SDL_BUTTON_LEFT && e.type == SDL_MOUSEBUTTONDOWN) {
+			if ((e.button.button == SDL_BUTTON_LEFT && e.type == SDL_MOUSEBUTTONDOWN) || (isMouseHolding && e.type != SDL_MOUSEBUTTONUP)) {
+				isMouseHolding = true;
 				button_state = 2;
 			}
-			else if(e.button.button == SDL_BUTTON_LEFT && e.type == SDL_MOUSEBUTTONUP) {
-				if (button_state == 2 && click_func != nullptr) {
+			else {
+				if (e.button.button == SDL_BUTTON_LEFT && e.type == SDL_MOUSEBUTTONUP && button_state == 2 && click_func != nullptr) {
 					std::cout << "Mouse Press" << std::endl;
 					(*click_func)();
 				}
 				else if (hover_func != nullptr)
 					(*hover_func)();
+				isMouseHolding = false;
 				button_state = 1;
 			}
 		}
-		else
+		else {
+			isMouseHolding = false;
 			button_state = 0;
+		}
 	}
 
 private:
@@ -162,6 +169,8 @@ private:
 	SDL_Texture * idle_tex;
 	SDL_Texture * hover_tex;
 	SDL_Texture * click_tex;
+
+	bool isMouseHolding = false;
 
 };
 

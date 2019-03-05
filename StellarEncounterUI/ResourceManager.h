@@ -9,6 +9,8 @@ public:
 
 	static SDL_Texture * LoadTexture(std::string path);
 
+	static SDL_Texture * LoadTextureWithCaption(std::string path, std::string caption);
+
 	static void FreeTextures();
 
 private:
@@ -18,6 +20,8 @@ private:
 	static SDL_Renderer * ren;
 
 	static std::map<std::string, SDL_Texture*> TextureMap;
+
+	static TTF_Font * default_font;
 
 };
 

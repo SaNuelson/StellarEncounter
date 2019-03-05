@@ -60,8 +60,17 @@ int main() {
 
 	// Add new testing UIElements here
 
-	buttons.push_back(Button::Default());
-	buttons[0].SetRect(20, 20, 250, 80);
+	for (int i = 0; i < 9; i++) {
+		buttons.push_back(Button::Default());
+		buttons[i].SetRect(
+			20 * ((i % 3) + 1) + 250 * (i % 3),
+			20 * ((i / 3) + 1) + 250 * (i / 3),
+			250, 80
+		);
+	}
+
+	buttons[4].SetClickFunc(Quit);
+
 	//buttons[0].SetClickFunc(Quit);
 
 	// To here
@@ -76,14 +85,15 @@ int main() {
 		SDL_RenderPresent(ren);
 
 		// Handle Inputs
+
 		while (SDL_PollEvent(&e)) {
+
+			for (auto &btn : buttons)
+				btn.ResolveInput(e);
 
 			if (e.type == SDL_QUIT)
 				quit = true;
 		}
-
-		for (auto &btn : buttons)
-			btn.ResolveInput(e);
 
 	}
 
