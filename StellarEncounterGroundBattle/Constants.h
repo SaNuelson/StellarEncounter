@@ -141,6 +141,8 @@ namespace Constants {
 
 	static std::string level1 = "a,HP=100,AP=5,ATTACK=10;b,HP=70,AP=3,ATTACK=25;300000003,02112220,0211111a20,01111110,021111120,022211b20,300000003;";
 
+	static std::string level1tilemap = "300000003,02112220,021111120,01111110,021111120,02221120,300000003";
+
 	static std::string GetLevelInfo(int level) {
 		switch (level) {
 		case 1:
@@ -149,6 +151,22 @@ namespace Constants {
 			return "";
 		}
 	}
+
+	static std::string GetTileCodePath(int tileCode) {
+		switch (tileCode) {
+		case 0:
+			return "Graphics/t1.png";
+		case 1:
+			return "Graphics/t5.png";
+		case 2:
+			return "Graphics/t4.png";
+		case 3:
+			return "Graphics/t8.png";
+		default:
+			return "";
+		}
+	}
+
 }
 
 #endif

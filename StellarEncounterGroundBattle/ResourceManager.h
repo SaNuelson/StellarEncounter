@@ -10,20 +10,18 @@
 class ResourceManager
 {
 public:
-	static SDL_Texture * loadTex(const std::string &file, SDL_Renderer * ren);
 
-	static void renderTex(SDL_Texture * tex, SDL_Renderer * ren, int x, int y, int w, int h);
-	static void renderTex(SDL_Texture* tex, SDL_Renderer* ren, int srcX, int srcY, int srcW, int srcH, int dstX, int dstY, int dstW, int dstH);
-	static void renderTex(SDL_Texture * tex, SDL_Renderer * ren, SDL_Rect dst, SDL_Rect * clip = nullptr);
-	static void renderTex(SDL_Texture * tex, SDL_Renderer * ren, int x, int y, SDL_Rect * clip = nullptr);
+	static void OnInit(SDL_Renderer*);
 
-	static bool GenerateTextures(SDL_Renderer* ren);
+	static SDL_Texture * loadTex(const std::string &file);
+	static TTF_Font * loadFont(const std::string &file, int size);
 
-	static SDL_Texture * GetTexture(UID ID);
-	static SDL_Texture * GetCharacterTex(UID ID);
-	static TTF_Font * GetFont(UID ID);
+	static void renderTex(SDL_Texture * tex, int x, int y, int w, int h);
+	static void renderTex(SDL_Texture* tex, int srcX, int srcY, int srcW, int srcH, int dstX, int dstY, int dstW, int dstH);
+	static void renderTex(SDL_Texture * tex, SDL_Rect dst, SDL_Rect * clip = nullptr);
+	static void renderTex(SDL_Texture * tex, int x, int y, SDL_Rect * clip = nullptr);
 
-	static SDL_Texture * CreateButton(SDL_Renderer* ren, SDL_Rect &rect, std::string caption, std::string type);
+	static SDL_Texture * CreateButton(SDL_Rect &rect, std::string caption, std::string type); // will move partially to button as in SEUI
 
 	static SDL_Rect CreateRect(int x, int y, int w, int h);
 	static SDL_Rect CreatePointRect(int x, int y);
@@ -31,10 +29,14 @@ public:
 
 	static SDL_Color CreateColor(int r, int g, int b, int a);
 
+	static void OnCleanup();
+
 private:
-	static std::map<UID, SDL_Texture*> TileTexMap;
-	static std::map<UID, SDL_Texture*> CharacterTexMap;
-	static std::map<UID, TTF_Font*> FontMap;
+	static std::map<std::string, SDL_Texture*> TexMap;
+	static std::map<std::string, TTF_Font*> FontMap;
+	static SDL_Renderer * ren;
+	static bool isInitialized;
+
 };
 
 #endif

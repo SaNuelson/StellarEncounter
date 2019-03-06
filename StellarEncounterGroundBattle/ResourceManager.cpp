@@ -1,33 +1,54 @@
 #include "ResourceManager.h"
 
-std::map<UID, SDL_Texture*> ResourceManager::TileTexMap;
-std::map<UID, SDL_Texture*> ResourceManager::CharacterTexMap;
-std::map<UID, TTF_Font*> ResourceManager::FontMap;
+std::map<std::string, SDL_Texture*> ResourceManager::TexMap;
+std::map<std::string, TTF_Font*> ResourceManager::FontMap;
+SDL_Renderer* ResourceManager::ren = nullptr;
+bool ResourceManager::isInitialized = false;
 
-SDL_Texture * ResourceManager::loadTex(const std::string &file, SDL_Renderer * ren) {
+void ResourceManager::OnInit(SDL_Renderer* renderer) {
+	ren = renderer;
+	isInitialized = true;
+}
+
+SDL_Texture * ResourceManager::loadTex(const std::string &file) {
+	if (TexMap.find(file) != TexMap.end())
+		return TexMap[file];
 	SDL_Texture * tex = IMG_LoadTexture(ren, file.c_str());
 	if (tex == nullptr) {
 		std::cout << "Error" << std::endl;
 	}
+	TexMap[file] = tex;
 	return tex;
 }
 
-void ResourceManager::renderTex(SDL_Texture * tex, SDL_Renderer * ren, int x, int y, int w, int h) {
+TTF_Font * ResourceManager::loadFont(const std::string &file, int size) {
+	if (FontMap.find(file + "@" + std::to_string(size)) != FontMap.end())
+		return FontMap[file + "@" + std::to_string(size)];
+	TTF_Font * font = TTF_OpenFont(file.c_str(), size);
+	if (font == nullptr) {
+		std::cout << "loadFont error at path: " << file << std::endl;
+		return nullptr;
+	}
+	FontMap[file + "@" + std::to_string(size)] = font;
+	return font;
+}
+
+void ResourceManager::renderTex(SDL_Texture * tex, int x, int y, int w, int h) {
 	SDL_Rect dst = CreateRect(x, y, w, h);
 	SDL_RenderCopy(ren, tex, nullptr, &dst);
 }
 
-void ResourceManager::renderTex(SDL_Texture * tex, SDL_Renderer * ren, SDL_Rect dst, SDL_Rect * clip) {
+void ResourceManager::renderTex(SDL_Texture * tex, SDL_Rect dst, SDL_Rect * clip) {
 	SDL_RenderCopy(ren, tex, clip, &dst);
 }
 
-void ResourceManager::renderTex(SDL_Texture* tex, SDL_Renderer* ren, int srcX, int srcY, int srcW, int srcH, int dstX, int dstY, int dstW, int dstH) {
+void ResourceManager::renderTex(SDL_Texture* tex, int srcX, int srcY, int srcW, int srcH, int dstX, int dstY, int dstW, int dstH) {
 	SDL_Rect src = CreateRect(srcX, srcY, srcW, srcH);
 	SDL_Rect dst = CreateRect(dstX, dstY, dstW, dstH);
 	SDL_RenderCopy(ren, tex, &src, &dst);
 }
 
-void ResourceManager::renderTex(SDL_Texture * tex, SDL_Renderer * ren, int x, int y, SDL_Rect * clip) {
+void ResourceManager::renderTex(SDL_Texture * tex, int x, int y, SDL_Rect * clip) {
 	SDL_Rect dst = CreatePointRect(x, y);
 	if (clip != nullptr) {
 		dst.w = clip->w;
@@ -36,63 +57,10 @@ void ResourceManager::renderTex(SDL_Texture * tex, SDL_Renderer * ren, int x, in
 	else {
 		SDL_QueryTexture(tex, nullptr, nullptr, &dst.w, &dst.h);
 	}
-	renderTex(tex, ren, dst, clip);
+	renderTex(tex, dst, clip);
 }
 
-bool ResourceManager::GenerateTextures(SDL_Renderer * ren)
-{
-	TileTexMap.clear();
-	CharacterTexMap.clear();
-	for (std::string path : Constants::GetTileTextures()) {
-		SDL_Texture* tex = IMG_LoadTexture(ren, path.c_str());
-		if (tex == nullptr)
-			return false;
-		TileTexMap[UID::GetNewTileUID()] = tex;
-	}
-	for (std::string path : Constants::GetCharacterTextures()) {
-		SDL_Texture* tex = IMG_LoadTexture(ren, path.c_str());
-		if (tex == nullptr)
-			return false;
-		CharacterTexMap[UID::GetNewEntUID()] = tex;
-	}
-	for (std::string path : Constants::GetFontTextures()) {
-		TTF_Font * font = TTF_OpenFont(path.c_str(), 12);
-		if (font == nullptr)
-			return false;
-		FontMap[UID::GetNewFontUID()] = font;
-	}
-	return true;
-}
-
-SDL_Texture * ResourceManager::GetTexture(UID ID)
-{
-	SDL_Texture * tex = TileTexMap[ID];
-	if (tex == nullptr) {
-		Managers::ExceptionManager::logError("Texture not found: " + ID.toString());
-		return nullptr;
-	}
-	return tex;
-}
-
-SDL_Texture * ResourceManager::GetCharacterTex(UID ID) {
-	SDL_Texture * tex = CharacterTexMap[ID];
-	if (tex == nullptr) {
-		Managers::ExceptionManager::logError("Character texture not found: " + ID.toString());
-		return nullptr;
-	}
-	return tex;
-}
-
-TTF_Font * ResourceManager::GetFont(UID ID) {
-	TTF_Font * font = FontMap[ID];
-	if (font == nullptr) {
-		Managers::ExceptionManager::logError("Font not found: " + ID.toString());
-		return nullptr;
-	}
-	return font;
-}
-
-SDL_Texture * ResourceManager::CreateButton(SDL_Renderer * ren, SDL_Rect &rect, std::string caption, std::string type)
+SDL_Texture * ResourceManager::CreateButton(SDL_Rect &rect, std::string caption, std::string type)
 {
 
 	TTF_Font * font = TTF_OpenFont("Resources/Raleway-Bold.ttf", 25);
@@ -102,7 +70,7 @@ SDL_Texture * ResourceManager::CreateButton(SDL_Renderer * ren, SDL_Rect &rect, 
 	
 	SDL_Color fg = CreateColor(0, 0, 0, 255);
 
-	SDL_Texture * btn_tex = ResourceManager::loadTex("Graphics/button" + type + ".png", ren);
+	SDL_Texture * btn_tex = ResourceManager::loadTex("Graphics/button" + type + ".png");
 
 	SDL_Surface * text_surf = TTF_RenderText_Solid(font, caption.c_str(), fg);
 	SDL_Texture * text_tex = SDL_CreateTextureFromSurface(ren, text_surf);
@@ -150,4 +118,16 @@ SDL_Color ResourceManager::CreateColor(int r, int g, int b, int a)
 	color.b = b;
 	color.a = a;
 	return color;
+}
+
+void ResourceManager::OnCleanup() {
+	
+	for (auto tex_pair : TexMap) {
+		SDL_DestroyTexture(tex_pair.second);
+	}
+
+	for (auto font_pair : FontMap) {
+		TTF_CloseFont(font_pair.second);
+	}
+
 }

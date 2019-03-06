@@ -3,6 +3,7 @@
 #include "Button.h"
 #include "ResourceManager.h"
 #include "WindowManager.h"
+#include "TileMap.h"
 
 class Scene : public std::enable_shared_from_this<Scene>{
 public:
@@ -45,21 +46,19 @@ private:
 
 };
 
-// not currently implemented, should simulate pre-defined battle
 class DemoGameScene : public Scene {
 public:
 
-	DemoGameScene() = default;
-	DemoGameScene(SDL_Renderer * ren);
+	DemoGameScene() {};
+	DemoGameScene(SDL_Renderer * renderer);;
 
 	std::shared_ptr<Scene> Run() override;
-	std::shared_ptr<Scene> GetNewScene(Button*);
+	std::shared_ptr<Scene> GetNewScene(Button*) {};
 
 private:
 
-	std::vector<std::string> btn_captions;
-	std::vector<Button> buttons;
-
+	
+	TileMap tileMap;
 	SDL_Renderer * ren;
 	SDL_Event e;
 

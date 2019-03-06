@@ -36,9 +36,6 @@
     <ClCompile Include="Button.cpp">
       <Filter>UIElements\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Event.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="EnergyFocusTriangle.cpp">
       <Filter>UIElements\Source Files</Filter>
     </ClCompile>
@@ -52,9 +49,6 @@
     </ClInclude>
     <ClInclude Include="Button.h">
       <Filter>UIElements\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Event.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="EnergyFocusTriangle.h">
       <Filter>UIElements\Header Files</Filter>

@@ -4,9 +4,9 @@ Button::Button(int x, int y, int w, int h, std::string caption, SDL_Renderer * r
 	rect = ResourceManager::CreateRect(x, y, w, h);
 	buttonState = Constants::ButtonState::Idle;
 	caption = caption;
-	tex = ResourceManager::CreateButton(ren, rect, caption, "");
-	tex_hover = ResourceManager::CreateButton(ren, rect, caption, "hover");
-	tex_clicked = ResourceManager::CreateButton(ren, rect, caption, "clicked");
+	tex = ResourceManager::CreateButton(rect, caption, "");
+	tex_hover = ResourceManager::CreateButton(rect, caption, "hover");
+	tex_clicked = ResourceManager::CreateButton(rect, caption, "clicked");
 }
 
 SDL_Texture * Button::GetTexture() {

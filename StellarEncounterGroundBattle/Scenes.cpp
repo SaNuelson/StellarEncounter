@@ -60,12 +60,45 @@ std::shared_ptr<Scene> MainMenuScene::Run()
 
 std::shared_ptr<Scene> MainMenuScene::GetNewScene(Button * btn)
 {
-	if (btn->caption == "New Game") // NewGameScene
-		return nullptr;
+	if (btn->caption == "New Game") { // NewGameScene
+		std::cout << "MainMenuScene jumpting to DemoGameScene" << std::endl;
+		return std::make_shared<DemoGameScene>(ren);
+	}
 	if (btn->caption == "Load Game") // I mean it's pretty obvious for now...
 		return nullptr;
 	if (btn->caption == "Options")
 		return nullptr;
 	if (btn->caption == "Quit Game")
 		return nullptr;
+}
+
+DemoGameScene::DemoGameScene(SDL_Renderer * renderer) : ren(renderer) {
+
+	tileMap.Init(Constants::level1tilemap);
+}
+
+std::shared_ptr<Scene> DemoGameScene::Run()
+{
+
+	bool change = false;
+
+	while (!change) {
+
+		SDL_RenderClear(ren);
+
+		int x, y;
+		SDL_GetMouseState(&x, &y);
+
+		tileMap.OnRender(ren);
+
+		SDL_RenderPresent(ren);
+
+		while (SDL_PollEvent(&e)) {
+			if (e.type == SDL_QUIT) {
+				change = true;
+			}
+		}
+	}
+
+	return nullptr;
 }

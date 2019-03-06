@@ -22,27 +22,11 @@ namespace Managers {
 		static SDL_Window * win;
 		static SDL_Renderer * ren;
 
-		// former methods, used in direct sequence
-		static int OnInit();
-		static void OnLoopOld(); // obsolete, only used to try rendering hex grid and reading hex clicks, works
-		static void OnRender() {};
-		static void OnCleanup() {};
-
-		// 2nd gamestate implementation, works (I think), but is too coupled
-		static void OnStateChange();
-		static void OnMenuLoop();
-		static void OnNewGameLoop();
-		static void OnBattleLoop();
-		// ...other window states...
-
-		// experiment with scenes, currently in use
-		static void ExperimentalSceneLoop();
-
-		static Constants::WindowState windowState;
+		static int OnInit(); // initialization function, inits all modules and managers
+		static void InitSceneLoop();
+		static void OnCleanup(); // cleanups this as well as all used managers and their resources
 
 	private:
-
-		static SDL_Event e;
 
 		static std::vector<std::shared_ptr<Scene>> scenes;
 

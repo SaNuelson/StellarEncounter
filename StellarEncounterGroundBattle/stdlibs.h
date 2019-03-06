@@ -14,5 +14,6 @@
 #include <string>
 
 #include <memory>
+#include <sstream>
 
 #endif

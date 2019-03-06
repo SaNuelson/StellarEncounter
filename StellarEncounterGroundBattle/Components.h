@@ -10,6 +10,8 @@ class IListener;
 
 class Component : public std::enable_shared_from_this<Component> {
 public:
+
+	virtual ~Component() {};
 	
 	virtual std::shared_ptr<Component> GetPtr() = 0;
 
