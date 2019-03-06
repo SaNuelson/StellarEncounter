@@ -123,18 +123,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Button.cpp" />
+    <ClCompile Include="EnergyFocusTriangle.cpp" />
     <ClCompile Include="Event.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="stdlibs.cpp" />
-    <ClCompile Include="UIElement.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Button.h" />
+    <ClInclude Include="EnergyFocusTriangle.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="stdlibs.h" />
-    <ClInclude Include="UIElement.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Readme.txt" />

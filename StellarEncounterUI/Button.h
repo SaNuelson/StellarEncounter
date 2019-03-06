@@ -2,15 +2,13 @@
 #include "stdlibs.h"
 #include "ResourceManager.h"
 
-typedef void (*func)();
-
 class Button
 {
 public:
 
 	Button() {};
-	Button(std::string btn_caption, SDL_Rect &btn_rect, func func_idle, func func_hover, func func_click, SDL_Texture * tex_idle, SDL_Texture * tex_hover, SDL_Texture * tex_click) :
-		caption(btn_caption), rect(btn_rect), idle_func(func_idle), hover_func(func_hover), click_func(func_click), idle_tex(tex_idle), hover_tex(tex_hover), click_tex(tex_idle) {};
+	Button(std::string btn_caption, SDL_Rect &btn_rect, Sint32 return_code, SDL_Texture * tex_idle, SDL_Texture * tex_hover, SDL_Texture * tex_click) :
+		caption(btn_caption), rect(btn_rect), retcode(return_code), idle_tex(tex_idle), hover_tex(tex_hover), click_tex(tex_idle) {};
 	~Button() {};
 
 	static Button Default() {
@@ -23,9 +21,7 @@ public:
 		Button btn;
 		btn.caption = "New_Button";
 		btn.rect = rect;
-		btn.idle_func = nullptr;
-		btn.hover_func = nullptr;
-		btn.click_func = nullptr;
+		btn.retcode = 1;
 		btn.idle_tex = ResourceManager::LoadTextureWithCaption("Resources/button_idle.png",btn.caption);
 		btn.hover_tex = ResourceManager::LoadTextureWithCaption("Resources/button_hover.png",btn.caption);
 		btn.click_tex = ResourceManager::LoadTextureWithCaption("Resources/button_click.png",btn.caption);
@@ -53,30 +49,6 @@ public:
 		if (y != -1) rect.y = y;
 		if (w != -1) rect.w = w;
 		if (h != -1) rect.h = h;
-	}
-
-	func GetIdleFunc() {
-		return idle_func;
-	}
-	void SetIdleFunc(func func) {
-		if (func != nullptr)
-			idle_func = func;
-	}
-
-	func GetHoverFunc() {
-		return hover_func;
-	}
-	void SetHoverFunc(func func) {
-		if (func != nullptr)
-			hover_func = func;
-	}
-
-	func GetClickFunc() {
-		return click_func;
-	}
-	void SetClickFunc(func func) {
-		if (func != nullptr)
-			click_func = func;
 	}
 
 	SDL_Texture * GetIdleTex() {
@@ -114,6 +86,13 @@ public:
 		}
 	}
 
+	void SetRetCode(Sint32 ret) {
+		retcode = ret;
+	}
+	Sint32 GetRetCode() {
+		return retcode;
+	}
+
 #pragma endregion
 
 	bool IsInBounds(int &x, int &y) {
@@ -138,12 +117,14 @@ public:
 				button_state = 2;
 			}
 			else {
-				if (e.button.button == SDL_BUTTON_LEFT && e.type == SDL_MOUSEBUTTONUP && button_state == 2 && click_func != nullptr) {
+				if (e.button.button == SDL_BUTTON_LEFT && e.type == SDL_MOUSEBUTTONUP && button_state == 2) {
 					std::cout << "Mouse Press" << std::endl;
-					(*click_func)();
+					DispatchEvent();
 				}
+				/* Might need in near future.
 				else if (hover_func != nullptr)
 					(*hover_func)();
+				*/
 				isMouseHolding = false;
 				button_state = 1;
 			}
@@ -154,15 +135,25 @@ public:
 		}
 	}
 
+	void OnRender(SDL_Renderer * ren) {
+		SDL_RenderCopy(ren, GetButtonTex(), nullptr, &rect);
+	}
+
+	void DispatchEvent() {
+		SDL_Event e;
+		e.type == SDL_EventType::SDL_USEREVENT;
+		e.user.code = retcode;
+		e.user.data1 = this;
+		SDL_PushEvent(&e);
+	}
+
 private:
 
 	std::string caption;
 
 	SDL_Rect rect;
 
-	func idle_func;
-	func hover_func;
-	func click_func;
+	Sint32 retcode;
 
 	int8_t button_state = 0;
 

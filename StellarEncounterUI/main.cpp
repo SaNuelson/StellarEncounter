@@ -1,5 +1,6 @@
 #include "stdlibs.h"
 #include "Button.h"
+#include "EnergyFocusTriangle.h"
 
 using namespace std;
 
@@ -14,8 +15,6 @@ void Quit() {
 }
 
 int main() {
-
-	vector<Button> buttons;
 
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
 		cout << "SDL_Init Error: " << SDL_GetError() << endl;
@@ -60,6 +59,7 @@ int main() {
 
 	// Add new testing UIElements here
 
+	/*
 	for (int i = 0; i < 9; i++) {
 		buttons.push_back(Button::Default());
 		buttons[i].SetRect(
@@ -68,10 +68,12 @@ int main() {
 			250, 80
 		);
 	}
-
+	
 	buttons[4].SetClickFunc(Quit);
-
+	*/
 	//buttons[0].SetClickFunc(Quit);
+
+	EnergyFocusTriangle eft = EnergyFocusTriangle::Default();
 
 	// To here
 
@@ -80,8 +82,9 @@ int main() {
 
 		// Render Screen
 		SDL_RenderClear(ren);
+		eft.OnRender(ren);
 		for (auto &btn : buttons)
-			SDL_RenderCopy(ren, btn.GetButtonTex(), nullptr, &btn.GetRect());
+			btn.OnRender(ren);
 		SDL_RenderPresent(ren);
 
 		// Handle Inputs
@@ -90,6 +93,8 @@ int main() {
 
 			for (auto &btn : buttons)
 				btn.ResolveInput(e);
+
+			eft.ResolveInput(e);
 
 			if (e.type == SDL_QUIT)
 				quit = true;

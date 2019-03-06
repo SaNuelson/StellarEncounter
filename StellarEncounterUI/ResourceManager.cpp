@@ -12,15 +12,23 @@ void ResourceManager::Init(SDL_Renderer * renderer) {
 SDL_Texture * ResourceManager::LoadTexture(std::string path)
 {
 
+	if (TextureMap.find(path) != TextureMap.end())
+		return TextureMap[path];
+
 	SDL_Texture * tex = IMG_LoadTexture(ren, path.c_str());
 	if (tex == nullptr) {
 		std::cout << "IMG_LoadTexture Error on path: " << path << std::endl;
 	}
+	TextureMap[path] = tex;
 	return tex;
 
 }
 SDL_Texture * ResourceManager::LoadTextureWithCaption(std::string path, std::string caption)
 {
+
+	if (TextureMap.find(path + "@" + caption) != TextureMap.end())
+		return TextureMap[path + "@" + caption];
+
 	// button texture
 	SDL_Texture * tex = LoadTexture(path); 
 	if (tex == nullptr)
