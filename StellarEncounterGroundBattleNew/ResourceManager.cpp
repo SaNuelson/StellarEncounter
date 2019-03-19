@@ -5,8 +5,8 @@ bool ResourceManager::initialized = false;
 std::map<std::string, SDL_Texture*> ResourceManager::TextureMap;
 TTF_Font * ResourceManager::default_font;
 
-void ResourceManager::Init(SDL_Renderer * renderer) { 
-	ren = renderer; initialized = true; 
+void ResourceManager::Init(SDL_Renderer * renderer) {
+	ren = renderer; initialized = true;
 	default_font = TTF_OpenFont("Resources/default_font.ttf", 20);
 }
 SDL_Texture * ResourceManager::LoadTexture(std::string path)
@@ -30,7 +30,7 @@ SDL_Texture * ResourceManager::LoadTextureWithCaption(std::string path, std::str
 		return TextureMap[path + "@" + caption];
 
 	// button texture
-	SDL_Texture * tex = LoadTexture(path); 
+	SDL_Texture * tex = LoadTexture(path);
 	if (tex == nullptr) {
 		std::cout << "ResourceManager::LoadTextureWithCaption(" << path << ", " << caption << ") -> LoadTexture error" << SDL_GetError() << std::endl;
 		return nullptr;

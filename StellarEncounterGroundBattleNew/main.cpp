@@ -1,7 +1,6 @@
-#include "stdlibs.h"
-#include "Button.h"
-#include "EnergyFocusTriangle.h"
-#include "SaveGameBox.h"
+#include "stdlib.h"
+#include "ResourceManager.h"
+#include "Tiles.h"
 
 using namespace std;
 
@@ -11,8 +10,6 @@ bool quit = false;
 
 int scr_height = 600;
 int scr_width = 800;
-
-vector<Button> buttons;
 
 void Quit() {
 	quit = true;
@@ -63,42 +60,24 @@ int main() {
 
 	// Add new testing UIElements here
 
-	/*
-	for (int i = 0; i < 9; i++) {
-		buttons.push_back(Button::Default());
-		buttons[i].SetRect(
-			20 * ((i % 3) + 1) + 250 * (i % 3),
-			20 * ((i / 3) + 1) + 250 * (i / 3),
-			250, 80
-		);
-	}
-	
-	buttons[4].SetClickFunc(Quit);
-	*/
-	//buttons[0].SetClickFunc(Quit);
-
-	SaveGameBox sgbox(scr_height, scr_width, ren);
-
 	// To here
+
+	TileMap tileMap;
+	tileMap.Init(Constants::level1tilemap, 20, 20);
 
 	SDL_Event e;
 	while (!quit) {
 
 		// Render Screen
 		SDL_RenderClear(ren);
-		sgbox.Render();
-		for (auto &btn : buttons)
-			btn.OnRender(ren);
+		tileMap.OnRender(ren);
 		SDL_RenderPresent(ren);
 
 		// Handle Inputs
 
 		while (SDL_PollEvent(&e)) {
 
-			for (auto &btn : buttons)
-				btn.ResolveInput(e);
-
-			sgbox.ResolveInput(e);
+			tileMap.ResolveInput(e);
 
 			if (e.type == SDL_QUIT)
 				quit = true;

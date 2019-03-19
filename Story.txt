@@ -1,0 +1,31 @@
+
+	################
+		Spoilers
+	################
+
+Storyplot:
+	
+	Chapter 1 - A Way out of a Paradise
+	
+	Player wakes up on a jungle planet on an island by the shore near a broken shuttle. He doesn't remember anything about his past, only flashes.
+	He then starts exploring the shuttle and finds a communication terminal still intact along with some additional supplies. On the terminal there is already set an SOS transmission with a voice log.
+	When the log is played, player can hear himself saying something along the lines that he's in an escape pod where he fled after an outbreak started on his spaceship. He calls for help of an 'old friend' who's supposed to come pick him up at specific coordinates, which one can only hope are of this specific planet.
+	After hearing this message, player collects his things and needs to stay alive until his savior cames.
+	Player comes out of the shuttle and goes to water to wash his face. (if implemented) There can player choose his visage, gender and associated preferences.
+	Then player sets up a simple bunk on the shore and goes to sleep.
+	On the second morning, he eats some of the rations and after checking the shuttle, he sees an answer has come to the terminal. His friend is on his way and should arrive in a weeks time.
+	
+	Here starts possible minigame (Stranded On Island), where player can salvage the shuttle, explore wildlands or train himself.
+	Simple version: Player chooses on which tasks to focus while waiting for rescue. Based on this, his traits will form.
+	Harder version: Player does actions as in the simple version, but consciously. So there's a clock and tasks take a specific amount of time to complete. There would be less rations, so player would need to either explore wildlands for food or craft a spear to hunt fish by the shore. Spare time he could spend exercising, meditating, crafting equipment and such... this would improve his specific traits.
+	
+	After said time, his friend would come <<< MAYBE a conflict could happen here, like volcano errupting on the island or meeting an unfriendly species, from which the player would be rescued at the last moment >>>. After jumping on a ship of his friend, player could at last get to know what actually happened.
+	
+	His friend would be Raze (28), human female, first of his companions.
+	She has a classic punk visage with some futuristic elements. Dark pink long hair with a side-shave, pointy chin and playful light-purple eyes. A scar runs across her left cheek. She saves the player and jumps back into outer space. There, with some time to spare, they spend the night with a bottle of scotch, talking about everything. Here player finds out many of the important facts about his life:
+		-	These days, the player is a bounty hunter, looking for criminals for the Space Council. He's said to be one of the best, or was anyway. He also learns about how he became friends with Raze in the first place. Supposedly, player rescued Raze in the past and they spent some time as fellow bounty hunters.
+	After the talk they head to bed, Raze apologizes for not knowing much about his recent life, but she has a lead, a friend from their former bounty hunter group who might know more.
+	
+	Here (if needed) the tutorial starts. You need to find the second crew member. Raze knows a place wher he might be. She also says she owes the player that much to help him find his memories. Thus, player gains control over the ship and goes to visit the mentioned place, a smuggler's den on a sandy planet few light years away.
+	
+	Chapter 2 - Friends Don't Forget

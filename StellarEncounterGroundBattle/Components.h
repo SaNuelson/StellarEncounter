@@ -6,14 +6,11 @@
 #include "ExceptionManager.h"
 
 class UID;
-class IListener;
 
-class Component : public std::enable_shared_from_this<Component> {
+class Component {
 public:
 
 	virtual ~Component() {};
-	
-	virtual std::shared_ptr<Component> GetPtr() = 0;
 
 };
 
@@ -23,13 +20,13 @@ public:
 
 	HealthComponent(int HP, UID owner);
 
-	int GetCurrentHealth();;
-	int GetMaxHealth();;
-	bool GetIsAlive();;
+	void OnExec(SDL_Event&);
+
+	int GetCurrentHealth();
+	int GetMaxHealth();
+	bool GetIsAlive();
 
 	// void ReceiveEvent(UID caller, Event e) override;
-
-	std::shared_ptr<Component> GetPtr() override { return shared_from_this(); };
 
 private:
 
@@ -49,18 +46,6 @@ private:
 
 };
 
-class ArmorComponent : public Component {
-
-	ArmorComponent(int AP, UID owner);
-
-	int CurrentAP;
-	int MaxAP;
-	UID ownerID;
-
-	std::shared_ptr<Component> GetPtr() override { return shared_from_this(); };
-
-};
-
 class ShieldComponent : public Component {
 
 	ShieldComponent(int SP, UID owner);
@@ -69,19 +54,18 @@ class ShieldComponent : public Component {
 	int MaxSP;
 	UID ownerID;
 
-	std::shared_ptr<Component> GetPtr() override { return shared_from_this(); };
 
 };
 
-class StatsComponent : public Component {
+class StatComponent : public Component {
 
-	std::shared_ptr<Component> GetPtr() override { return shared_from_this(); };
+};
+
+class AttribComponent : public Component {
 
 };
 
 class EquipComponent : public Component {
-
-	std::shared_ptr<Component> GetPtr() override { return shared_from_this(); };
 
 };
 
@@ -92,7 +76,16 @@ class InfoComponent : public Component {
 	std::string Name;
 	std::string Desc;
 
-	std::shared_ptr<Component> GetPtr() override { return shared_from_this(); };
+};
+
+class RenderComponent : public Component {
+public:
+
+	void OnExec(SDL_Event&) override;
+
+private:
+
+	SDL_Texture * tex; // TODO: Animated textures.
 
 };
 

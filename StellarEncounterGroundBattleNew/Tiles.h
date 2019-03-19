@@ -1,5 +1,5 @@
 #pragma once
-#include "stdlibs.h"
+#include "stdlib.h"
 #include "ResourceManager.h"
 #include "Constants.h"
 
@@ -22,10 +22,25 @@ public:
 			for (char c : line) {
 				tileLayout[line_count].push_back(c - 48);
 				if (tileCodeMap.find(c - 48) == tileCodeMap.end())
-					tileCodeMap[c - 48] = ResourceManager::loadTex(Constants::GetTileCodePath(c - 48));
+					tileCodeMap[c - 48] = ResourceManager::LoadTexture(Constants::GetTileCodePath(c - 48));
 			}
 			line_count++;
 		}
+	}
+
+	void ResolveInput(SDL_Event &e) {
+		int x, y;
+		SDL_GetMouseState(&x, &y);
+
+		yt = y / Constants::yTileSize;
+		x -= yt * Constants::xTileSize / 2;
+		xt = x / Constants::xTileSize;
+
+		if (xt < 0 || yt < 0 || yt > tileLayout.size() || xt > tileLayout[yt].size())
+			hover = false;
+		else
+			hover = true;
+
 	}
 
 	void OnRender(SDL_Renderer * ren) {
@@ -63,6 +78,9 @@ private:
 	std::map<int, SDL_Texture*> tileCodeMap;
 
 	SDL_Point start_pt;
+
+	bool hover;
+	int xt, yt;
 
 };
 

@@ -5,31 +5,31 @@
 #include "Character.h"
 #include "Constants.h"
 #include "UID.h"
+#include "Components.h"
 
 // currently not used, should take care of creating and keeping track of tiles and units (from components hopefully).
 
 class Tile;
 class Character;
 
-namespace Managers {
+class EntityManager
+{
+public:
+	static void CreateNewTileMap(std::string* src);
 
-	class EntityManager
-	{
-	public:
-		static void CreateNewTileMap(std::string* src);
+	static SDL_Rect GetMouseHex(SDL_Event* e);
 
-		static SDL_Rect GetMouseHex(SDL_Event* e);
+	static UID CreateCharacter(std::string &src); // creates an entity and pushes it into CharacterMap
+	static Character* GetCharacter(UID); // returns pointer pointing inside the CharacterMap -> raw ptr should be fine
 
-		static Character* GetCharacter(UID ID);
-		static Tile* GetTile(int x, int y);
+	static Tile* GetTile(int x, int y);
 
-	private:
+private:
 
-		static std::vector<std::vector<Tile>> TileMap;
-		static std::map<UID, Character> CharacterMap;
+	static std::vector<std::vector<Tile>> TileMap;
+	static std::map<UID,Character> CharacterMap;
 
-	};
+};
 
-}
 
 #endif

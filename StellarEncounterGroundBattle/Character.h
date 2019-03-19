@@ -19,8 +19,25 @@ public:
 
 private:
 
-	std::vector<std::shared_ptr<Component>> Components;
+	InfoComponent IC;
+	HealthComponent HC;
+	ShieldComponent SC;
+	AttribComponent AC;
+	StatComponent SC;
+	EquipComponent EC;
+	RenderComponent RC;
 
 };
+
+/*
+
++ HealthComponent
+? ShieldComponent
+? AttribComponent (base)
++ StatComponent
+? EquipComponent
++ RenderComponent
+
+*/
 
 #endif

@@ -13,54 +13,30 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="UIElements">
-      <UniqueIdentifier>{4a150443-fef2-4ad0-8076-21d4ea32dee6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="UIElements\Header Files">
-      <UniqueIdentifier>{0743e33d-38b7-41bc-a0ab-9f5bf27410b1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="UIElements\Source Files">
-      <UniqueIdentifier>{8a8b36fb-af98-439b-b603-ecd062c6e84b}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="stdlibs.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ResourceManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Button.cpp">
-      <Filter>UIElements\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="EnergyFocusTriangle.cpp">
-      <Filter>UIElements\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SaveGameBox.cpp">
+    <ClCompile Include="Tiles.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="stdlibs.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="stdlib.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="ResourceManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Button.h">
-      <Filter>UIElements\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="EnergyFocusTriangle.h">
-      <Filter>UIElements\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SaveGameBox.h">
+    <ClInclude Include="Tiles.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="Readme.txt" />
+    <ClInclude Include="Constants.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

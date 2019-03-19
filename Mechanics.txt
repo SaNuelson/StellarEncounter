@@ -1,0 +1,80 @@
+Game Mechanics
+
+	####################
+		Main Screens
+	####################
+
+Star Map
+	- (as of now) it shows only player and stars. Player moves on other planets with a click. A moving animation should show, moving player ship from one star to another.
+	
+	- UI:
+		- Menu -> (if implemented) In-Game Menu (else MsgBox && MainMenu)
+		- (if implemented) Inventory
+		- (if implemented) Quests
+		- Enter Star System -> System Map
+
+	- General Ideas:
+		- RMB might make markers (same in System Map which woul translate in some list seen in Star Map) with custom captions to keep track of some bigger ore deposits, good markets with smooth prices, etc.
+	
+System Map
+	- (as of now) same as with Star Map, just there're no stars, but planets. Player should be able to travel anywhere, because there might be space stations, asteroid fields (with some of that sweet booty), quest markers, etc.
+	- (maybe implemented) other ships travelling around, so player could talk to them, trade, attack, etc. (just avoid becoming a Star Rangers clone at this point)
+	
+	- UI:
+		... same as in Star Map ...
+		- Exit Star System (instead of Enter SS... duh)
+		- Enter Planet
+		
+Planet Map
+	- perhaps only show available places with docks. I mean, being able to jump down anywhere would be sweet, but that's way far in the implementation stack. Still, some markers with booties, artifacts, ruins... stuff like that should work fine.
+	
+	- UI:
+		- Same as above
+		- Exit Planet
+
+Station(?)
+	- this should include any point when player sets down the ship. Either on a space station, a city on a planet, pretty much any relatively friendly place.
+	
+	- UI:
+		- Explore - not sure what's gonna be here yet. Definetely some kind of pub for getting the new gossip, some kind of station representative... place? for new missions and bounties and whatnot. (if implemented) there might be something like exploring some less friendly parts of the station or it's vicinity for fights, loot... you know the drill.
+		- Market - buy/sell equipment or general goods (more in SubScreens)
+		- Hangar - here's your ship, it's equip, equip of your crew... (SubScreens)
+		- Exit Station
+
+Ground Battle
+	- operating on shifted, top-pointed hex-grid.
+	- enemy on right side, player on left.
+	- turn-based, not much thought out at the moment.
+	
+Space Battle (if implemented)
+	- no hex-grid (ships don't move all that much in the space, there's no use to that really...)
+	- again turn-based
+	- 2 Ideas:
+		1. Actions cost energy, energy replenished every turn. Player has a cap which prevents from accumulating a lot. Player can then spend the energy attacking, creating shields, sending drones... every action has it's cost in energy points.
+		
+		2. Action cost AP, AP is fixed (might be buffed by equip if impl.), there is a "Energy Focusing Triangle" which distributes all ship energy into 3 categories:
+			Offense - responsible for any offensive modules. Affects damage and effectivity of these modules
+			Defense - you get the idea... Affects effectivity of shields, healing station...
+			Engines - ... Affects chance of dodging incoming projectiles.
+
+	###################
+		Sub-Screens
+	###################
+	
+	- sub-screens in general should stop the main screen from updating, freezing in it's place, so once turned off, the former screen just hops back on. Important in Battles or cutscenes, where the exact point of freeze is important.
+	
+In-Game Menu
+	- just a box with buttons, some might open additional sub-screens.
+	
+	- UI:
+		- Resume
+		- Save Game - sub
+		- Load Game - sub
+		- Options - another sub-screen... yay!
+		- Quit Game - ask for exit save, as usual
+
+SaveGame/LoadGame Menu
+	- this definitely should be implemented, but I have no idea why. That's gonna be some hard UI + Manager work right there.
+	
+Options Menu
+	- we'll see what's gonna be in here.

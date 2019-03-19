@@ -57,9 +57,11 @@ public:
 
 private:
 
-	
+	//std::vector<std::vector<SDL_Texture*>> TileTexVec2d;
 	TileMap tileMap;
 	SDL_Renderer * ren;
 	SDL_Event e;
+
+
 
 };

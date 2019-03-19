@@ -2,15 +2,15 @@
 
 
 
-std::vector<std::vector<Tile>> Managers::EntityManager::TileMap;
-std::map<UID, Character> Managers::EntityManager::CharacterMap;
+std::vector<std::vector<Tile>> EntityManager::TileMap;
+std::map<UID, Character> EntityManager::CharacterMap;
 
-void Managers::EntityManager::CreateNewTileMap(std::string * src)
+void EntityManager::CreateNewTileMap(std::string * src)
 {
 	// TODO
 }
 
-SDL_Rect Managers::EntityManager::GetMouseHex(SDL_Event * e)
+SDL_Rect EntityManager::GetMouseHex(SDL_Event * e)
 {
 	SDL_Rect pos;
 	int x = 0, y = 0;
@@ -28,12 +28,22 @@ SDL_Rect Managers::EntityManager::GetMouseHex(SDL_Event * e)
 	return pos;
 }
 
-Character * Managers::EntityManager::GetCharacter(UID ID)
+UID EntityManager::CreateCharacter(std::string &src)
 {
-	return CharacterMap.find(ID) == CharacterMap.end() ? nullptr : &CharacterMap[ID];
+	// TODO
+	return UID::GetEmptyUID();
 }
 
-Tile * Managers::EntityManager::GetTile(int x, int y)
+Character* EntityManager::GetCharacter(UID id)
+{
+	if (CharacterMap.find(id) == CharacterMap.end()) {
+		std::cout << "EntityManager::GetCharacter(" << id.toString() << ") error: UID not found in entity pool." << std::endl;
+		return nullptr;
+	}
+	return &CharacterMap[id];
+}
+
+Tile * EntityManager::GetTile(int x, int y)
 {
 	return (TileMap.size() > x) && (TileMap[x].size() > y) ? &TileMap[x][y] : nullptr ;
 }
