@@ -4,6 +4,7 @@
 #include "ResourceManager.h"
 #include "WindowManager.h"
 #include "TileMap.h"
+#include "Player.h"
 
 class Scene : public std::enable_shared_from_this<Scene>{
 public:
@@ -57,11 +58,23 @@ public:
 
 private:
 
-	//std::vector<std::vector<SDL_Texture*>> TileTexVec2d;
-	TileMap tileMap;
 	SDL_Renderer * ren;
 	SDL_Event e;
 
+	// game logic
 
+	bool playerturn = false;
+	HumanPlayer player;
+	AIPlayer enemy;
+	TileMap tileMap;
 
+	std::vector<UID> units;
+	int currentUnit = 0;
+
+	// timer for delta
+	// TODO: Move to struct "Clock"
+
+	Uint64 time_now = SDL_GetPerformanceCounter();
+	Uint64 time_last = 0;
+	double delta = 0;
 };

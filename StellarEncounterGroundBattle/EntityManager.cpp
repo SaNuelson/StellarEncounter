@@ -28,10 +28,16 @@ SDL_Rect EntityManager::GetMouseHex(SDL_Event * e)
 	return pos;
 }
 
-UID EntityManager::CreateCharacter(std::string &src)
+UID EntityManager::CreateCharacter(UID owner, std::string &src)
 {
-	// TODO
-	return UID::GetEmptyUID();
+	std::stringstream ss(src);
+	std::string name;
+	int HP, AP, Att;
+	ss >> name;
+	ss >> HP, ss >> AP, ss >> Att;
+	UID ID = UID::GetNewEntUID();
+	CharacterMap[ID] = Character(owner, HP, AP, Att);
+	return ID;
 }
 
 Character* EntityManager::GetCharacter(UID id)

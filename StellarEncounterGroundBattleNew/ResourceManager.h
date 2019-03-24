@@ -11,13 +11,16 @@ public:
 
 	static SDL_Texture * LoadTextureWithCaption(std::string path, std::string caption);
 
+	static SDL_Rect CreateRectangle(int x, int y, int w, int h); // for quick creation
+
 	static void FreeTextures();
+
+	static SDL_Renderer * ren;
 
 private:
 
 	static bool initialized;
 
-	static SDL_Renderer * ren;
 
 	static std::map<std::string, SDL_Texture*> TextureMap;
 

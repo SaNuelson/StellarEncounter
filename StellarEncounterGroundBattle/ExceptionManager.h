@@ -3,18 +3,13 @@
 
 #include "stdlibs.h"
 
-namespace Managers {
+class ExceptionManager {
 
-	class ExceptionManager {
+public:
 
-	public:
+	static void logSDLError(std::ostream& o, std::string msg);
 
-		static void logSDLError(std::ostream& o, std::string msg);
+	static void logError(std::string msg);
 
-		static void logError(std::string msg);
-
-	};
-
-}
-
+};
 #endif

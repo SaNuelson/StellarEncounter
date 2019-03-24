@@ -5,7 +5,6 @@
 #include "Character.h"
 #include "Constants.h"
 #include "UID.h"
-#include "Components.h"
 
 // currently not used, should take care of creating and keeping track of tiles and units (from components hopefully).
 
@@ -19,7 +18,7 @@ public:
 
 	static SDL_Rect GetMouseHex(SDL_Event* e);
 
-	static UID CreateCharacter(std::string &src); // creates an entity and pushes it into CharacterMap
+	static UID CreateCharacter(UID owner, std::string &src); // creates an entity and pushes it into CharacterMap
 	static Character* GetCharacter(UID); // returns pointer pointing inside the CharacterMap -> raw ptr should be fine
 
 	static Tile* GetTile(int x, int y);

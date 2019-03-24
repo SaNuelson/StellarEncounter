@@ -75,67 +75,52 @@ std::shared_ptr<Scene> MainMenuScene::GetNewScene(Button * btn)
 DemoGameScene::DemoGameScene(SDL_Renderer * renderer) : ren(renderer) {
 	
 	tileMap.Init(Constants::level1tilemap, 20, 20);
-	/*
-	std::string source = Constants::level1tilemap;
-	std::string line;
-	std::stringstream ss(source);
-	int i = 0;
-	while (std::getline(ss, line, ',')) {
-		TileTexVec2d.push_back(std::vector<SDL_Texture*>());
-		for (char c : line) {
-			TileTexVec2d[i].push_back(ResourceManager::loadTex(Constants::GetTileCodePath(c - 48)));
-		}
-		i++;
-	}
-	*/
 }
 
 std::shared_ptr<Scene> DemoGameScene::Run()
 {
 
-	bool change = false;
+	// setup the game
+	tileMap.Init(Constants::level1tilemap, Constants::xTileSize, Constants::xTileSize);
 
-	while (!change) {
+	bool gameover = false;
+
+	while (!gameover) {
+
+		// this will move, hardcoded units created in players
+		player.units.push_back(EntityManager::CreateCharacter(player.GetID(), Constants::unit1));
+		enemy.units.push_back(EntityManager::CreateCharacter(player.GetID(), Constants::unit2));
+
+		// ask for units from players, create queue, now without initiative
+		units.push_back(player.units[0]);
+		units.push_back(enemy.units[0]);
+
+		playerturn = (EntityManager::GetCharacter(units[currentUnit])->GetOwner() == player.GetID());
+
+		time_last = time_now;
+		time_now = SDL_GetPerformanceCounter();
+		delta = (double)((time_now - time_last) * 1000 / (double)SDL_GetPerformanceFrequency());
+
+		while (SDL_PollEvent(&e)) {
+			if (e.type == SDL_QUIT || e.user.code == Constants::EVENT_BATTLE_END) {
+				gameover = true;
+				// start end-battle sequence
+				std::cout << "EAAGONGAOHE" << std::endl;
+			}
+			else if (playerturn) {
+				player.ResolveEvent(e);
+			}
+			tileMap.ResolveInput(e);
+		}
 
 		SDL_RenderClear(ren);
 
-		int x, y;
-		SDL_GetMouseState(&x, &y);
-		
-		/*
-		SDL_Rect tile_rect;
-		tile_rect.x = 0;
-		tile_rect.y = 0;
-		tile_rect.w = Constants::xTileSize;
-		tile_rect.h = Constants::yTileSize;
-
-		bool odd = true;
-
-		for (auto vec : TileTexVec2d) {
-			for (auto tile : vec) {
-				SDL_RenderCopy(ren, tile, nullptr, &tile_rect);
-				tile_rect.x += Constants::xTileSize;
-			}
-			odd = !odd;
-			tile_rect.y += Constants::yTileTopSize + Constants::yTileBoxSize;
-			if (odd) {
-				tile_rect.x = 0;
-			}
-			else {
-				tile_rect.x = Constants::xTileSize / 2;
-			}
-		}
-		*/
-		
 		tileMap.OnRender(ren);
+		player.Update(delta);
+		enemy.Update(delta);
 
 		SDL_RenderPresent(ren);
 
-		while (SDL_PollEvent(&e)) {
-			if (e.type == SDL_QUIT) {
-				change = true;
-			}
-		}
 	}
 
 	return nullptr;

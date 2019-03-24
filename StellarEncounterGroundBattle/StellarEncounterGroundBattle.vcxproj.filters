@@ -69,17 +69,11 @@
     <ClCompile Include="EntityManager.cpp">
       <Filter>Managers\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AI.cpp">
-      <Filter>Unsorted\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Character.cpp">
       <Filter>Entities\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="UID.cpp">
       <Filter>Unsorted\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Components.cpp">
-      <Filter>Entities\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="stdlibs.cpp">
       <Filter>Unsorted\Source Files</Filter>
@@ -91,6 +85,9 @@
       <Filter>Unsorted\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TileMap.cpp">
+      <Filter>Unsorted\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
       <Filter>Unsorted\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -116,17 +113,11 @@
     <ClInclude Include="EntityManager.h">
       <Filter>Managers\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AI.h">
-      <Filter>Unsorted\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Character.h">
       <Filter>Entities\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="UID.h">
       <Filter>Unsorted\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Components.h">
-      <Filter>Entities\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="stdlibs.h">
       <Filter>Unsorted\Header Files</Filter>
@@ -138,6 +129,9 @@
       <Filter>Unsorted\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TileMap.h">
+      <Filter>Unsorted\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
       <Filter>Unsorted\Header Files</Filter>
     </ClInclude>
   </ItemGroup>

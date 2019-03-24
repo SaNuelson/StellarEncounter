@@ -2,31 +2,58 @@
 #define SE_CHARACTER
 
 #include <vector>
-#include "Components.h"
 #include "EntityManager.h"
 #include "ExceptionManager.h"
-
-class Component;
-class UID;
+#include "UID.h"
 
 class Character
 {
 public:
-	Character();
-	~Character();
 
-	void AddComponent(std::shared_ptr<Component> ptr);
+	Character() = default;
+	Character(UID ownerID, int HP, int AP, int Att) {
+		owner = ownerID;
+		HPmax = HP;
+		HPcur = HP;
+		APmax = AP;
+		APcur = AP;
+		AttackPower = Att;
+	};
+	~Character() { OnCleanup(); };
+
+	UID GetOwner() { return owner; };
+	void OnCleanup() {};
+
+	void Attack(Character* defender) {
+		defender->Defend(this, AttackPower);
+	}
+
+	void BindToOwner(UID ownerID) {
+		owner = ownerID;
+	}
+
+	void Defend(Character* attacker, int &damage) {
+		HPcur -= damage;
+		if (HPcur <= 0) {
+			std::cout << "Unit died" << std::endl;
+		}
+	}
 
 private:
 
-	InfoComponent IC;
-	HealthComponent HC;
-	ShieldComponent SC;
-	AttribComponent AC;
-	StatComponent SC;
-	EquipComponent EC;
-	RenderComponent RC;
 
+	int HPmax;
+	int HPcur;
+
+	int APmax;
+	int APcur;
+
+	int AttackPower;
+
+	UID owner;
+
+	SDL_Texture* tex;
+	SDL_Point mappos;
 };
 
 /*

@@ -9,3 +9,5 @@
 #include <map>
 #include <memory>
 #include <sstream>
+#include <bitset>
+#include <array>

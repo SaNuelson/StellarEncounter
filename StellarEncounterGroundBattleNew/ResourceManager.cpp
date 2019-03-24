@@ -75,6 +75,16 @@ SDL_Texture * ResourceManager::LoadTextureWithCaption(std::string path, std::str
 
 }
 
+SDL_Rect ResourceManager::CreateRectangle(int x, int y, int w, int h)
+{
+	SDL_Rect rect;
+	rect.x = x;
+	rect.y = y;
+	rect.w = w;
+	rect.h = h;
+	return rect;
+}
+
 void ResourceManager::FreeTextures()
 {
 	for (auto tex_pair : TextureMap) {

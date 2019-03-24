@@ -1,6 +1,7 @@
 #include "stdlib.h"
 #include "ResourceManager.h"
 #include "Tiles.h"
+#include "Entity.h"
 
 using namespace std;
 
@@ -56,32 +57,46 @@ int main() {
 		return -1;
 	}
 
+	//timer
+	Uint64 t_now = SDL_GetPerformanceCounter();
+	Uint64 t_last = 0;
+	double delta = 0;
+
 	ResourceManager::Init(ren);
-
-	// Add new testing UIElements here
-
-	// To here
-
-	TileMap tileMap;
-	tileMap.Init(Constants::level1tilemap, 20, 20);
-
 	SDL_Event e;
+
+	bool PlayerTurn = true;
+	BoxTileMap tilemap;
+	tilemap.Init(level1boxtilemap, xTileSize, xTileSize);
+
+	Entity player = Entity::GetDefault(ren);
+	
+
+	int currentUnit = 0;
+
 	while (!quit) {
 
-		// Render Screen
-		SDL_RenderClear(ren);
-		tileMap.OnRender(ren);
-		SDL_RenderPresent(ren);
+		// calc delta
+		t_last = t_now;
+		t_now = SDL_GetPerformanceCounter();
+		delta = (double)((t_now - t_last) * 1000 / (double)SDL_GetPerformanceFrequency());
 
 		// Handle Inputs
-
 		while (SDL_PollEvent(&e)) {
 
-			tileMap.ResolveInput(e);
+			// TODO resolve input
+
+			tilemap.ResolveInput(e);
 
 			if (e.type == SDL_QUIT)
 				quit = true;
 		}
+
+		// Render Screen
+		SDL_RenderClear(ren);
+		tilemap.OnRender(ren);
+		player.OnRender();
+		SDL_RenderPresent(ren);
 
 	}
 

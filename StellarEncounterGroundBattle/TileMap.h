@@ -3,6 +3,7 @@
 #include "ResourceManager.h"
 #include "Constants.h"
 
+
 class TileMap
 {
 public:
@@ -17,6 +18,7 @@ public:
 		std::stringstream ss(source);
 		std::string line;
 		int line_count = 0;
+		hoverTileTex = ResourceManager::loadTex("Graphics/thover.png");
 		while (std::getline(ss, line, ',')) {
 			tileLayout.push_back(std::vector<int>());
 			for (char c : line) {
@@ -26,6 +28,21 @@ public:
 			}
 			line_count++;
 		}
+	}
+
+	void ResolveInput(SDL_Event &e) {
+		int x, y;
+		SDL_GetMouseState(&x, &y);
+
+		yt = (y - start_pt.y) / Constants::yTileSize;
+		x -= yt * Constants::xTileSize / 2;
+		xt = (x - start_pt.x) / Constants::xTileSize;
+		std::cout << "[ " << xt << " ; " << yt << " ]" << std::endl;
+		if (xt < 0 || yt < 0 || yt >= tileLayout.size() || xt >= tileLayout[yt].size())
+			hover = false;
+		else
+			hover = true;
+
 	}
 
 	void OnRender(SDL_Renderer * ren) {
@@ -53,6 +70,13 @@ public:
 				tile_rect.x = start_pt.x + Constants::xTileSize / 2;
 			}
 		}
+
+		if (hover) {
+			tile_rect.y = start_pt.y + yt * (Constants::yTileBoxSize + Constants::yTileTopSize);
+			tile_rect.x = start_pt.x + xt * Constants::xTileSize + yt * Constants::xTileSize / 2;
+			SDL_RenderCopy(ren, hoverTileTex, nullptr, &tile_rect);
+		}
+
 	}
 
 private:
@@ -62,7 +86,13 @@ private:
 	std::vector<std::vector<int>> tileLayout;
 	std::map<int, SDL_Texture*> tileCodeMap;
 
+
 	SDL_Point start_pt;
 
+	SDL_Texture* hoverTileTex;
+	bool hover;
+	int xt, yt;
+
 };
+
 

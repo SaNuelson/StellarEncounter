@@ -31,6 +31,16 @@ public:
 		return false;
 	}
 
+	char GetType() {
+		return type;
+	}
+
+	bool operator ==(const UID &right) {
+		if (type == right.type && id == right.type)
+			return true;
+		return false;
+	}
+
 	std::string toString() {
 		return type + "." + id;
 	}
@@ -59,7 +69,7 @@ private:
 			id = oth_ctr++;
 			break;
 		default:
-			Managers::ExceptionManager::logError("Unknown UID type: " + uid_type);
+			ExceptionManager::logError("Unknown UID type: " + uid_type);
 			break;
 		}
 	}

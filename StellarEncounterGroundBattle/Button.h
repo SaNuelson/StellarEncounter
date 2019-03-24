@@ -1,4 +1,6 @@
-#pragma once
+# ifndef SE_BTN
+# define SE_BTN
+
 #include "stdlibs.h"
 #include "ResourceManager.h"
 #include "Constants.h"
@@ -26,3 +28,5 @@ public:
 	static void GenerateButtonStack(SDL_Renderer*ren, SDL_Rect &srcpos, int offset, bool horizontally, std::vector<std::string> &captions, std::vector<Button> &dst);
 
 };
+
+#endif
