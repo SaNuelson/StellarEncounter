@@ -69,8 +69,20 @@ int main() {
 	BoxTileMap tilemap;
 	tilemap.Init(level1boxtilemap, xTileSize, xTileSize);
 
-	Entity player = Entity::GetDefault(ren);
-	
+	Entity ent(ren, true);
+	ent.info = InfoComponent(&ent, "Hero", "Hero description...");
+	ent.health = HealthComponent(&ent, 200);
+	ent.shield = ShieldComponent(&ent, 200);
+	ent.stat = StatComponent(&ent);
+	ent.equip = EquipComponent(&ent);
+	SDL_Rect rect;
+	rect.x = 300;
+	rect.y = 300;
+	rect.w = 100;
+	rect.h = 100;
+	ent.transform = TransformComponent(&ent, &tilemap, 2, 5, 20);
+	ent.render = RenderComponent(&ent, "Graphics/Hero/");
+	tilemap.AddEntity(ent);
 
 	int currentUnit = 0;
 
@@ -84,18 +96,17 @@ int main() {
 		// Handle Inputs
 		while (SDL_PollEvent(&e)) {
 
-			// TODO resolve input
-
 			tilemap.ResolveInput(e);
 
 			if (e.type == SDL_QUIT)
 				quit = true;
 		}
 
+		tilemap.OnUpdate(delta);
+
 		// Render Screen
 		SDL_RenderClear(ren);
 		tilemap.OnRender(ren);
-		player.OnRender();
 		SDL_RenderPresent(ren);
 
 	}

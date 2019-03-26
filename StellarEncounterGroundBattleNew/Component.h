@@ -1,10 +1,11 @@
 #pragma once
 
 #include "stdlib.h"
-#include "Entity.h"
 #include "Constants.h"
 
+
 class Entity;
+class BoxTileMap;
 
 class Component
 {
@@ -20,21 +21,13 @@ class HealthComponent : Component {
 
 public:
 
+	HealthComponent() {};
 	HealthComponent(Entity* ent, int HP) : owner(ent), CurHP(HP), MaxHP(HP) {};
 	~HealthComponent() = default;
 
-	void Damage(int amount) {
-		CurHP -= amount;
-		if (CurHP < 0) {
-			CurHP = 0;
-			// statcomponent -> dead
-		}
-	}
+	void Damage(int amount);
 
-	void Heal(int amount) {
-		CurHP += amount;
-		CurHP = std::min(CurHP, MaxHP);
-	}
+	void Heal(int amount);
 
 private:
 
@@ -47,7 +40,8 @@ private:
 class InfoComponent : Component {
 public:
 
-	InfoComponent(Entity* ent) : owner(ent) {};
+	InfoComponent() {};
+	InfoComponent(Entity* ent, std::string Name, std::string Desc) : owner(ent), name(Name), desc(Desc) {};
 
 	std::string name;
 	std::string desc;
@@ -58,19 +52,12 @@ public:
 class ShieldComponent : Component {
 public:
 
+	ShieldComponent() {};
 	ShieldComponent(Entity* ent, int SP) : owner(ent), MaxSP(SP), CurSP(SP) {};
 
-	void Damage(int amount) {
-		if (amount > CurSP) {
-			int surp = amount - CurSP;
-			CurSP = 0;
-			owner->health->Damage(surp);
-		}
-	}
+	void Damage(int amount);
 
-	void Fix(int amount) {
-		CurSP = std::min(CurSP + amount, MaxSP);
-	}
+	void Fix(int amount);
 
 private:
 
@@ -83,6 +70,7 @@ private:
 class StatComponent : Component {
 public:
 
+	StatComponent() {};
 	StatComponent(Entity* ent) : owner(ent), isAlive(true) {};
 
 private:
@@ -94,6 +82,8 @@ private:
 
 class EquipComponent : Component {
 public:
+
+	EquipComponent() {};
 	EquipComponent(Entity* ent) : owner(ent) {};
 	// EquipComponent(Race race) { race.GetAvailableEquip() };
 
@@ -106,29 +96,40 @@ private:
 class TransformComponent : Component {
 public:
 
-	TransformComponent(Entity* ent, SDL_Rect &start_pos, int speed) : owner(ent), position(start_pos), speed(speed) {};
+	TransformComponent() {};
+	TransformComponent(Entity* owner, BoxTileMap* tilemap, int tx, int ty, int speed);
 
-	SDL_Rect position;
+	SDL_Rect* GetPosition();
+	void MoveTo(SDL_Point &dst);
+	void Move(SDL_Point movevec);
+	void OnUpdate(double delta);
+
 	int speed;
+	SDL_Point currentTile;
+	SDL_Point destTile;
+	SDL_Point dest;
+	SDL_Point velocity;
+	bool moving = false;
+	SDL_Rect position;
 
 private:
 
 	Entity* owner;
+	BoxTileMap* tilemap;
 
 };
 
 class RenderComponent : Component {
 public:
 
+	RenderComponent() {};
 	RenderComponent(Entity* ent, std::string folderPath) : owner(ent) { Load(folderPath); }
 
-	void Load(std::string folderPath) {
+	void Load(std::string folderPath);
 
-	}
+	SDL_Texture* GetTexture();
 
-	void OnRender(SDL_Renderer* ren) {
-		SDL_RenderCopy(ren, textures[currentTex], nullptr, &owner->transform->position);
-	}
+	void OnRender(SDL_Renderer* ren);
 
 private:
 

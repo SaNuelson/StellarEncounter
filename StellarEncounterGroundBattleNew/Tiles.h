@@ -2,6 +2,7 @@
 #include "stdlib.h"
 #include "ResourceManager.h"
 #include "Constants.h"
+#include "Entity.h"
 
 class TileMap
 {
@@ -103,6 +104,7 @@ public:
 
 	~BoxTileMap() {};
 
+	// set up tilemap from source
 	void Init(std::string source, int x, int y) {
 		start_pt.x = x;
 		start_pt.y = y;
@@ -121,13 +123,16 @@ public:
 		}
 	}
 
-	SDL_Point GetCoords(int &x, int &y) {
+	SDL_Point GetCoords(int &tx, int &ty) {
 		SDL_Point pt;
-		if (x < 0 || y < 0 || x >= tileLayout.size() || y >= tileLayout[0].size())
+		pt.x = -1;
+		pt.y = -1;
+		if (tx < 0 || ty < 0 || tx >= tileLayout.size() || ty >= tileLayout[0].size())
 			return pt;
 		else {
-			pt.x = start_pt.x + x * boxTileSize;
-			pt.y = start_pt.y + y * boxTileSize;
+			pt.x = start_pt.x + tx * boxTileSize;
+			pt.y = start_pt.y + ty * boxTileSize;
+			return pt;
 		}
 	}
 
@@ -137,11 +142,35 @@ public:
 
 		yt = (y - start_pt.y) / boxTileSize;
 		xt = (x - start_pt.x) / boxTileSize;
-		std::cout << "( " << x << " ; " << y << " ) -> [ " << xt << " ; " << yt << " ]" << std::endl;
+		//std::cout << "( " << x << " ; " << y << " ) -> [ " << xt << " ; " << yt << " ]" << std::endl;
 		if (xt < 0 || yt < 0 || yt >= tileLayout.size() || xt >= tileLayout[yt].size())
 			hover = false;
 		else
 			hover = true;
+
+		if (e.type == SDL_MOUSEBUTTONDOWN) {
+			// move active unit TODO passing center of tile
+			SDL_Point p;
+			p.x = xt;
+			p.y = yt;
+			entities[activeUnit].transform.Move(GetMoveVec(entities[activeUnit].transform.currentTile, p));
+		}
+
+	}
+
+	SDL_Point GetMoveVec(SDL_Point tilefrom, SDL_Point tileto) {
+		SDL_Point vec;
+		vec.x = (tileto.x - tilefrom.x)*boxTileSize;
+		vec.y = (tileto.y - tilefrom.y)*boxTileSize;
+		return vec;
+	}
+
+	void OnUpdate(double delta) {
+		for (auto &ent : entities) {
+			ent.OnUpdate(delta);
+		}
+
+		std::cout << "After update " << entities[0].transform.position.x << entities[0].transform.position.y << std::endl;
 
 	}
 
@@ -169,6 +198,21 @@ public:
 			SDL_RenderCopy(ren, hoverTileTex, nullptr, &tile_rect);
 		}
 
+		std::cout << "Before render " << entities[0].transform.position.x << entities[0].transform.position.y << std::endl;
+
+
+		for (auto &ent : entities) {
+			ent.render.OnRender(ren);
+		}
+
+	}
+
+	void AddEntity(Entity ent) {
+		entities.push_back(ent);
+		SDL_Point p;
+		p.x = ent.transform.currentTile.x;
+		p.y = ent.transform.currentTile.y;
+		entityPositions[&ent] = p;
 	}
 
 private:
@@ -178,6 +222,9 @@ private:
 	std::vector<std::vector<int>> tileLayout;
 	std::map<int, SDL_Texture*> tileCodeMap;
 
+	std::map<Entity*, SDL_Point> entityPositions;
+	std::vector<Entity> entities;
+	int activeUnit = 0;
 
 	SDL_Point start_pt;
 
