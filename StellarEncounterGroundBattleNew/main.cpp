@@ -1,7 +1,6 @@
 #include "stdlib.h"
 #include "ResourceManager.h"
 #include "Tiles.h"
-#include "Entity.h"
 
 using namespace std;
 
@@ -68,21 +67,7 @@ int main() {
 	bool PlayerTurn = true;
 	BoxTileMap tilemap;
 	tilemap.Init(level1boxtilemap, xTileSize, xTileSize);
-
-	Entity ent(ren, true);
-	ent.info = InfoComponent(&ent, "Hero", "Hero description...");
-	ent.health = HealthComponent(&ent, 200);
-	ent.shield = ShieldComponent(&ent, 200);
-	ent.stat = StatComponent(&ent);
-	ent.equip = EquipComponent(&ent);
-	SDL_Rect rect;
-	rect.x = 300;
-	rect.y = 300;
-	rect.w = 100;
-	rect.h = 100;
-	ent.transform = TransformComponent(&ent, &tilemap, 2, 5, 20);
-	ent.render = RenderComponent(&ent, "Graphics/Hero/");
-	tilemap.AddEntity(ent);
+	tilemap.InitDemo();
 
 	int currentUnit = 0;
 

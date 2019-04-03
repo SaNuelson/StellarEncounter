@@ -11,3 +11,4 @@
 #include <sstream>
 #include <bitset>
 #include <array>
+#include <stdexcept>

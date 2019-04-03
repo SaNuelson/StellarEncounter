@@ -3,18 +3,6 @@
 
 #include "stdlib.h"
 
-// Here is everything that didn't find it's place anywhere else. Don't know where that thing is? Most likely somewhere here. Adventure Time!
-enum ComponentType {
-	NONE = -1,
-	HEALTH = 0,
-	SHIELD = 1,
-	STAT = 2,
-	EQUIP = 3,
-	POS = 4,
-	RENDER = 5,
-	INFO = 6
-};
-
 static int xTileSize = 80;
 static int yTileSize = 64;
 static int yTileBoxSize = 32;
@@ -148,8 +136,5 @@ static std::string GetBoxTileCodePath(int tileCode) {
 		return "";
 	}
 }
-
-const int8_t BuffStates = 8;
-const std::bitset<BuffStates> FlagSet;
 
 #endif

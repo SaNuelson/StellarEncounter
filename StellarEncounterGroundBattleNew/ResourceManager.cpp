@@ -23,6 +23,21 @@ SDL_Texture * ResourceManager::LoadTexture(std::string path)
 	return tex;
 
 }
+SDL_Texture * ResourceManager::LoadTexture(std::string srcpath, Uint8 alpha)
+{
+	std::string path = srcpath + "#" + std::to_string(alpha);
+
+	if (TextureMap.find(path) != TextureMap.end())
+		return TextureMap[path];
+
+	SDL_Texture * tex = IMG_LoadTexture(ren, srcpath.c_str());
+	if (tex == nullptr) {
+		std::cout << "IMG_LoadTexture Error on path: " << path << std::endl;
+	}
+	SDL_SetTextureAlphaMod(tex, alpha);
+	TextureMap[path] = tex;
+	return tex;
+}
 SDL_Texture * ResourceManager::LoadTextureWithCaption(std::string path, std::string caption)
 {
 

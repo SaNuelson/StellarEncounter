@@ -9,6 +9,8 @@ public:
 
 	static SDL_Texture * LoadTexture(std::string path);
 
+	static SDL_Texture * LoadTexture(std::string path, Uint8 alpha);
+
 	static SDL_Texture * LoadTextureWithCaption(std::string path, std::string caption);
 
 	static SDL_Rect CreateRectangle(int x, int y, int w, int h); // for quick creation
