@@ -84,6 +84,7 @@
     <Link>
       <AdditionalDependencies>SDL2.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2main.lib;SDL2test.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
+      <AdditionalOptions>/FORCE:MULTIPLE %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -127,6 +128,7 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="Tile.cpp" />
     <ClCompile Include="Tiles.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -136,7 +138,10 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="stdlib.h" />
+    <ClInclude Include="Tile.h" />
     <ClInclude Include="Tiles.h" />
+    <ClInclude Include="UIHolder.h" />
+    <ClInclude Include="UnitInfoBlock.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="StellarEncounterGroundBattleNew.rc" />

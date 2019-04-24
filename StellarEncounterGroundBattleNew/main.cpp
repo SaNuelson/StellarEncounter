@@ -1,4 +1,5 @@
 #include "stdlib.h"
+#include "Constants.h"
 #include "ResourceManager.h"
 #include "Tiles.h"
 
@@ -8,8 +9,6 @@ SDL_Window * win = nullptr;
 SDL_Renderer * ren = nullptr;
 bool quit = false;
 
-int scr_height = 600;
-int scr_width = 800;
 
 void Quit() {
 	quit = true;
@@ -61,7 +60,10 @@ int main() {
 	Uint64 t_last = 0;
 	double delta = 0;
 
+	// necessary initializations because... reasons
 	ResourceManager::Init(ren);
+	BoxTile::Init();
+
 	SDL_Event e;
 
 	bool PlayerTurn = true;

@@ -6,24 +6,33 @@ using small = uint8_t;
 // speed - in milliseconds
 
 class BoxTileMap;
+class BoxTile;
 
 class GameObject {
 public:
 	~GameObject() {}
+
+	virtual bool isEnemy();
+
+	virtual std::string toString();
 };
 
-class Unit : GameObject {
+class Unit : public GameObject {
 public:
 	Unit() {};
-	Unit(big HP, big SP, small AP, SDL_Point tilePosition, std::string texSrc, BoxTileMap* tilemap, bool playerTeam);
+	Unit(big HP, big SP, small AP, BoxTile* tile, std::string texSrc, BoxTileMap* tilemap, bool playerTeam);
 
 	void LoadTextures(std::string texSrc);
 
 	void OnUpdate(double delta);
 
-	void Move(SDL_Point destTile);
+	void Move(BoxTile* tile);
 
 	void OnRender();
+
+	bool isEnemy() override;
+
+	std::string toString() override;
 
 //private:
 
@@ -41,9 +50,8 @@ public:
 	small MaxAP = 5;
 	small CurAP = 5;
 	
-	SDL_Point currTile;
-	
 	SDL_Rect position;
+	BoxTile* tile;
 
 	// Equip
 	// Equipment equip;
@@ -57,11 +65,13 @@ public:
 
 };
 
-class Item : GameObject {
+class Item : public GameObject {
 
 public:
 
+	bool isEnemy() override;
 
+	std::string toString() override;
 
 private:
 

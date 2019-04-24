@@ -3,6 +3,9 @@
 
 #include "stdlib.h"
 
+int scr_height = 600;
+int scr_width = 800;
+
 static int xTileSize = 80;
 static int yTileSize = 64;
 static int yTileBoxSize = 32;
@@ -11,6 +14,13 @@ static int boxTileSize = 64;
 
 static int xMargin = 50;
 static int yMargin = 50;
+
+typedef std::bitset<8> TileRenderFlag;
+const TileRenderFlag TILE_DEFAULT = 1;
+const TileRenderFlag TILE_HOVER =	2;
+const TileRenderFlag TILE_MOVE =	4;
+const TileRenderFlag TILE_RUN =		8;
+const TileRenderFlag TILE_ATTACK =	16;
 
 // Red, Green, Blue, Purple, Yellow, Cyan, Grey, White, Brown, Pink, Black
 static SDL_Color GetColor(std::string color_name) {
