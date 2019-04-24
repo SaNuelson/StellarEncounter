@@ -3,8 +3,8 @@
 
 #include "stdlib.h"
 
-int scr_height = 600;
-int scr_width = 800;
+int scr_height = 768;
+int scr_width = 1280;
 
 static int xTileSize = 80;
 static int yTileSize = 64;
@@ -21,6 +21,22 @@ const TileRenderFlag TILE_HOVER =	2;
 const TileRenderFlag TILE_MOVE =	4;
 const TileRenderFlag TILE_RUN =		8;
 const TileRenderFlag TILE_ATTACK =	16;
+
+
+
+/// SECTION FOR EVENT RETURN CODES (Sint32)
+using EventCode = Sint32;
+
+
+
+
+
+
+
+
+
+
+
 
 // Red, Green, Blue, Purple, Yellow, Cyan, Grey, White, Brown, Pink, Black
 static SDL_Color GetColor(std::string color_name) {
