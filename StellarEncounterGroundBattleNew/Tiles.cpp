@@ -8,13 +8,14 @@ SDL_Texture* BoxTile::tex_attack = nullptr;
 // set up demo units
 
 void BoxTileMap::InitDemo() {
-	units.push_back(ResourceManager::CreateUnit(100, 100, 5, &tiles[1][2], "Graphics/Hero/idle1.png", this, true));
-	units.push_back(ResourceManager::CreateUnit(100, 100, 5, &tiles[4][3], "Graphics/Enemy1/idle1.png", this, false));
-	units.push_back(ResourceManager::CreateUnit(100, 100, 5, &tiles[4][4], "Graphics/Enemy2/idle1.png", this, false));
-	units.push_back(ResourceManager::CreateUnit(100, 100, 5, &tiles[4][2], "Graphics/Enemy3/idle1.png", this, false));
-
-	items.push_back(ResourceManager::CreateItem("Graphics/box.png",&tiles[3][4], this, false));
-	items.push_back(ResourceManager::CreateItem("Graphics/box.png", &tiles[5][2], this, false));
+	units.push_back(Unit(100, 100, 5, &tiles[1][2], "Graphics/Hero/idle1.png", this, true));
+	units[0].tile->occ = &(units[0]); bool u1 = units[0].tile->occ->isEnemy();
+	units.push_back(Unit(100, 100, 5, &tiles[4][3], "Graphics/Enemy1/idle1.png", this, false));
+	units[1].tile->occ = &(units[1]); bool u2 = units[1].tile->occ->isEnemy();
+	units.push_back(Unit(100, 100, 5, &tiles[4][4], "Graphics/Enemy2/idle1.png", this, false));
+	units[2].tile->occ = &(units[2]); bool u3 = units[2].tile->occ->isEnemy();
+	units.push_back(Unit(100, 100, 5, &tiles[4][2], "Graphics/Enemy3/idle1.png", this, false));
+	units[3].tile->occ = &(units[3]); bool u4 = units[3].tile->occ->isEnemy();
 }
 
 // set up tilemap from source
@@ -54,6 +55,8 @@ void BoxTileMap::ResolveInput(SDL_Event & e) {
 
 	yt = (y - start_pt.y) / boxTileSize;
 	xt = (x - start_pt.x) / boxTileSize;
+	//std::cout << "( " << x << " ; " << y << " ) -> [ " << xt << " ; " << yt << " ]" << std::endl;
+	std::cout << tiles.size() << "x" << tiles[0].size() << " <- " << xt << "x" << yt << std::endl;
 	if (xt < 0 || yt < 0 || yt >= tiles.size() || xt >= tiles[yt].size())
 		hover = false;
 	else
@@ -61,7 +64,7 @@ void BoxTileMap::ResolveInput(SDL_Event & e) {
 
 	if (e.type == SDL_MOUSEBUTTONDOWN && hover && tiles[yt][xt].occ == nullptr) {
 		// move active unit TODO passing center of tile
-		units[activeUnit]->Move(&tiles[yt][xt]);
+		units[activeUnit].Move(&tiles[yt][xt]);
 	}
 
 }
@@ -75,20 +78,21 @@ int BoxTileMap::GetDistance(int & tx1, int & tx2, int & ty1, int & ty2) {
 }
 
 int BoxTileMap::GetDistance(BoxTile * t1, BoxTile * t2) {
+	std::cout << "GetDistance: " << (abs(t1->pos.x - t2->pos.x) + abs(t1->pos.y - t2->pos.y)) / boxTileSize << std::endl;
 	return (abs(t1->pos.x - t2->pos.x) + abs(t1->pos.y - t2->pos.y)) / boxTileSize;
 }
 
 bool BoxTileMap::CanMoveHere(BoxTile * tile) {
-	return GetDistance(units[activeUnit]->tile, tile) <= units[activeUnit]->CurAP;
+	return GetDistance(units[activeUnit].tile, tile) <= units[activeUnit].CurAP;
 }
 
 void BoxTileMap::OnUpdate(double delta) {
 
 	for (auto &unit : units)
-		unit->OnUpdate(delta);
+		unit.OnUpdate(delta);
 
 	// if any change on field occured, change states of tiles accordingly
-	if (true) { //stateChange
+	if (false) { //stateChange
 
 		for (int x = 0; x < tiles[0].size(); x++) {
 			for (int y = 0; y < tiles.size(); y++) {
@@ -102,20 +106,27 @@ void BoxTileMap::OnUpdate(double delta) {
 
 void BoxTileMap::OnRender(SDL_Renderer * ren) {
 
+	for (auto line : tiles) {
+
+		for (auto tile : line) {
+			std::cout << tile.occ << "   ";
+		}
+		std::cout << std::endl;
+	}
 	// if current unit is held by player
 	bool renderMovable = true; // units[activeUnit].isPlayer;
 
 	// render tilemap
-	/*
 	for (auto &line: tiles) {
 		for (auto &tile : line) {
 
-			tile.SetState(TILE_DEFAULT);
-
-			std::cout << tile.occ << std::endl;
+			if (tile.occ == nullptr)
+				std::cout << "Current Tile Has No Occupant." << std::endl;
+			else
+				std::cout << tile.occ->toString();
 
 			// render default with movable
-			if (renderMovable && GetDistance(units[activeUnit]->tile, &tile) <= units[activeUnit]->CurAP) {
+			if (renderMovable && GetDistance(units[activeUnit].tile, &tile) <= units[activeUnit].CurAP) {
 				if(tile.occ == nullptr) {
 					std::cout << "Sending TILE_DEFAULT " << TILE_DEFAULT << "\n       TILE_MOVE " << TILE_MOVE << std::endl;
 					tile.SetState(TILE_MOVE);
@@ -132,30 +143,22 @@ void BoxTileMap::OnRender(SDL_Renderer * ren) {
 
 		}
 	}
-	*/
 
 	// render hover tile
 	if (hover) {
+		std::cout << "Sending TILE_HOVER " << TILE_HOVER << std::endl;
 		tiles[yt][xt].SetState(TILE_HOVER);
+		// SDL_RenderCopy(ren, hoverTileTex, nullptr, &tiles[yt][xt].pos);
 	}
 
-	// render tiles
 	for (auto &line : tiles)
 		for (auto &tile : line)
 			tile.OnRender();
 
 	// render units
 	for (auto &unit : units)
-		unit->OnRender();
+		unit.OnRender();
 
-	for (auto &item : items)
-		item->OnRender();
-
-}
-
-Unit * BoxTileMap::GetCurrentUnit()
-{
-	return units[activeUnit];
 }
 
 bool BoxTileMap::Lock(void * locker) {
@@ -181,11 +184,5 @@ bool BoxTileMap::Unlock(void * locker) {
 bool BoxTileMap::IsPlayerTurn() {
 	if (units.empty())
 		return false;
-	return units[activeUnit]->isPlayer;
-}
-
-void BoxTileMap::EndTurn()
-{
-	//TODO
-	units[activeUnit]->CurAP = units[activeUnit]->MaxAP;
+	return units[activeUnit].isPlayer;
 }

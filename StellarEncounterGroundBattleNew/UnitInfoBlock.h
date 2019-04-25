@@ -8,77 +8,42 @@
 class UnitInfoBlock {
 public:
 
-	UnitInfoBlock() {};
 	UnitInfoBlock(BoxTileMap* tilemap) {
 		ren = ResourceManager::ren;
 		this->tilemap = tilemap;
 		
 		block_tex = ResourceManager::LoadTexture("Graphics/unitinfoblockrect.png");
-		block_rect.h = 150;
-		block_rect.w = 400;
+		SDL_QueryTexture(block_tex, nullptr, nullptr, &block_rect.w, &block_rect.h);
 		block_rect.x = 0;
 		block_rect.y = scr_height - block_rect.h;
 
-		portrait_tex = ResourceManager::LoadTexture("Graphics/unitinfoblockportrait.png");
-		portrait_rect.x = block_rect.x + 20;
-		portrait_rect.y = block_rect.y + 20;
-		portrait_rect.h = 110;
-		portrait_rect.w = 110;
-
-		hp_tex = ResourceManager::LoadTexture("Graphics/unitinfoblockhpbar.png");
-		hp_rect.x = block_rect.x + 165;
-		hp_rect.y = block_rect.y + 15;
-		hp_rect.h = 30;
-		hp_rect.w = 220;
+		hp_tex = ResourceManager::LoadTexture("Graphics/unitinfohpbar.png");
+		SDL_QueryTexture(hp_tex, nullptr, nullptr, &hp_rect.w, &hp_rect.h);
+		hp_rect.x = block_rect.x + 3 * block_rect.w / 4 - hp_rect.w / 2;
+		hp_rect.y = block_rect.y + block_rect.h / 4 - hp_rect.h / 2;
 		curr_hp_rect = hp_rect;
 
-		sp_tex = ResourceManager::LoadTexture("Graphics/unitinfoblockspbar.png");
+		sp_tex = ResourceManager::LoadTexture("Graphic/unitinfospbar.png");
+		SDL_QueryTexture(sp_tex, nullptr, nullptr, &sp_rect.w, &sp_rect.h);
 		sp_rect.x = hp_rect.x;
-		sp_rect.y = hp_rect.y + 45;
-		sp_rect.h = 30;
-		sp_rect.w = hp_rect.w;
+		sp_rect.y = block_rect.y + 3 * block_rect.h / 4 - hp_rect.h / 2;
 		curr_sp_rect = sp_rect;
 
-		ap_tex = ResourceManager::LoadTexture("Graphics/unitinfoblockapbar.png");
-		ap_rect.x = hp_rect.x;
-		ap_rect.y = hp_rect.y + 90;
-		ap_rect.h = 30;
-		ap_rect.w = hp_rect.w;
-		curr_ap_rect = ap_rect;
-
-		emptybar_tex = ResourceManager::LoadTexture("Graphics/unitinfoblockemptybar.png");
-		max_bar_w = curr_ap_rect.w;
-
-
+		portrait_tex = ResourceManager::LoadTexture("Graphics/unitinfoportrait.png");
+		SDL_QueryTexture(portrait_tex, nullptr, nullptr, &portrait_rect.w, &portrait_rect.h);
+		portrait_rect.x = block_rect.x + block_rect.w / 4 - portrait_rect.w / 4;
+		portrait_rect.y = block_rect.y + block_rect.h / 2 - portrait_rect.h / 2;
 	};
 	~UnitInfoBlock() {};
 
 	void OnUpdate(double delta) {
-		// if change
-
-		currentUnit = tilemap->GetCurrentUnit();
-
-		curr_hp_rect.w = max_bar_w * currentUnit->CurHP / currentUnit->MaxHP;
-		curr_ap_rect.w = max_bar_w * currentUnit->CurAP / currentUnit->MaxAP;
-		curr_sp_rect.w = max_bar_w * currentUnit->CurSP / currentUnit->MaxSP;
-
+		
 	};
 
 	void OnRender() {
 		SDL_RenderCopy(ren, block_tex, nullptr, &block_rect);
-		
-		SDL_RenderCopy(ren, emptybar_tex, nullptr, &hp_rect);
-		SDL_RenderCopy(ren, hp_tex, nullptr, &curr_hp_rect);
-		ResourceManager::RenderText(std::to_string(currentUnit->CurHP), hp_rect);
-
-		SDL_RenderCopy(ren, emptybar_tex, nullptr, &sp_rect);
-		SDL_RenderCopy(ren, sp_tex, nullptr, &curr_sp_rect);
-		ResourceManager::RenderText(std::to_string(currentUnit->CurSP), sp_rect);
-		
-		SDL_RenderCopy(ren, emptybar_tex, nullptr, &ap_rect);
-		SDL_RenderCopy(ren, ap_tex, nullptr, &curr_ap_rect);
-		ResourceManager::RenderText(std::to_string(currentUnit->CurAP), ap_rect);
-		
+		SDL_RenderCopy(ren, hp_tex, &curr_hp_rect, &hp_rect);
+		SDL_RenderCopy(ren, sp_tex, &curr_sp_rect, &sp_rect);
 		SDL_RenderCopy(ren, portrait_tex, nullptr, &portrait_rect);
 	}
 
@@ -105,12 +70,5 @@ private:
 	SDL_Texture* sp_tex;
 	SDL_Rect sp_rect;
 	SDL_Rect curr_sp_rect;
-
-	SDL_Texture* ap_tex;
-	SDL_Rect ap_rect;
-	SDL_Rect curr_ap_rect;
-
-	SDL_Texture* emptybar_tex;
-	int max_bar_w;
 
 };

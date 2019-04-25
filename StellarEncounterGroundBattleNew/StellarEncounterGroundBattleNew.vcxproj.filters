@@ -77,12 +77,6 @@
     <ClInclude Include="Tile.h">
       <Filter>Header Files\GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="UnitActionBlock.h">
-      <Filter>Header Files\UIElements</Filter>
-    </ClInclude>
-    <ClInclude Include="Button.h">
-      <Filter>Header Files\UIElements</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="StellarEncounterGroundBattleNew.rc">

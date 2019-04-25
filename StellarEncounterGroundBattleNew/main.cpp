@@ -2,7 +2,6 @@
 #include "Constants.h"
 #include "ResourceManager.h"
 #include "Tiles.h"
-#include "UIHolder.h"
 
 using namespace std;
 
@@ -69,7 +68,6 @@ int main() {
 
 	bool PlayerTurn = true;
 	BoxTileMap tilemap;
-	UIHolder uiholder(&tilemap);
 	tilemap.Init(level1boxtilemap, xTileSize, xTileSize);
 	tilemap.InitDemo();
 
@@ -89,22 +87,16 @@ int main() {
 
 			if (e.type == SDL_QUIT)
 				quit = true;
-			else if (e.key.keysym.sym == SDLK_SPACE)
-				tilemap.EndTurn();
 		}
 
 		tilemap.OnUpdate(delta);
-		uiholder.OnUpdate(delta);
 
 		// Render Screen
 		SDL_RenderClear(ren);
 		tilemap.OnRender(ren);
-		uiholder.OnRender();
 		SDL_RenderPresent(ren);
 
 	}
-
-
 
 	TTF_Quit();
 	IMG_Quit();

@@ -4,7 +4,6 @@ SDL_Renderer * ResourceManager::ren = nullptr;
 bool ResourceManager::initialized = false;
 std::map<std::string, SDL_Texture*> ResourceManager::TextureMap;
 TTF_Font * ResourceManager::default_font;
-std::vector<std::unique_ptr<GameObject>> ResourceManager::GameObjects;
 
 void ResourceManager::Init(SDL_Renderer * renderer) {
 	ren = renderer; initialized = true;
@@ -39,21 +38,6 @@ SDL_Texture * ResourceManager::LoadTexture(std::string srcpath, Uint8 alpha)
 	TextureMap[path] = tex;
 	return tex;
 }
-
-SDL_Texture * ResourceManager::LoadCaption(std::string caption) 
-{
-	if (TextureMap.find("@" + caption) != TextureMap.end())
-		return TextureMap["@" + caption];
-
-	SDL_Color color; color.r = 0; color.g = 0; color.b = 0; color.a = 255;
-	SDL_Surface * caption_surf = TTF_RenderText_Blended(default_font, caption.c_str(), color);
-	SDL_Texture * caption_tex = SDL_CreateTextureFromSurface(ren, caption_surf);
-
-	TextureMap["@" + caption] = caption_tex;
-	return caption_tex;
-
-}
-
 SDL_Texture * ResourceManager::LoadTextureWithCaption(std::string path, std::string caption)
 {
 
@@ -106,27 +90,6 @@ SDL_Texture * ResourceManager::LoadTextureWithCaption(std::string path, std::str
 
 }
 
-void ResourceManager::RenderText(std::string caption, SDL_Rect & dst_rect)
-{
-
-	// TODO: Flags -> text_fit, text_stretch, text_align...
-
-	SDL_Texture* tex = LoadCaption(caption);
-	SDL_Rect min_rect;
-	SDL_QueryTexture(tex, nullptr, nullptr, &min_rect.w, &min_rect.h);
-	if (min_rect.h > dst_rect.h || min_rect.w > dst_rect.w) { // text is squished into the dst_rect
-		std::cout << "ResourceManager::RenderText Warning, dst_rect is smaller than text_rect, text might be distrorted.\n" <<
-			"    text_rect [w,h] = [" << min_rect.w << ", " << min_rect.h << "], dst_rect= [" << dst_rect.w << ", " << dst_rect.h << "]\n";
-		SDL_RenderCopy(ren, tex, nullptr, &dst_rect);
-	}
-	else { // center the text into larger area
-		SDL_Rect center_rect;
-		min_rect.y = dst_rect.y + (dst_rect.h - min_rect.h) / 2;
-		min_rect.x = dst_rect.x + (dst_rect.w - min_rect.w) / 2;
-		SDL_RenderCopy(ren, tex, nullptr, &min_rect);
-	}
-}
-
 SDL_Rect ResourceManager::CreateRectangle(int x, int y, int w, int h)
 {
 	SDL_Rect rect;
@@ -144,15 +107,4 @@ void ResourceManager::FreeTextures()
 	}
 	TextureMap.clear();
 }
-
-Unit * ResourceManager::CreateUnit(big HP, big SP, small AP, BoxTile * tile, std::string texSrc, BoxTileMap * tilemap, bool playerTeam)
-{
-	GameObjects.push_back(std::make_unique<Unit>(HP, SP, AP, tile, texSrc, tilemap, playerTeam));
-	return (Unit*) GameObjects[GameObjects.size() - 1]->getPtr();
-}
-
-Item * ResourceManager::CreateItem(std::string texSrc, BoxTile* tile, BoxTileMap * tilemap, bool usable)
-{
-	GameObjects.push_back(std::make_unique<Item>(texSrc, tile, tilemap, usable));
-	return (Item*)GameObjects[GameObjects.size() - 1]->getPtr();
-}
+;
