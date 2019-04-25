@@ -1,13 +1,16 @@
 #include "ResourceManager.h"
+#include "Unit.h"
+#include "Item.h"
 
 SDL_Renderer * ResourceManager::ren = nullptr;
+SDL_Window * ResourceManager::win = nullptr;
 bool ResourceManager::initialized = false;
 std::map<std::string, SDL_Texture*> ResourceManager::TextureMap;
 TTF_Font * ResourceManager::default_font;
 std::vector<std::unique_ptr<GameObject>> ResourceManager::GameObjects;
 
-void ResourceManager::Init(SDL_Renderer * renderer) {
-	ren = renderer; initialized = true;
+void ResourceManager::Init(SDL_Renderer * renderer, SDL_Window * window) {
+	ren = renderer; win = window; initialized = true;
 	default_font = TTF_OpenFont("Resources/default_font.ttf", 20);
 }
 SDL_Texture * ResourceManager::LoadTexture(std::string path)

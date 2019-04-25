@@ -2,8 +2,10 @@
 #include "stdlib.h"
 #include "ResourceManager.h"
 #include "Constants.h"
-#include "GameObject.h"
 #include "Tile.h"
+#include "Scene.h"
+
+class Unit;
 
 class TileMap
 {
@@ -100,63 +102,42 @@ class BoxTileMap
 {
 public:
 
-	BoxTileMap() = default;
+	BoxTileMap(Scene * scene) : scene(scene) {};
 
 	~BoxTileMap() {};
-
-	// set up demo units
-	void InitDemo();
 
 	// set up tilemap from source
 	void Init(std::string source, int x, int y);
 
 	void ResolveInput(SDL_Event &e);
+	void OnUpdate(double delta);
+	void OnRender();
+
+	void DispatchEvent(EventCode ec);
+
+	bool IsInBounds(int& x, int& y);
+	bool IsMouseInBounds();
 
 	int GetDistance(SDL_Point &p1, SDL_Point &p2);
-
 	int GetDistance(int &tx1, int &tx2, int &ty1, int &ty2);
-
 	int GetDistance(BoxTile* t1, BoxTile* t2);
 
-	bool CanMoveHere(BoxTile* tile);
+	bool CanMoveHere(Unit* unit, BoxTile* tile);
 
-	void OnUpdate(double delta);
+//private:
 
-	void OnRender(SDL_Renderer * ren);
-
-	Unit* GetCurrentUnit();
-
-	bool Lock(void* locker);
-
-	bool Unlock(void* locker);
-
-	bool IsPlayerTurn();
-
-	void EndTurn();
-
-private:
-
-	// for now tile textures will be held in resourcemanager, tilemap will ask on render for these tiles, later they should be loaded once, then blitted on a uniform surface
+	Scene * scene;
 
 	std::vector<std::vector<BoxTile>> tiles;
-
-	std::vector<Unit*> units;
-	std::vector<Item*> items;
-
-	int activeUnit = 0;
 
 	SDL_Point start_pt;
 
 	SDL_Texture* hoverTileTex;
-	bool hover;
-	int xt, yt;
+	bool hover = false;
+	bool click = false;
+	int xt = -1, yt = -1, oxt = -1, oyt = -1; 
 
 	SDL_Texture* moveTileTex;
 	SDL_Texture* runTileTex;
-
-	bool lock = false; // lock game for animations and other stuff, only when unlocked can game continue
-	void* locker;
-
-	bool stateChange = true;
 
 };

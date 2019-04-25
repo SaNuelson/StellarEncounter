@@ -2,9 +2,49 @@
 #define SE_CONSTANTS
 
 #include "stdlib.h"
+#include "ResourceManager.h"
+
+// For Quicker Event Handling
+bool EventHandled;
+
+// Layout Constants
+// except scr_size (which should be resizable, all others will be based off of that
 
 int scr_height = 768;
 int scr_width = 1280;
+
+void UpdateWindowSize() {
+	SDL_GetWindowSize(ResourceManager::win, &scr_width, &scr_height);
+}
+
+SDL_Rect GetUnitInfoBlockRect() {
+	SDL_Rect r;
+	r.x = 0;
+	r.w = scr_width * 4 / 10;
+	r.y = scr_height * 8 / 10;
+	r.h = scr_height * 2 / 10;
+	return r;
+}
+
+SDL_Rect GetUnitActionBlockRect() {
+	SDL_Rect r;
+	r.x = scr_width * 4 / 10;
+	r.y = scr_height * 9 / 10;
+	r.w = scr_width * 6 / 10;
+	r.h = scr_height * 1 / 10;
+	return r;
+}
+
+SDL_Rect GetTilemapSize() {
+	SDL_Rect r;
+	r.x = scr_width * 1 / 20;
+	r.y = r.x;
+	r.w = scr_width * 18 / 20;
+	r.h = scr_height * 14 / 20;
+	return r;
+}
+
+// TileMap Constants
 
 static int xTileSize = 80;
 static int yTileSize = 64;
@@ -15,6 +55,9 @@ static int boxTileSize = 64;
 static int xMargin = 50;
 static int yMargin = 50;
 
+
+// Tile Constants
+
 typedef std::bitset<8> TileRenderFlag;
 const TileRenderFlag TILE_DEFAULT = 1;
 const TileRenderFlag TILE_HOVER =	2;
@@ -22,11 +65,10 @@ const TileRenderFlag TILE_MOVE =	4;
 const TileRenderFlag TILE_RUN =		8;
 const TileRenderFlag TILE_ATTACK =	16;
 
-
-
-/// SECTION FOR EVENT RETURN CODES (Sint32)
+// Return EventCodes Constants (Sint32)
 using EventCode = Sint32;
 
+const EventCode TileClick = 1;
 
 
 
@@ -37,6 +79,7 @@ using EventCode = Sint32;
 
 
 
+// ColorGetter
 
 // Red, Green, Blue, Purple, Yellow, Cyan, Grey, White, Brown, Pink, Black
 static SDL_Color GetColor(std::string color_name) {
@@ -96,6 +139,10 @@ static SDL_Color GetColor(std::string color_name) {
 	}
 	return color;
 }
+
+
+
+// Misc..........
 
 /*
 level string composition:

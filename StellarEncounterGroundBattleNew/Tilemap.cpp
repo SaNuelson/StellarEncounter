@@ -1,21 +1,10 @@
-#include "Tiles.h"
+#include "Tilemap.h"
+#include "Unit.h"
 
 SDL_Texture* BoxTile::tex_hover = nullptr;
 SDL_Texture* BoxTile::tex_move = nullptr;
 SDL_Texture* BoxTile::tex_run = nullptr;
 SDL_Texture* BoxTile::tex_attack = nullptr;
-
-// set up demo units
-
-void BoxTileMap::InitDemo() {
-	units.push_back(ResourceManager::CreateUnit(100, 100, 5, &tiles[1][2], "Graphics/Hero/idle1.png", this, true));
-	units.push_back(ResourceManager::CreateUnit(100, 100, 5, &tiles[4][3], "Graphics/Enemy1/idle1.png", this, false));
-	units.push_back(ResourceManager::CreateUnit(100, 100, 5, &tiles[4][4], "Graphics/Enemy2/idle1.png", this, false));
-	units.push_back(ResourceManager::CreateUnit(100, 100, 5, &tiles[4][2], "Graphics/Enemy3/idle1.png", this, false));
-
-	items.push_back(ResourceManager::CreateItem("Graphics/box.png",&tiles[3][4], this, false));
-	items.push_back(ResourceManager::CreateItem("Graphics/box.png", &tiles[5][2], this, false));
-}
 
 // set up tilemap from source
 
@@ -41,27 +30,25 @@ void BoxTileMap::Init(std::string source, int x, int y) {
 		pos.y += boxTileSize;
 		line_count++;
 	}
-	units.clear();
 }
 
 void BoxTileMap::ResolveInput(SDL_Event & e) {
-
-	if (lock)
-		return;
 
 	int x, y;
 	SDL_GetMouseState(&x, &y);
 
 	yt = (y - start_pt.y) / boxTileSize;
+	if (yt >= tiles.size())
+		yt--;
 	xt = (x - start_pt.x) / boxTileSize;
-	if (xt < 0 || yt < 0 || yt >= tiles.size() || xt >= tiles[yt].size())
-		hover = false;
-	else
-		hover = true;
+	if (xt >= tiles[0].size())
+		xt--;
 
-	if (e.type == SDL_MOUSEBUTTONDOWN && hover && tiles[yt][xt].occ == nullptr) {
-		// move active unit TODO passing center of tile
-		units[activeUnit]->Move(&tiles[yt][xt]);
+	hover = true;
+
+	if (e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_LEFT) {
+		click = true;
+		
 	}
 
 }
@@ -78,21 +65,18 @@ int BoxTileMap::GetDistance(BoxTile * t1, BoxTile * t2) {
 	return (abs(t1->pos.x - t2->pos.x) + abs(t1->pos.y - t2->pos.y)) / boxTileSize;
 }
 
-bool BoxTileMap::CanMoveHere(BoxTile * tile) {
-	return GetDistance(units[activeUnit]->tile, tile) <= units[activeUnit]->CurAP;
+bool BoxTileMap::CanMoveHere(Unit* unit, BoxTile * tile) {
+	return GetDistance(unit->tile, tile) <= unit->CurAP;
 }
 
 void BoxTileMap::OnUpdate(double delta) {
-
-	for (auto &unit : units)
-		unit->OnUpdate(delta);
 
 	// if any change on field occured, change states of tiles accordingly
 	if (true) { //stateChange
 
 		for (int x = 0; x < tiles[0].size(); x++) {
 			for (int y = 0; y < tiles.size(); y++) {
-				tiles[y][x].OnUpdate();
+				tiles[y][x].OnUpdate ();
 			}
 		}
 
@@ -100,7 +84,7 @@ void BoxTileMap::OnUpdate(double delta) {
 
 }
 
-void BoxTileMap::OnRender(SDL_Renderer * ren) {
+void BoxTileMap::OnRender() {
 
 	// if current unit is held by player
 	bool renderMovable = true; // units[activeUnit].isPlayer;
@@ -136,7 +120,11 @@ void BoxTileMap::OnRender(SDL_Renderer * ren) {
 
 	// render hover tile
 	if (hover) {
+		if (oxt != -1 && oyt != -1)
+			tiles[oyt][oxt].SetState(TILE_DEFAULT);
 		tiles[yt][xt].SetState(TILE_HOVER);
+		oxt = xt; oyt = yt;
+		hover = false;
 	}
 
 	// render tiles
@@ -144,48 +132,21 @@ void BoxTileMap::OnRender(SDL_Renderer * ren) {
 		for (auto &tile : line)
 			tile.OnRender();
 
-	// render units
-	for (auto &unit : units)
-		unit->OnRender();
-
-	for (auto &item : items)
-		item->OnRender();
-
 }
 
-Unit * BoxTileMap::GetCurrentUnit()
+void BoxTileMap::DispatchEvent(EventCode ec)
 {
-	return units[activeUnit];
 }
 
-bool BoxTileMap::Lock(void * locker) {
-	if (lock)
-		return false;
-	lock = true;
-	this->locker = locker;
-}
-
-bool BoxTileMap::Unlock(void * locker) {
-	if (!lock) {
-		std::cout << "Unlock invalid, lock not locked by entity " << typeid(&locker).name();
-		exit(5);
-	}
-	else if (this->locker != locker) {
-		std::cout << "Unlock invalid, there is a different locker." << std::endl;
-		return false;
-	}
-	locker = nullptr;
-	lock = false;
-}
-
-bool BoxTileMap::IsPlayerTurn() {
-	if (units.empty())
-		return false;
-	return units[activeUnit]->isPlayer;
-}
-
-void BoxTileMap::EndTurn()
+bool BoxTileMap::IsInBounds(int & x, int & y)
 {
-	//TODO
-	units[activeUnit]->CurAP = units[activeUnit]->MaxAP;
+	auto& brt = tiles[tiles.size() - 1][tiles[tiles.size() - 1].size() - 1];
+	return (tiles[0][0].pos.x <= x && tiles[0][0].pos.y <= y && x <= brt.pos.x + brt.pos.w && y <= brt.pos.y + brt.pos.h);
+}
+
+bool BoxTileMap::IsMouseInBounds()
+{
+	int x, y;
+	SDL_GetMouseState(&x, &y);
+	return IsInBounds(x, y);
 }

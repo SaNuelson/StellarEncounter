@@ -1,8 +1,8 @@
 #include "stdlib.h"
 #include "Constants.h"
 #include "ResourceManager.h"
-#include "Tiles.h"
-#include "UIHolder.h"
+#include "Tilemap.h"
+#include "Scene.h"
 
 using namespace std;
 
@@ -61,19 +61,14 @@ int main() {
 	Uint64 t_last = 0;
 	double delta = 0;
 
-	// necessary initializations because... reasons
-	ResourceManager::Init(ren);
-	BoxTile::Init();
+	// everything below is dependent on initialized res manager
+	ResourceManager::Init(ren, win);
 
 	SDL_Event e;
 
-	bool PlayerTurn = true;
-	BoxTileMap tilemap;
-	UIHolder uiholder(&tilemap);
-	tilemap.Init(level1boxtilemap, xTileSize, xTileSize);
-	tilemap.InitDemo();
-
-	int currentUnit = 0;
+	Scene scene;
+	
+	scene.StartDemo1();
 
 	while (!quit) {
 
@@ -85,27 +80,34 @@ int main() {
 		// Handle Inputs
 		while (SDL_PollEvent(&e)) {
 
-			tilemap.ResolveInput(e);
-
-			if (e.type == SDL_QUIT)
+			EventHandled = false;
+			if (e.type == SDL_QUIT){
+				EventHandled = true;
 				quit = true;
-			else if (e.key.keysym.sym == SDLK_SPACE)
-				tilemap.EndTurn();
+				break;
+			}
+			else if (e.type == SDL_WINDOWEVENT) {
+				if (e.window.event == SDL_WINDOWEVENT_RESIZED) {
+					// Resize all elements, especially UI
+					EventHandled = true;
+				}
+			}
+			if(!EventHandled)
+				scene.ResolveInput(e);
 		}
 
-		tilemap.OnUpdate(delta);
-		uiholder.OnUpdate(delta);
+		// Update holders
+		scene.OnUpdate(delta);
 
 		// Render Screen
 		SDL_RenderClear(ren);
-		tilemap.OnRender(ren);
-		uiholder.OnRender();
+		scene.OnRender();
 		SDL_RenderPresent(ren);
 
 	}
 
 
-
+	ResourceManager::FreeTextures();
 	TTF_Quit();
 	IMG_Quit();
 	SDL_Quit();

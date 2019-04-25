@@ -1,8 +1,9 @@
 #pragma once
 #include "stdlib.h"
 #include "ResourceManager.h"
+#include "UIElement.h"
 
-class Button
+class Button : public UIElement
 {
 public:
 
@@ -101,23 +102,13 @@ public:
 
 #pragma endregion
 
-	bool IsInBounds(int &x, int &y) {
-		if (rect.x <= x && x <= rect.x + rect.w && rect.y <= y && y <= rect.y + rect.h)
-			return true;
-		return false;
-	}
+	bool IsInBounds(int &x, int& y) { return (rect.x <= x && x <= rect.x + rect.w &&rect.y <= y && y <= rect.y + rect.h); }
 
-	bool IsMouseOn() {
-		int x, y;
-		SDL_GetMouseState(&x, &y);
-		return IsInBounds(x, y);
-	};
-
-	void ResolveInput(SDL_Event &e) {
+	void ResolveInput(SDL_Event &e) override {
 		// idle if not mouse on
 		// hover if mouse on && not lmb down
 		// click if mouse on && lmb down
-		if (IsMouseOn()) {
+		if (IsMouseInBounds()) {
 			if ((e.button.button == SDL_BUTTON_LEFT && e.type == SDL_MOUSEBUTTONDOWN) || (isMouseHolding && e.type != SDL_MOUSEBUTTONUP)) {
 				isMouseHolding = true;
 				button_state = 2;
@@ -127,10 +118,6 @@ public:
 					std::cout << "Mouse Press" << std::endl;
 					DispatchEvent();
 				}
-				/* Might need in near future.
-				else if (hover_func != nullptr)
-					(*hover_func)();
-				*/
 				isMouseHolding = false;
 				button_state = 1;
 			}
@@ -141,11 +128,15 @@ public:
 		}
 	}
 
-	void OnRender(SDL_Renderer * ren) {
-		SDL_RenderCopy(ren, GetButtonTex(), nullptr, &rect);
+	void OnUpdate(double delta) override {
+		return;
 	}
 
-	void DispatchEvent() {
+	void OnRender() override {
+		SDL_RenderCopy(ResourceManager::ren, GetButtonTex(), nullptr, &rect);
+	}
+
+	void DispatchEvent() override {
 		SDL_Event e;
 		e.type == SDL_EventType::SDL_USEREVENT;
 		e.user.code = retcode;

@@ -13,16 +13,16 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\GameObjects">
+    <Filter Include="Header Files\Game">
       <UniqueIdentifier>{c82e5895-8288-44bb-909a-f273d05e41e8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\GameObjects">
-      <UniqueIdentifier>{ec2f8daf-e5a9-44f5-8923-591f69453336}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\UIElements">
+    <Filter Include="Header Files\UI">
       <UniqueIdentifier>{bda11ef9-37ff-4d94-b3df-5009b182d817}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\UIElements">
+    <Filter Include="Source Files\Game">
+      <UniqueIdentifier>{ec2f8daf-e5a9-44f5-8923-591f69453336}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\UI">
       <UniqueIdentifier>{37b16c44-a4a4-492d-baf6-1646468d1d6f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -33,17 +33,20 @@
     <ClCompile Include="ResourceManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Game.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Tiles.cpp">
-      <Filter>Source Files\GameObjects</Filter>
-    </ClCompile>
     <ClCompile Include="GameObject.cpp">
-      <Filter>Source Files\GameObjects</Filter>
+      <Filter>Source Files\Game</Filter>
     </ClCompile>
     <ClCompile Include="Tile.cpp">
-      <Filter>Source Files\GameObjects</Filter>
+      <Filter>Source Files\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Unit.cpp">
+      <Filter>Source Files\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Item.cpp">
+      <Filter>Source Files\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Tilemap.cpp">
+      <Filter>Source Files\Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -56,32 +59,41 @@
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Game.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Tiles.h">
-      <Filter>Header Files\GameObjects</Filter>
-    </ClInclude>
     <ClInclude Include="stdlib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GameObject.h">
-      <Filter>Header Files\GameObjects</Filter>
+      <Filter>Header Files\Game</Filter>
     </ClInclude>
     <ClInclude Include="UnitInfoBlock.h">
-      <Filter>Header Files\UIElements</Filter>
-    </ClInclude>
-    <ClInclude Include="UIHolder.h">
-      <Filter>Header Files\UIElements</Filter>
+      <Filter>Header Files\UI</Filter>
     </ClInclude>
     <ClInclude Include="Tile.h">
-      <Filter>Header Files\GameObjects</Filter>
+      <Filter>Header Files\Game</Filter>
     </ClInclude>
     <ClInclude Include="UnitActionBlock.h">
-      <Filter>Header Files\UIElements</Filter>
+      <Filter>Header Files\UI</Filter>
     </ClInclude>
     <ClInclude Include="Button.h">
-      <Filter>Header Files\UIElements</Filter>
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UIElement.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Unit.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Item.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Tilemap.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EventManager.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

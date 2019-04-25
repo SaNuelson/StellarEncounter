@@ -1,5 +1,5 @@
 #include "Tile.h"
-#include "Tiles.h"
+#include "Tilemap.h"
 #include "GameObject.h"
 
 BoxTile::BoxTile(std::string source, SDL_Point position, BoxTileMap* tilemap) {
@@ -10,6 +10,7 @@ BoxTile::BoxTile(std::string source, SDL_Point position, BoxTileMap* tilemap) {
 	occ = nullptr;
 	state = 1;
 	this->tilemap = tilemap;
+	Init();
 }
 
 void BoxTile::Init()
@@ -29,25 +30,6 @@ void BoxTile::SetOccupant(GameObject* obj) {
 }
 
 void BoxTile::OnUpdate() {
-
-	// is update needed?
-	if (tilemap->IsPlayerTurn()) {
-
-		state = TILE_DEFAULT;
-		
-		// is moveAble?
-		if (tilemap->CanMoveHere(this)) {
-			// is enemy here?
-			if (occ == nullptr)
-				state |= TILE_MOVE;
-			else if (occ->isEnemy())
-				state |= TILE_ATTACK;
-		}
-
-
-
-	}
-
 }
 
 void BoxTile::SetState(TileRenderFlag flag) {
@@ -68,6 +50,7 @@ void BoxTile::SetState(TileRenderFlag flag) {
 }
 
 void BoxTile::OnRender() {
+	std::cout << state << std::endl;
 	if (TileRenderFlag(state)[0])
 		SDL_RenderCopy(ResourceManager::ren, tex_default, nullptr, &pos);
 	if (TileRenderFlag(state)[2])

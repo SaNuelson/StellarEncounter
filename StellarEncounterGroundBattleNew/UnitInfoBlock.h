@@ -3,21 +3,19 @@
 #include "GameObject.h"
 #include "ResourceManager.h"
 #include "Constants.h"
-#include "Tiles.h"
+#include "GameHolder.h"
+#include "UIElement.h"
+#include "Unit.h"
 
-class UnitInfoBlock {
+class UnitInfoBlock : public UIElement {
 public:
 
-	UnitInfoBlock() {};
-	UnitInfoBlock(BoxTileMap* tilemap) {
+	UnitInfoBlock() {
 		ren = ResourceManager::ren;
-		this->tilemap = tilemap;
-		
+		currentUnit = nullptr;
+
 		block_tex = ResourceManager::LoadTexture("Graphics/unitinfoblockrect.png");
-		block_rect.h = 150;
-		block_rect.w = 400;
-		block_rect.x = 0;
-		block_rect.y = scr_height - block_rect.h;
+		block_rect = GetUnitInfoBlockRect();
 
 		portrait_tex = ResourceManager::LoadTexture("Graphics/unitinfoblockportrait.png");
 		portrait_rect.x = block_rect.x + 20;
@@ -53,10 +51,19 @@ public:
 	};
 	~UnitInfoBlock() {};
 
-	void OnUpdate(double delta) {
-		// if change
+	void ResolveInput(SDL_Event& e) override {
+		// Contains info for now, so nothing to handle really
+		EventHandled = true;
+	};
 
-		currentUnit = tilemap->GetCurrentUnit();
+	void OnUpdate(double delta) override{
+
+		if (currentUnit == nullptr) {
+			curr_hp_rect.w = 0;
+			curr_ap_rect.w = 0;
+			curr_sp_rect.w = 0;
+			return;
+		}
 
 		curr_hp_rect.w = max_bar_w * currentUnit->CurHP / currentUnit->MaxHP;
 		curr_ap_rect.w = max_bar_w * currentUnit->CurAP / currentUnit->MaxAP;
@@ -64,30 +71,35 @@ public:
 
 	};
 
-	void OnRender() {
+	void OnRender() override{
 		SDL_RenderCopy(ren, block_tex, nullptr, &block_rect);
 		
 		SDL_RenderCopy(ren, emptybar_tex, nullptr, &hp_rect);
 		SDL_RenderCopy(ren, hp_tex, nullptr, &curr_hp_rect);
-		ResourceManager::RenderText(std::to_string(currentUnit->CurHP), hp_rect);
+		if(currentUnit != nullptr)
+			ResourceManager::RenderText(std::to_string(currentUnit->CurHP), hp_rect);
 
 		SDL_RenderCopy(ren, emptybar_tex, nullptr, &sp_rect);
 		SDL_RenderCopy(ren, sp_tex, nullptr, &curr_sp_rect);
-		ResourceManager::RenderText(std::to_string(currentUnit->CurSP), sp_rect);
+		if(currentUnit != nullptr)
+			ResourceManager::RenderText(std::to_string(currentUnit->CurSP), sp_rect);
 		
 		SDL_RenderCopy(ren, emptybar_tex, nullptr, &ap_rect);
 		SDL_RenderCopy(ren, ap_tex, nullptr, &curr_ap_rect);
-		ResourceManager::RenderText(std::to_string(currentUnit->CurAP), ap_rect);
+		if(currentUnit != nullptr)
+			ResourceManager::RenderText(std::to_string(currentUnit->CurAP), ap_rect);
 		
 		SDL_RenderCopy(ren, portrait_tex, nullptr, &portrait_rect);
 	}
 
+	bool IsInBounds(int &x, int& y) { return (block_rect.x <= x && x <= block_rect.x + block_rect.w &&block_rect.y <= y && y <= block_rect.y + block_rect.h); }
+
+
 private:
 
-	// logic
-	BoxTileMap* tilemap;
-	Unit* currentUnit;
+	void DispatchEvent() override {};
 
+	Unit* currentUnit;
 
 	// render
 	SDL_Renderer* ren;
