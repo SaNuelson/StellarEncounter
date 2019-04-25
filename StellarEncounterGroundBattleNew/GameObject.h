@@ -14,7 +14,11 @@ public:
 
 	virtual bool isEnemy();
 
+	virtual void OnRender() {};
+
 	virtual std::string toString();
+
+	virtual GameObject* getPtr();
 };
 
 class Unit : public GameObject {
@@ -28,11 +32,13 @@ public:
 
 	void Move(BoxTile* tile);
 
-	void OnRender();
+	void OnRender() override;
 
 	bool isEnemy() override;
 
 	std::string toString() override;
+
+	Unit* getPtr() override;
 
 //private:
 
@@ -69,12 +75,28 @@ class Item : public GameObject {
 
 public:
 
+	Item() {};
+	Item(std::string texSrc, BoxTile* tile, BoxTileMap* tilemap, bool usable);
+
 	bool isEnemy() override;
+
+	void OnRender() override;
 
 	std::string toString() override;
 
+	Item* getPtr() override;
+
 private:
 
+	BoxTileMap * tilemap;
+	BoxTile * tile;
+	bool isUsable;
+
+	SDL_Renderer* ren;
+	SDL_Texture * tex;
+	SDL_Rect position;
+
+	// render
 	big currentTexture = 0;
 	big textureSpeed = 300;
 	std::vector<SDL_Texture*> textures;

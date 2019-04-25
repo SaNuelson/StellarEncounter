@@ -132,6 +132,7 @@
     <ClCompile Include="Tiles.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Button.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
@@ -141,6 +142,7 @@
     <ClInclude Include="Tile.h" />
     <ClInclude Include="Tiles.h" />
     <ClInclude Include="UIHolder.h" />
+    <ClInclude Include="UnitActionBlock.h" />
     <ClInclude Include="UnitInfoBlock.h" />
   </ItemGroup>
   <ItemGroup>

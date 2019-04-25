@@ -124,11 +124,15 @@ public:
 
 	void OnRender(SDL_Renderer * ren);
 
+	Unit* GetCurrentUnit();
+
 	bool Lock(void* locker);
 
 	bool Unlock(void* locker);
 
 	bool IsPlayerTurn();
+
+	void EndTurn();
 
 private:
 
@@ -136,7 +140,8 @@ private:
 
 	std::vector<std::vector<BoxTile>> tiles;
 
-	std::vector<Unit> units;
+	std::vector<Unit*> units;
+	std::vector<Item*> items;
 
 	int activeUnit = 0;
 
