@@ -1,4 +1,4 @@
-#include "Tiles.h"
+#include "Tilemap.h"
 
 SDL_Texture* BoxTile::tex_hover = nullptr;
 SDL_Texture* BoxTile::tex_move = nullptr;

@@ -126,22 +126,29 @@
   <ItemGroup>
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="Item.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Tile.cpp" />
-    <ClCompile Include="Tiles.cpp" />
+    <ClCompile Include="Tilemap.cpp" />
+    <ClCompile Include="Unit.cpp" />
+    <ClCompile Include="UnitActionBlock.cpp" />
+    <ClCompile Include="UnitInfoBlock.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Button.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="Item.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="Scene.h" />
     <ClInclude Include="stdlib.h" />
     <ClInclude Include="Tile.h" />
-    <ClInclude Include="Tiles.h" />
+    <ClInclude Include="Tilemap.h" />
     <ClInclude Include="UIHolder.h" />
+    <ClInclude Include="Unit.h" />
     <ClInclude Include="UnitActionBlock.h" />
     <ClInclude Include="UnitInfoBlock.h" />
   </ItemGroup>

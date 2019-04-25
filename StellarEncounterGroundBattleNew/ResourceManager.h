@@ -1,6 +1,12 @@
 #pragma once
 #include "stdlib.h"
-#include "GameObject.h"
+#include "Constants.h"
+
+class GameObject;
+class Item;
+class Unit;
+class BoxTile;
+class BoxTileMap;
 
 class ResourceManager
 {

@@ -3,6 +3,8 @@
 #include "ResourceManager.h"
 #include "Constants.h"
 #include "GameObject.h"
+#include "Unit.h"
+#include "Item.h"
 #include "Tile.h"
 
 class TileMap
@@ -111,18 +113,15 @@ public:
 	void Init(std::string source, int x, int y);
 
 	void ResolveInput(SDL_Event &e);
+	void OnUpdate(double delta);
+	void OnRender(SDL_Renderer * ren);
 
 	int GetDistance(SDL_Point &p1, SDL_Point &p2);
-
 	int GetDistance(int &tx1, int &tx2, int &ty1, int &ty2);
-
 	int GetDistance(BoxTile* t1, BoxTile* t2);
 
 	bool CanMoveHere(BoxTile* tile);
 
-	void OnUpdate(double delta);
-
-	void OnRender(SDL_Renderer * ren);
 
 	Unit* GetCurrentUnit();
 

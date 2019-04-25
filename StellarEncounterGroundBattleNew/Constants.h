@@ -3,6 +3,9 @@
 
 #include "stdlib.h"
 
+using big = uint16_t;
+using small = uint8_t;
+
 int scr_height = 768;
 int scr_width = 1280;
 

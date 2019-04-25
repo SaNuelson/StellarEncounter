@@ -1,5 +1,5 @@
 #include "Tile.h"
-#include "Tiles.h"
+#include "Tilemap.h"
 #include "GameObject.h"
 
 BoxTile::BoxTile(std::string source, SDL_Point position, BoxTileMap* tilemap) {

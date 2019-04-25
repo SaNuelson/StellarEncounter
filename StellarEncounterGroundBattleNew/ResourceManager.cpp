@@ -1,4 +1,9 @@
 #include "ResourceManager.h"
+#include "GameObject.h"
+#include "Unit.h"
+#include "Item.h"
+#include "Tile.h"
+#include "Tilemap.h"
 
 SDL_Renderer * ResourceManager::ren = nullptr;
 bool ResourceManager::initialized = false;

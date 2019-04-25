@@ -1,7 +1,7 @@
 #include "stdlib.h"
 #include "Constants.h"
 #include "ResourceManager.h"
-#include "Tiles.h"
+#include "Tilemap.h"
 #include "UIHolder.h"
 
 using namespace std;
