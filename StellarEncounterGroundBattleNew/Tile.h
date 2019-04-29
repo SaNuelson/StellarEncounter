@@ -12,7 +12,9 @@ public:
 
 	static void Init();
 
-	BoxTile(std::string source, SDL_Point position, BoxTileMap* tilemap);
+	BoxTile(std::string source, SDL_Point position, SDL_Point mappos, BoxTileMap* tilemap);
+
+	void SetNeighbors(BoxTile* left, BoxTile* up, BoxTile* right, BoxTile* down);
 
 	GameObject* GetOccupant();
 	void SetOccupant(GameObject* obj);
@@ -20,7 +22,10 @@ public:
 	void OnUpdate();
 	void OnRender();
 
+	void AddState(TileRenderFlag flag);
 	void SetState(TileRenderFlag flag);
+	void DelState(TileRenderFlag flag);
+	bool GetState(TileRenderFlag flag);
 
 	SDL_Point GetCenter();
 
@@ -35,7 +40,13 @@ public:
 	static SDL_Texture* tex_hover;
 	static SDL_Texture* tex_attack;
 
+	BoxTile* tile_up = nullptr;
+	BoxTile* tile_left = nullptr;
+	BoxTile* tile_right = nullptr;
+	BoxTile* tile_down = nullptr;
+
 	SDL_Rect pos;
+	SDL_Point mappos;
 	GameObject * occ;
 
 	// static for debug

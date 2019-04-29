@@ -6,23 +6,23 @@
 class GameObject;
 class Item;
 class Unit;
+class Scene;
 class BoxTileMap;
 
 class UnitInfoBlock {
 public:
 
-	UnitInfoBlock() {};
-	UnitInfoBlock(BoxTileMap* tilemap);
+	UnitInfoBlock(Scene * scene);
 	~UnitInfoBlock() {};
 
 	void OnUpdate(double delta);;
 
 	void OnRender();
 
-private:
+//private:
 
 	// logic
-	BoxTileMap* tilemap;
+	Scene * scene;
 	Unit* currentUnit;
 
 

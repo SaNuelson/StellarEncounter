@@ -1,8 +1,8 @@
 #include "stdlib.h"
 #include "Constants.h"
 #include "ResourceManager.h"
-#include "Tilemap.h"
-#include "UIHolder.h"
+#include "Tile.h"
+#include "Scene.h"
 
 using namespace std;
 
@@ -62,16 +62,14 @@ int main() {
 	double delta = 0;
 
 	// necessary initializations because... reasons
-	ResourceManager::Init(ren);
+	ResourceManager::Init(ren, win, nullptr);
 	BoxTile::Init();
+	Scene scene;
+	ResourceManager::scene = &scene;
 
 	SDL_Event e;
 
-	bool PlayerTurn = true;
-	BoxTileMap tilemap;
-	UIHolder uiholder(&tilemap);
-	tilemap.Init(level1boxtilemap, xTileSize, xTileSize);
-	tilemap.InitDemo();
+	scene.StartDemo1();
 
 	int currentUnit = 0;
 
@@ -85,21 +83,17 @@ int main() {
 		// Handle Inputs
 		while (SDL_PollEvent(&e)) {
 
-			tilemap.ResolveInput(e);
+			scene.ResolveInput(e);
 
 			if (e.type == SDL_QUIT)
 				quit = true;
-			else if (e.key.keysym.sym == SDLK_SPACE)
-				tilemap.EndTurn();
 		}
 
-		tilemap.OnUpdate(delta);
-		uiholder.OnUpdate(delta);
+		scene.OnUpdate(delta);
 
 		// Render Screen
 		SDL_RenderClear(ren);
-		tilemap.OnRender(ren);
-		uiholder.OnRender();
+		scene.OnRender();
 		SDL_RenderPresent(ren);
 
 	}

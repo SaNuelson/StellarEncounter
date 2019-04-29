@@ -22,6 +22,30 @@ void Unit::LoadTextures(std::string texSrc)
 
 void Unit::OnUpdate(double delta) {
 
+	if (CurHP <= 0) {
+		CurHP = 0;
+		textures.push_back(ResourceManager::LoadTexture("Graphics/rip.png"));
+		currentTexture++;
+	}
+
+}
+
+void Unit::UseAction(GameObject * defender)
+{
+	std::cout << toString() << " uses action against " << defender->toString() << std::endl;
+	defender->ReceiveAction(weapon.GetStrength());
+}
+
+void Unit::ReceiveAction(int amount)
+{
+	if (amount > 0) {
+		CurHP -= amount;
+		std::cout << toString() << " gets hurt by attack for " << amount << " points." << std::endl;
+	}
+	else {
+		CurHP = std::min(MaxHP, (big)(CurHP - amount));
+		std::cout << toString() << " gets healed for " << amount << "points." << std::endl;
+	}
 }
 
 void Unit::Move(BoxTile * tile)
@@ -29,8 +53,25 @@ void Unit::Move(BoxTile * tile)
 	this->CurAP -= tilemap->GetDistance(this->tile, tile);
 	this->tile->SetOccupant(nullptr);
 	tile->SetOccupant(this);
-	// now move is instant
 	this->tile = tile;
+}
+
+void Unit::Move(Direction dir)
+{
+	switch (dir) {
+	case 0:
+		Move(tile->tile_left);
+		break;
+	case 1:
+		Move(tile->tile_up);
+		break;
+	case 2:
+		Move(tile->tile_right);
+		break;
+	case 3:
+		Move(tile->tile_down);
+		break;
+	}
 }
 
 void Unit::OnRender() {

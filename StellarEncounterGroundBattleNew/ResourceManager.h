@@ -7,12 +7,13 @@ class Item;
 class Unit;
 class BoxTile;
 class BoxTileMap;
+class Scene;
 
 class ResourceManager
 {
 public:
 
-	static void Init(SDL_Renderer * renderer);
+	static void Init(SDL_Renderer * renderer, SDL_Window* win, Scene * scene);
 
 	static SDL_Texture * LoadTexture(std::string path);
 
@@ -29,6 +30,8 @@ public:
 	static void FreeTextures();
 
 	static SDL_Renderer * ren;
+	static SDL_Window * win;
+	static Scene * scene;
 
 	static Unit* CreateUnit(big HP, big SP, small AP, BoxTile* tile, std::string texSrc, BoxTileMap* tilemap, bool playerTeam);
 	static Item* CreateItem(std::string texSrc, BoxTile* tile, BoxTileMap* tilemap, bool usable);

@@ -1,15 +1,25 @@
 #include "Tile.h"
 #include "Tilemap.h"
 #include "GameObject.h"
+#include "Scene.h"
 
-BoxTile::BoxTile(std::string source, SDL_Point position, BoxTileMap* tilemap) {
+BoxTile::BoxTile(std::string source, SDL_Point position, SDL_Point mapposition, BoxTileMap* tilemap) {
 	tex_default = ResourceManager::LoadTexture(source);
 	SDL_QueryTexture(tex_default, nullptr, nullptr, &pos.w, &pos.h);
 	pos.x = position.x;
 	pos.y = position.y;
+	mappos = mapposition;
 	occ = nullptr;
 	state = 1;
 	this->tilemap = tilemap;
+}
+
+void BoxTile::SetNeighbors(BoxTile * left, BoxTile * up, BoxTile * right, BoxTile * down)
+{
+	tile_up = up;
+	tile_left = left;
+	tile_right = right;
+	tile_down = down;
 }
 
 void BoxTile::Init()
@@ -29,25 +39,18 @@ void BoxTile::SetOccupant(GameObject* obj) {
 }
 
 void BoxTile::OnUpdate() {
+	state = TILE_DEFAULT;
+}
 
-	// is update needed?
-	if (tilemap->IsPlayerTurn()) {
-
-		state = TILE_DEFAULT;
-		
-		// is moveAble?
-		if (tilemap->CanMoveHere(this)) {
-			// is enemy here?
-			if (occ == nullptr)
-				state |= TILE_MOVE;
-			else if (occ->isEnemy())
-				state |= TILE_ATTACK;
-		}
-
-
-
+void BoxTile::AddState(TileRenderFlag flag) {
+	auto newstate = state | flag;
+	if ((newstate | TILE_MOVE | TILE_RUN) == newstate ||
+		(newstate | TILE_MOVE | TILE_ATTACK) == newstate ||
+		(newstate | TILE_RUN | TILE_ATTACK) == newstate) {
+		std::cout << "BoxTile::AddState: " << flag << " unsuccessful, unallowed. Reverting..." << std::endl;
+		return;
 	}
-
+	state = newstate;
 }
 
 void BoxTile::SetState(TileRenderFlag flag) {
@@ -60,11 +63,18 @@ void BoxTile::SetState(TileRenderFlag flag) {
 		state = state & ~(TILE_MOVE | TILE_ATTACK) | TILE_RUN;
 	else if (flag == TILE_ATTACK)
 		state = state & ~(TILE_MOVE | TILE_RUN) | TILE_ATTACK;
-	else if (flag == TILE_DEFAULT)
-		state = TILE_DEFAULT;
 	else
 		state |= flag;
 
+}
+
+void BoxTile::DelState(TileRenderFlag flag) {
+	state &= ~flag;
+}
+
+bool BoxTile::GetState(TileRenderFlag flag)
+{
+	return (state == (state | flag));
 }
 
 void BoxTile::OnRender() {
@@ -78,6 +88,10 @@ void BoxTile::OnRender() {
 		SDL_RenderCopy(ResourceManager::ren, tex_attack, nullptr, &pos);
 	if (TileRenderFlag(state)[1])
 		SDL_RenderCopy(ResourceManager::ren, tex_hover, nullptr, &pos);
+
+	if (occ != nullptr)
+		occ->OnRender();
+
 }
 
 SDL_Point BoxTile::GetCenter() {

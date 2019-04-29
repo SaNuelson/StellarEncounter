@@ -2,11 +2,14 @@
 #include "GameObject.h"
 #include "Unit.h"
 #include "Item.h"
+#include "Scene.h"
 #include "Tilemap.h"
 
-UnitInfoBlock::UnitInfoBlock(BoxTileMap * tilemap) {
+class Scene;
+
+UnitInfoBlock::UnitInfoBlock(Scene * scene) {
 	ren = ResourceManager::ren;
-	this->tilemap = tilemap;
+	this->scene = scene;
 
 	block_tex = ResourceManager::LoadTexture("Graphics/unitinfoblockrect.png");
 	block_rect.h = 150;
@@ -50,11 +53,21 @@ UnitInfoBlock::UnitInfoBlock(BoxTileMap * tilemap) {
 void UnitInfoBlock::OnUpdate(double delta) {
 	// if change
 
-	currentUnit = tilemap->GetCurrentUnit();
+	currentUnit = scene->GetCurrentUnit();
+	if (currentUnit != nullptr) {
 
-	curr_hp_rect.w = max_bar_w * currentUnit->CurHP / currentUnit->MaxHP;
-	curr_ap_rect.w = max_bar_w * currentUnit->CurAP / currentUnit->MaxAP;
-	curr_sp_rect.w = max_bar_w * currentUnit->CurSP / currentUnit->MaxSP;
+		curr_hp_rect.w = max_bar_w * currentUnit->CurHP / currentUnit->MaxHP;
+		curr_ap_rect.w = max_bar_w * currentUnit->CurAP / currentUnit->MaxAP;
+		curr_sp_rect.w = max_bar_w * currentUnit->CurSP / currentUnit->MaxSP;
+
+	}
+	else {
+
+		curr_hp_rect.w = 0;
+		curr_sp_rect.w = 0;
+		curr_ap_rect.w = 0;
+
+	}
 
 }
 

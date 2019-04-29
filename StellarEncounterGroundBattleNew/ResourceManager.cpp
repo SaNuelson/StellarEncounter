@@ -6,13 +6,17 @@
 #include "Tilemap.h"
 
 SDL_Renderer * ResourceManager::ren = nullptr;
+SDL_Window * ResourceManager::win = nullptr;
+Scene * ResourceManager::scene = nullptr;
 bool ResourceManager::initialized = false;
 std::map<std::string, SDL_Texture*> ResourceManager::TextureMap;
 TTF_Font * ResourceManager::default_font;
 std::vector<std::unique_ptr<GameObject>> ResourceManager::GameObjects;
 
-void ResourceManager::Init(SDL_Renderer * renderer) {
+void ResourceManager::Init(SDL_Renderer * renderer, SDL_Window* window, Scene * pscene) {
 	ren = renderer; initialized = true;
+	win = window;
+	scene = pscene;
 	default_font = TTF_OpenFont("Resources/default_font.ttf", 20);
 }
 SDL_Texture * ResourceManager::LoadTexture(std::string path)
@@ -38,7 +42,7 @@ SDL_Texture * ResourceManager::LoadTexture(std::string srcpath, Uint8 alpha)
 
 	SDL_Texture * tex = IMG_LoadTexture(ren, srcpath.c_str());
 	if (tex == nullptr) {
-		std::cout << "IMG_LoadTexture Error on path: " << path << std::endl;
+		std::cout << "IMG_LoadTexture Error on path: " << path << SDL_GetError() << std::endl;
 	}
 	SDL_SetTextureAlphaMod(tex, alpha);
 	TextureMap[path] = tex;

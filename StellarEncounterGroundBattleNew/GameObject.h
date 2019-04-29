@@ -10,11 +10,13 @@ class GameObject {
 public:
 	~GameObject() {}
 
-	virtual bool isEnemy();
+	virtual bool isEnemy() = 0;
 
-	virtual void OnRender() {};
+	virtual void OnRender() = 0;
 
-	virtual std::string toString();
+	virtual void ReceiveAction(int amt) = 0;
 
-	virtual GameObject* getPtr();
+	virtual std::string toString() = 0;
+
+	virtual GameObject* getPtr() = 0;
 };

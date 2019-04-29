@@ -6,6 +6,7 @@ Item::Item(std::string texSrc, BoxTile* tile, BoxTileMap * tilemap, bool usable)
 	ren = ResourceManager::ren;
 	this->tilemap = tilemap;
 	this->tile = tile;
+	tile->occ = this;
 	isUsable = usable;
 }
 
@@ -21,8 +22,18 @@ void Item::OnRender()
 	position.y = p.y - s.y;
 	position.w = s.x;
 	position.h = s.y;
-	std::cout << position.x << " " << position.y << " " << position.w << " " << position.h << std::endl;
+	// std::cout << "Item::OnRender on position: " << position.x << " " << position.y << " " << position.w << " " << position.h << std::endl;
 	SDL_RenderCopy(ResourceManager::ren, tex, nullptr, &position);
+}
+
+void Item::ReceiveAction(int amount)
+{
+	if (amount > 0) {
+		std::cout << toString() << "gets hurt, but it's just an inanimate object and because of lacking implementation feels nothing." << std::endl;
+	}
+	else {
+		std::cout << toString() << "gets healed, but once again it's just AN INANIMATE OBJECT. The object feels nothing. Not a thing. This action was useless." << std::endl;
+	}
 }
 
 std::string Item::toString()

@@ -124,11 +124,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="Tilemap.cpp" />
     <ClCompile Include="Unit.cpp" />
@@ -138,10 +138,9 @@
   <ItemGroup>
     <ClInclude Include="Button.h" />
     <ClInclude Include="Constants.h" />
-    <ClInclude Include="Game.h" />
+    <ClInclude Include="Equipment.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Item.h" />
-    <ClInclude Include="resource.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="stdlib.h" />

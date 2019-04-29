@@ -16,6 +16,8 @@ public:
 
 	void OnRender() override;
 
+	void ReceiveAction(int amount) override;
+
 	std::string toString() override;
 
 	Item* getPtr() override;
@@ -29,6 +31,9 @@ private:
 	SDL_Renderer* ren;
 	SDL_Texture * tex;
 	SDL_Rect position;
+
+	int CurHP;
+	int MaxHP;
 
 	// render
 	big currentTexture = 0;

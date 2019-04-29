@@ -3,6 +3,17 @@
 
 #include "stdlib.h"
 
+enum Attribute {
+
+};
+
+enum Direction {
+	Left = 0,
+	Up = 1,
+	Right = 2,
+	Down = 3
+};
+
 using big = uint16_t;
 using small = uint8_t;
 

@@ -4,17 +4,22 @@
 #include "Tilemap.h"
 #include "Tile.h"
 #include "ResourceManager.h"
+#include "Equipment.h"
 
 class Unit : public GameObject {
 public:
-	Unit() {};
+	Unit() : weapon(10) {};
 	Unit(big HP, big SP, small AP, BoxTile* tile, std::string texSrc, BoxTileMap* tilemap, bool playerTeam);
 
 	void LoadTextures(std::string texSrc);
 
 	void OnUpdate(double delta);
 
+	void UseAction(GameObject * defender);
+	void ReceiveAction(int amount) override;
+
 	void Move(BoxTile* tile);
+	void Move(Direction dir);
 
 	void OnRender() override;
 
@@ -45,6 +50,8 @@ public:
 
 	// Equip
 	// Equipment equip;
+	Weapon weapon;
+	
 
 	// Render
 	big textureSpeed;
