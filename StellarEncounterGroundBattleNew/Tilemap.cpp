@@ -1,5 +1,5 @@
 #include "Tilemap.h"
-#include "Scene.h"
+#include "GroundBattleScene.h"
 
 SDL_Texture* BoxTile::tex_hover = nullptr;
 SDL_Texture* BoxTile::tex_move = nullptr;

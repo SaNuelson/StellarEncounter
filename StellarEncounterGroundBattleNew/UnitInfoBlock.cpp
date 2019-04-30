@@ -2,12 +2,10 @@
 #include "GameObject.h"
 #include "Unit.h"
 #include "Item.h"
-#include "Scene.h"
+#include "GroundBattleScene.h"
 #include "Tilemap.h"
 
-class Scene;
-
-UnitInfoBlock::UnitInfoBlock(Scene * scene) {
+UnitInfoBlock::UnitInfoBlock(GroundBattleScene * scene) {
 	ren = ResourceManager::ren;
 	this->scene = scene;
 

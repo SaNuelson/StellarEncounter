@@ -4,7 +4,7 @@
 class Weapon {
 public:
 
-	Weapon() : amt(0) {};
+	Weapon() : amt(-10) {};
 	Weapon(int amount) : amt(amount) {};
 
 	int GetStrength() { return amt; }

@@ -6,13 +6,13 @@
 class GameObject;
 class Item;
 class Unit;
-class Scene;
+class GroundBattleScene;
 class BoxTileMap;
 
 class UnitInfoBlock {
 public:
 
-	UnitInfoBlock(Scene * scene);
+	UnitInfoBlock(GroundBattleScene * scene);
 	~UnitInfoBlock() {};
 
 	void OnUpdate(double delta);;
@@ -22,7 +22,7 @@ public:
 //private:
 
 	// logic
-	Scene * scene;
+	GroundBattleScene * scene;
 	Unit* currentUnit;
 
 

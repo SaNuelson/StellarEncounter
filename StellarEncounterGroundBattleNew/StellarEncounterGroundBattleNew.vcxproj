@@ -125,6 +125,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GroundBattleScene.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
@@ -140,6 +141,7 @@
     <ClInclude Include="Constants.h" />
     <ClInclude Include="Equipment.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GroundBattleScene.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Scene.h" />

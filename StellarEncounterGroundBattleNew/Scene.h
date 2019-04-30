@@ -11,34 +11,11 @@
 class Scene {
 public:
 
-	Scene();
-	~Scene() {};
+	Scene() = default;
+	~Scene() = default;
 
-	void StartDemo1();
-
-	void ResolveInput(SDL_Event& e);
-	void OnUpdate(double delta);
-	void OnRender();
-
-	bool IsPlayerTurn();
-
-	Unit * GetCurrentUnit();
-
-	std::vector<Unit*> units;
-	int currentUnit = 0;
-
-	std::vector<Item*> items;
-
-	BoxTileMap tilemap;
-
-	UnitInfoBlock infoblock;
-	UnitActionBlock actionblock;
-
-
-};
-
-class GroundBattleScene : Scene {
-
-
+	virtual void ResolveInput(SDL_Event& e) = 0;
+	virtual void OnUpdate(double delta) = 0;
+	virtual void OnRender() = 0;
 
 };

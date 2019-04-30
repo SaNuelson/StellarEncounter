@@ -3,6 +3,8 @@
 
 #include "stdlib.h"
 
+// CUSTOM DATA TYPES
+
 enum Attribute {
 
 };
@@ -14,8 +16,10 @@ enum Direction {
 	Down = 3
 };
 
-using big = uint16_t;
-using small = uint8_t;
+using big = int16_t;
+using small = int8_t;
+
+// WINDOW INFO
 
 int scr_height = 768;
 int scr_width = 1280;
@@ -29,6 +33,8 @@ static int boxTileSize = 64;
 static int xMargin = 50;
 static int yMargin = 50;
 
+// TILE RENDERING OPTIONS
+
 typedef std::bitset<8> TileRenderFlag;
 const TileRenderFlag TILE_DEFAULT = 1;
 const TileRenderFlag TILE_HOVER =	2;
@@ -37,23 +43,9 @@ const TileRenderFlag TILE_RUN =		8;
 const TileRenderFlag TILE_ATTACK =	16;
 
 
-
-/// SECTION FOR EVENT RETURN CODES (Sint32)
-using EventCode = Sint32;
-
-
-
-
-
-
-
-
-
-
-
-
-// Red, Green, Blue, Purple, Yellow, Cyan, Grey, White, Brown, Pink, Black
+// SDL_Color Generator
 static SDL_Color GetColor(std::string color_name) {
+	// Red, Green, Blue, Purple, Yellow, Cyan, Grey, White, Brown, Pink, Black
 	SDL_Color color;
 	color.r = 0;
 	color.g = 0;
@@ -110,6 +102,8 @@ static SDL_Color GetColor(std::string color_name) {
 	}
 	return color;
 }
+
+// MAP DATA
 
 /*
 level string composition:

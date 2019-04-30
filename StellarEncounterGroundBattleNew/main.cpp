@@ -3,6 +3,7 @@
 #include "ResourceManager.h"
 #include "Tile.h"
 #include "Scene.h"
+#include "GroundBattleScene.h"
 
 using namespace std;
 
@@ -64,7 +65,7 @@ int main() {
 	// necessary initializations because... reasons
 	ResourceManager::Init(ren, win, nullptr);
 	BoxTile::Init();
-	Scene scene;
+	GroundBattleScene scene;
 	ResourceManager::scene = &scene;
 
 	SDL_Event e;

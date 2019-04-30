@@ -21,6 +21,12 @@ public:
 	void Move(BoxTile* tile);
 	void Move(Direction dir);
 
+	void ChangeHP(big amount, bool overload); // overload heals SP with excess healing
+	void ChangeSP(big amount, bool overload); // overload damages HP with excess damage
+	void ChangeAP(big amount);
+
+	void Die();
+
 	void OnRender() override;
 
 	bool isEnemy() override;
@@ -59,5 +65,8 @@ public:
 	small currentTexture = 0;
 	std::vector<SDL_Texture*> textures;
 	std::map<small, std::pair<small, small>> textureSets;
+
+	// Other
+	std::string name = "";
 
 };

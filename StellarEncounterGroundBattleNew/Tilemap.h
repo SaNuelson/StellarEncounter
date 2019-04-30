@@ -7,7 +7,7 @@
 #include "Item.h"
 #include "Tile.h"
 
-class Scene;
+class GroundBattleScene;
 
 class TileMap
 {
@@ -104,7 +104,7 @@ class BoxTileMap
 {
 public:
 
-	BoxTileMap(Scene*scene) : scene(scene) {};
+	BoxTileMap(GroundBattleScene*scene) : scene(scene) {};
 
 	~BoxTileMap() {};
 
@@ -126,7 +126,7 @@ public:
 
 	bool CanMoveHere(BoxTile* tile);
 
-	Scene * scene;
+	GroundBattleScene * scene;
 
 private:
 
