@@ -3,18 +3,51 @@
 #include "ResourceManager.h"
 #include "Constants.h"
 
-class BoxTileMap;
+class TileMap;
 class GameObject;
 
-class BoxTile {
+class Tile {
+
+public:
+
+	Tile(std::string source, SDL_Point position, SDL_Point mappos, TileMap* tilemap);
+
+	void SetNeighbors(Tile* up_left, Tile* up_right, Tile* right, Tile* down_right, Tile* down_left, Tile* left);
+
+	GameObject* GetOccupant();
+	void SetOccupant(GameObject* obj);
+
+	void OnUpdate();
+	void OnRender();
+
+	SDL_Point GetCenter();
+
+	TileMap* tilemap;
+
+	Tile* tile_up_left = nullptr;
+	Tile* tile_up_right = nullptr;
+	Tile* tile_left = nullptr;
+	Tile* tile_right = nullptr;
+	Tile* tile_down_right = nullptr;
+	Tile* tile_down_left = nullptr;
+
+	SDL_Rect pos;
+	SDL_Point mappos;
+	GameObject * occ;
+	SDL_Texture * tex;
+
+};
+
+/*
+class Tile {
 
 public:
 
 	static void Init();
 
-	BoxTile(std::string source, SDL_Point position, SDL_Point mappos, BoxTileMap* tilemap);
+	Tile(std::string source, SDL_Point position, SDL_Point mappos, TileMap* tilemap);
 
-	void SetNeighbors(BoxTile* left, BoxTile* up, BoxTile* right, BoxTile* down);
+	void SetNeighbors(Tile* left, Tile* up, Tile* right, Tile* down);
 
 	GameObject* GetOccupant();
 	void SetOccupant(GameObject* obj);
@@ -29,7 +62,7 @@ public:
 
 	SDL_Point GetCenter();
 
-	BoxTileMap* tilemap;
+	TileMap* tilemap;
 
 	// keeping current state of tile (hovered, moveable, adjacent_to_enemy... all updated it Tilemap::OnUpdate
 	TileRenderFlag state;
@@ -40,10 +73,10 @@ public:
 	static SDL_Texture* tex_hover;
 	static SDL_Texture* tex_attack;
 
-	BoxTile* tile_up = nullptr;
-	BoxTile* tile_left = nullptr;
-	BoxTile* tile_right = nullptr;
-	BoxTile* tile_down = nullptr;
+	Tile* tile_up = nullptr;
+	Tile* tile_left = nullptr;
+	Tile* tile_right = nullptr;
+	Tile* tile_down = nullptr;
 
 	SDL_Rect pos;
 	SDL_Point mappos;
@@ -55,3 +88,4 @@ public:
 	const std::string src_hover = "Graphics/txhover.png";
 
 };
+*/

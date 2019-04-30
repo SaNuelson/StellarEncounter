@@ -38,7 +38,7 @@ UIHolder:
 			/// contains buttons with all available actions for active unit
 
 GameHolder:
-			/// currently BoxTileMap... dumb I know
+			/// currently TileMap... dumb I know
 
 	Units
 			/// vector of all units, updated and rendered sequentially

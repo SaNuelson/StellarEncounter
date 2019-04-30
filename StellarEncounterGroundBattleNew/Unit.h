@@ -5,11 +5,12 @@
 #include "Tile.h"
 #include "ResourceManager.h"
 #include "Equipment.h"
+#include "MiniUnitInfoBlock.h"
 
 class Unit : public GameObject {
 public:
-	Unit() : weapon(10) {};
-	Unit(big HP, big SP, small AP, BoxTile* tile, std::string texSrc, BoxTileMap* tilemap, bool playerTeam);
+	Unit();
+	Unit(big HP, big SP, small AP, Tile* tile, std::string texSrc, TileMap* tilemap, bool playerTeam);
 
 	void LoadTextures(std::string texSrc);
 
@@ -18,7 +19,7 @@ public:
 	void UseAction(GameObject * defender);
 	void ReceiveAction(int amount) override;
 
-	void Move(BoxTile* tile);
+	void Move(Tile* tile);
 	void Move(Direction dir);
 
 	void ChangeHP(big amount, bool overload); // overload heals SP with excess healing
@@ -38,7 +39,7 @@ public:
 	//private:
 
 		// GameLogic
-	BoxTileMap* tilemap;
+	TileMap* tilemap;
 	bool isPlayer;
 
 	// HitPoints
@@ -52,7 +53,7 @@ public:
 	small CurAP = 5;
 
 	SDL_Rect position;
-	BoxTile* tile;
+	Tile* tile;
 
 	// Equip
 	// Equipment equip;
@@ -65,6 +66,8 @@ public:
 	small currentTexture = 0;
 	std::vector<SDL_Texture*> textures;
 	std::map<small, std::pair<small, small>> textureSets;
+
+	MiniUnitInfoBlock info;
 
 	// Other
 	std::string name = "";

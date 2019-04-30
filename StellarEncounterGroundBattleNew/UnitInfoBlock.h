@@ -7,7 +7,7 @@ class GameObject;
 class Item;
 class Unit;
 class GroundBattleScene;
-class BoxTileMap;
+class TileMap;
 
 class UnitInfoBlock {
 public:

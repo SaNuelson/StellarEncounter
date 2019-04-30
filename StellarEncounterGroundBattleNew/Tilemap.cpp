@@ -1,14 +1,16 @@
 #include "Tilemap.h"
 #include "GroundBattleScene.h"
 
-SDL_Texture* BoxTile::tex_hover = nullptr;
-SDL_Texture* BoxTile::tex_move = nullptr;
-SDL_Texture* BoxTile::tex_run = nullptr;
-SDL_Texture* BoxTile::tex_attack = nullptr;
+void TileMap::Init(std::string source, int x, int y) {
 
+	/*
+	
+	for now source must be in format with rectangle-like proportions, starting with margined line.
+	that means every odd line starting with first, must have N-1 cells
+		while every even line must have N cells, because of specific indexation of the tiles.
 
+	*/
 
-void BoxTileMap::Init(std::string source, int x, int y) {
 	start_pt.x = x;
 	start_pt.y = y;
 	SDL_Point pos;
@@ -20,84 +22,78 @@ void BoxTileMap::Init(std::string source, int x, int y) {
 	std::stringstream ss(source);
 	std::string line;
 	int line_count = 0;
-	hoverTileTex = ResourceManager::LoadTexture("Graphics/txhover.png");
-	moveTileTex = ResourceManager::LoadTexture("Graphics/txmove.png", 150);
-	runTileTex = ResourceManager::LoadTexture("Graphics/txrun.png", 150);
+	// true when first line starts with margin
+	bool margin = true; // later figured before-hand, used to shift every second line by half the width of a tile
 	while (std::getline(ss, line, ',')) {
-		tiles.push_back(std::vector<BoxTile>());
-		for (char c : line) {
-			tiles[line_count].push_back(BoxTile(GetBoxTileCodePath(c - 48), pos, mappos, this));
-			pos.x += boxTileSize;
-			mappos.x++;
-		}
 		pos.x = x;
-		pos.y += boxTileSize;
-		line_count++;
+		pos.y += yTileTopSize + yTileBoxSize;
+		if (margin)
+			pos.x += xTileSize / 2;
 		mappos.x = 0;
 		mappos.y = line_count;
+		tiles.push_back(std::vector<Tile>());
+		for (char c : line) {
+			tiles[line_count].push_back(Tile(GetTileCodePath(c - 48), pos, mappos, this));
+			pos.x += xTileSize;
+			mappos.x++;
+		}
+		line_count++;
+		margin = !margin;
 	}
-	BoxTile* left;
-	BoxTile* up;
-	for(int i = 0; i < tiles.size(); i++)
-		for (int j = 0; j < tiles[0].size(); j++) {
-			if (i > 0) {
-				tiles[i][j].tile_up = &tiles[i - 1][j];
-				tiles[i - 1][j].tile_down = &tiles[i][j];
+
+	// bind neighbors for all tiles without margin
+	for(int i = 1; i < tiles.size(); i += 2)
+		for (int j = 0; j < tiles[i].size(); j ++) {
+			// top_right
+			if (i > 0 && tiles[i-1].size() > j) {
+				tiles[i][j].tile_up_right = &tiles[i - 1][j];
+				tiles[i - 1][j].tile_down_left = &tiles[i][j];
 			}
+			// left
 			if (j > 0) {
 				tiles[i][j].tile_left = &tiles[i][j - 1];
 				tiles[i][j - 1].tile_right = &tiles[i][j];
 			}
+			// top_left
+			if (i > 0 && j > 0) {
+				tiles[i][j].tile_up_left = &tiles[i - 1][j - 1];
+				tiles[i - 1][j - 1].tile_down_right = &tiles[i][j];
+			}
 		}
 
-}
-
-void BoxTileMap::ResolveInput(SDL_Event & e) {
-
-	int x, y;
-	SDL_GetMouseState(&x, &y);
-
-	if (y - start_pt.y < 0)
-		yt = -1;
-	else
-		yt = (y - start_pt.y) / boxTileSize;
-	if (x - start_pt.x < 0)
-		xt = -1;
-	else
-		xt = (x - start_pt.x) / boxTileSize;
-
-	if (xt < 0 || yt < 0 || yt >= tiles.size() || xt >= tiles[yt].size())
-		hover = false;
-	else
-		hover = true;
-
-	if (e.type == SDL_MOUSEBUTTONDOWN && hover) {
-		// click on tile
-		if (CanMove(scene->GetCurrentUnit(), &tiles[yt][xt])) {
-			scene->GetCurrentUnit()->Move(&tiles[yt][xt]);
+	// bind neighbors for all tiles with margin
+	for (int i = 0; i < tiles.size(); i += 2)
+		for (int j = 0; j < tiles[i].size(); j ++) {
+			// top_right
+			if (i > 0 && tiles[i - 1].size() > j + 1) {
+				tiles[i][j].tile_up_right = &tiles[i - 1][j + 1];
+				tiles[i - 1][j + 1].tile_down_left = &tiles[i][j];
+			}
+			// left
+			if (j > 0) {
+				tiles[i][j].tile_left = &tiles[i][j - 1];
+				tiles[i][j - 1].tile_right = &tiles[i][j];
+			}
+			// top_left
+			if (i > 0 && tiles[i].size() > j) {
+				tiles[i][j].tile_up_left = &tiles[i - 1][j];
+				tiles[i - 1][j].tile_down_right = &tiles[i][j];
+			}
 		}
-		else if (CanAttack(scene->GetCurrentUnit(), &tiles[yt][xt])) {
-			scene->GetCurrentUnit()->Move(&tiles[yt - 1][xt]); // TODO move on free tile in reach
-			scene->GetCurrentUnit()->UseAction((Unit*)tiles[yt][xt].occ);
-		}
-	}
+
 
 }
-/*
-int BoxTileMap::GetDistance(SDL_Point & p1, SDL_Point & p2) {
-	return abs(p1.x - p2.x) + abs(p1.y - p2.y);
+
+void TileMap::ResolveInput(SDL_Event & e) {
+
 }
 
-int BoxTileMap::GetDistance(int & tx1, int & tx2, int & ty1, int & ty2) {
-	return abs(tx1 - tx2) + abs(ty1 - ty2);
-}
-*/
-int BoxTileMap::GetDistance(BoxTile * t1, BoxTile * t2) {
+int TileMap::GetDistance(Tile * t1, Tile * t2) {
 	
 	return 1; // todo
 }
 
-bool BoxTileMap::CanMove(Unit * unit, BoxTile * tile)
+bool TileMap::CanMove(Tile * tile)
 {
 	if (tile == nullptr)
 		return false;
@@ -106,27 +102,23 @@ bool BoxTileMap::CanMove(Unit * unit, BoxTile * tile)
 	return true;
 }
 
-bool BoxTileMap::CanAttack(Unit * unit, BoxTile * tile)
+bool TileMap::CanAttack(Unit * unit, Tile * tile)
 {
 	if (tile == nullptr)
 		return false;
-	// std::cout << "BoxTileMap::CanAttack " << tile->occ->isEnemy() << " against " << unit->isEnemy() << std::endl;
+	// std::cout << "TileMap::CanAttack " << tile->occ->isEnemy() << " against " << unit->isEnemy() << std::endl;
 	if (tile->occ->isEnemy() != unit->isEnemy())
 		return true;
 	return false;
 }
 
-bool BoxTileMap::CanMoveHere(BoxTile * tile) {
-	return GetDistance(scene->GetCurrentUnit()->tile, tile) <= scene->GetCurrentUnit()->CurAP;
-}
-
-void BoxTileMap::OnUpdate(double delta) {
+void TileMap::OnUpdate(double delta) {
 
 	// if any change on field occured, change states of tiles accordingly
 	if (true) { //stateChange
 
 		for (int x = 0; x < tiles.size(); x++) {
-			for (int y = 0; y < tiles[0].size(); y++) {
+			for (int y = 0; y < tiles[x].size(); y++) {
 				tiles[x][y].OnUpdate();
 			}
 		}
@@ -177,18 +169,7 @@ void BoxTileMap::OnUpdate(double delta) {
 
 }
 
-void BoxTileMap::OnRender() {
-
-	if (oxt >= 0 && oyt >= 0 && oxt < tiles[0].size() && oyt < tiles.size())
-		tiles[oyt][oxt].DelState(TILE_HOVER);
-
-	if (hover) {
-		//std::cout << "BoxTileMap::OnRender - hover true on: " << yt << " " << xt << std::endl;
-		tiles[yt][xt].AddState(TILE_HOVER);
-	}
-
-	oxt = xt;
-	oyt = yt;
+void TileMap::OnRender() {
 
 	for (auto &line : tiles)
 		for (auto &tile : line)

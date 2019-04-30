@@ -1,6 +1,8 @@
 #include "Unit.h"
 
-Unit::Unit(big HP, big SP, small AP, BoxTile* tile, std::string texSrc, BoxTileMap* tilemap, bool playerTeam) {
+Unit::Unit() : weapon(10), info(this) {}
+
+Unit::Unit(big HP, big SP, small AP, Tile* tile, std::string texSrc, TileMap* tilemap, bool playerTeam) : info(this) {
 
 	MaxHP = HP;
 	CurHP = HP;
@@ -23,7 +25,7 @@ void Unit::OnUpdate(double delta) {
 
 	if (CurHP <= 0) {
 		CurHP = 0;
-		textures.push_back(ResourceManager::LoadTexture("Graphics/rip.png"));
+		textures.push_back(ResourceManager::LoadTexture("Graphics/Units/rip.png"));
 		currentTexture++;
 	}
 
@@ -41,7 +43,7 @@ void Unit::ReceiveAction(int amount)
 	ChangeSP(amount, true);
 }
 
-void Unit::Move(BoxTile * tile)
+void Unit::Move(Tile * tile)
 {
 	this->CurAP -= tilemap->GetDistance(this->tile, tile);
 	this->tile->SetOccupant(nullptr);
@@ -53,16 +55,22 @@ void Unit::Move(Direction dir)
 {
 	switch (dir) {
 	case 0:
-		Move(tile->tile_left);
+		Move(tile->tile_up_right);
 		break;
 	case 1:
-		Move(tile->tile_up);
-		break;
-	case 2:
 		Move(tile->tile_right);
 		break;
+	case 2:
+		Move(tile->tile_down_right);
+		break;
 	case 3:
-		Move(tile->tile_down);
+		Move(tile->tile_down_left);
+		break;
+	case 4:
+		Move(tile->tile_left);
+		break;
+	case 5:
+		Move(tile->tile_up_left);
 		break;
 	}
 }
@@ -144,13 +152,16 @@ void Unit::Die()
 }
 
 void Unit::OnRender() {
-	//std::cout << "Render " << position.x << " " << position.y << " " << position.w << " " << position.h << std::endl;
+	std::cout << "Render " << position.x << " " << position.y << " " << position.w << " " << position.h << std::endl;
 	SDL_Point p = tile->GetCenter();
 	SDL_Point s;
 	SDL_QueryTexture(textures[currentTexture], nullptr, nullptr, &s.x, &s.y);
 	position.x = p.x - s.x / 2;
 	position.y = p.y - s.y;
 	SDL_RenderCopy(ResourceManager::ren, textures[currentTexture], nullptr, &position);
+	info.Move();
+	info.OnRender();
+
 }
 
 bool Unit::isEnemy() { return !isPlayer; }

@@ -5,8 +5,8 @@
 class GameObject;
 class Item;
 class Unit;
-class BoxTile;
-class BoxTileMap;
+class Tile;
+class TileMap;
 class Scene;
 
 class ResourceManager
@@ -33,8 +33,8 @@ public:
 	static SDL_Window * win;
 	static Scene * scene;
 
-	static Unit* CreateUnit(big HP, big SP, small AP, BoxTile* tile, std::string texSrc, BoxTileMap* tilemap, bool playerTeam);
-	static Item* CreateItem(std::string texSrc, BoxTile* tile, BoxTileMap* tilemap, bool usable);
+	static Unit* CreateUnit(big HP, big SP, small AP, Tile* tile, std::string texSrc, TileMap* tilemap, bool playerTeam);
+	static Item* CreateItem(std::string texSrc, Tile* tile, TileMap* tilemap, bool usable);
 
 private:
 

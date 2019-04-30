@@ -5,6 +5,7 @@
 #include "GameObject.h"
 #include "Unit.h"
 #include "Item.h"
+#include "UnitStackBlock.h"
 
 
 class UnitActionBlock;
@@ -23,16 +24,19 @@ public:
 
 	bool IsPlayerTurn();
 
-	Unit * GetCurrentUnit();
+	bool UpKey = false;
+	bool DownKey = false;
+
+	TileMap tilemap;
 
 	std::vector<Unit*> units;
 	int currentUnit = 0;
+	Unit * GetCurrentUnit();
 
 	std::vector<Item*> items;
 
-	BoxTileMap tilemap;
 
 	UnitInfoBlock infoblock;
 	UnitActionBlock actionblock;
-
+	UnitStackBlock stackblock;
 };

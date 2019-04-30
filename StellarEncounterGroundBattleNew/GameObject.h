@@ -3,8 +3,8 @@
 
 // speed - in milliseconds
 
-class BoxTileMap;
-class BoxTile;
+class TileMap;
+class Tile;
 
 class GameObject {
 public:

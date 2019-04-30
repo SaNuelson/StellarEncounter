@@ -6,7 +6,7 @@
 class UIHolder {
 public:
 
-	UIHolder(BoxTileMap* tilemap) {
+	UIHolder(TileMap* tilemap) {
 		unitinfo = UnitInfoBlock(tilemap);
 
 	};

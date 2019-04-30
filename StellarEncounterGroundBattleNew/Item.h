@@ -10,7 +10,7 @@ class Item : public GameObject {
 public:
 
 	Item() {};
-	Item(std::string texSrc, BoxTile* tile, BoxTileMap* tilemap, bool usable);
+	Item(std::string texSrc, Tile* tile, TileMap* tilemap, bool usable);
 
 	bool isEnemy() override;
 
@@ -24,8 +24,8 @@ public:
 
 private:
 
-	BoxTileMap * tilemap;
-	BoxTile * tile;
+	TileMap * tilemap;
+	Tile * tile;
 	bool isUsable;
 
 	SDL_Renderer* ren;

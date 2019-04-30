@@ -128,6 +128,7 @@
     <ClCompile Include="GroundBattleScene.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MiniUnitInfoBlock.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Tile.cpp" />
@@ -135,6 +136,7 @@
     <ClCompile Include="Unit.cpp" />
     <ClCompile Include="UnitActionBlock.cpp" />
     <ClCompile Include="UnitInfoBlock.cpp" />
+    <ClCompile Include="UnitStackBlock.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Button.h" />
@@ -143,6 +145,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GroundBattleScene.h" />
     <ClInclude Include="Item.h" />
+    <ClInclude Include="MiniUnitInfoBlock.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="stdlib.h" />
@@ -152,6 +155,7 @@
     <ClInclude Include="Unit.h" />
     <ClInclude Include="UnitActionBlock.h" />
     <ClInclude Include="UnitInfoBlock.h" />
+    <ClInclude Include="UnitStackBlock.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="StellarEncounterGroundBattleNew.rc" />

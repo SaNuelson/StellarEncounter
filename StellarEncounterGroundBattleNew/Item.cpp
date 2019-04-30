@@ -1,6 +1,6 @@
 #include "Item.h"
 
-Item::Item(std::string texSrc, BoxTile* tile, BoxTileMap * tilemap, bool usable)
+Item::Item(std::string texSrc, Tile* tile, TileMap * tilemap, bool usable)
 {
 	tex = ResourceManager::LoadTexture(texSrc);
 	ren = ResourceManager::ren;

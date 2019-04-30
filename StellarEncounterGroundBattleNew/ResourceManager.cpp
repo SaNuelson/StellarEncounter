@@ -154,13 +154,13 @@ void ResourceManager::FreeTextures()
 	TextureMap.clear();
 }
 
-Unit * ResourceManager::CreateUnit(big HP, big SP, small AP, BoxTile * tile, std::string texSrc, BoxTileMap * tilemap, bool playerTeam)
+Unit * ResourceManager::CreateUnit(big HP, big SP, small AP, Tile * tile, std::string texSrc, TileMap * tilemap, bool playerTeam)
 {
 	GameObjects.push_back(std::make_unique<Unit>(HP, SP, AP, tile, texSrc, tilemap, playerTeam));
 	return (Unit*) GameObjects[GameObjects.size() - 1]->getPtr();
 }
 
-Item * ResourceManager::CreateItem(std::string texSrc, BoxTile* tile, BoxTileMap * tilemap, bool usable)
+Item * ResourceManager::CreateItem(std::string texSrc, Tile* tile, TileMap * tilemap, bool usable)
 {
 	GameObjects.push_back(std::make_unique<Item>(texSrc, tile, tilemap, usable));
 	return (Item*)GameObjects[GameObjects.size() - 1]->getPtr();

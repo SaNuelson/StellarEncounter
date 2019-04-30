@@ -64,7 +64,6 @@ int main() {
 
 	// necessary initializations because... reasons
 	ResourceManager::Init(ren, win, nullptr);
-	BoxTile::Init();
 	GroundBattleScene scene;
 	ResourceManager::scene = &scene;
 
