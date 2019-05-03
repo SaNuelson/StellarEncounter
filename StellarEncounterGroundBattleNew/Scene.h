@@ -2,8 +2,6 @@
 #include "stdlib.h"
 #include "ResourceManager.h"
 #include "Tilemap.h"
-#include "UnitActionBlock.h"
-#include "UnitInfoBlock.h"
 #include "GameObject.h"
 #include "Unit.h"
 #include "Item.h"

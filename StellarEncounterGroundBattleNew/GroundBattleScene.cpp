@@ -1,8 +1,6 @@
 #include "GroundBattleScene.h"
-#include "UnitActionBlock.h"
-#include "UnitInfoBlock.h"
 
-GroundBattleScene::GroundBattleScene() : infoblock(this), tilemap(this), actionblock(this), stackblock(this) {
+GroundBattleScene::GroundBattleScene() : tilemap(this), actionblock(this), stackblock(this) {
 
 	// actionblock.scene = this
 
@@ -123,7 +121,6 @@ void GroundBattleScene::OnUpdate(double delta) {
 	if (currentUnit >= units.size())
 		currentUnit = 0;
 
-	infoblock.OnUpdate(delta);
 	//actionblock.OnUpdate(delta);
 	tilemap.OnUpdate(delta);
 	for (auto &unit : units)
@@ -132,7 +129,6 @@ void GroundBattleScene::OnUpdate(double delta) {
 
 void GroundBattleScene::OnRender() {
 	tilemap.OnRender();
-	infoblock.OnRender();
 	stackblock.OnRender();
 	//actionblock.OnRender();
 

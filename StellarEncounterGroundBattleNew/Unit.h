@@ -5,7 +5,6 @@
 #include "Tile.h"
 #include "ResourceManager.h"
 #include "Equipment.h"
-#include "MiniUnitInfoBlock.h"
 
 class Unit : public GameObject {
 public:
@@ -67,7 +66,6 @@ public:
 	std::vector<SDL_Texture*> textures;
 	std::map<small, std::pair<small, small>> textureSets;
 
-	MiniUnitInfoBlock info;
 
 	// Other
 	std::string name = "";

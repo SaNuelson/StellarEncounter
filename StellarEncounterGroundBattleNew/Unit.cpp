@@ -1,8 +1,8 @@
 #include "Unit.h"
 
-Unit::Unit() : weapon(10), info(this) {}
+Unit::Unit() : weapon(10) {}
 
-Unit::Unit(big HP, big SP, small AP, Tile* tile, std::string texSrc, TileMap* tilemap, bool playerTeam) : info(this) {
+Unit::Unit(big HP, big SP, small AP, Tile* tile, std::string texSrc, TileMap* tilemap, bool playerTeam) {
 
 	MaxHP = HP;
 	CurHP = HP;
@@ -152,15 +152,13 @@ void Unit::Die()
 }
 
 void Unit::OnRender() {
-	std::cout << "Render " << position.x << " " << position.y << " " << position.w << " " << position.h << std::endl;
+	// std::cout << "Render " << position.x << " " << position.y << " " << position.w << " " << position.h << std::endl;
 	SDL_Point p = tile->GetCenter();
 	SDL_Point s;
 	SDL_QueryTexture(textures[currentTexture], nullptr, nullptr, &s.x, &s.y);
 	position.x = p.x - s.x / 2;
 	position.y = p.y - s.y;
 	SDL_RenderCopy(ResourceManager::ren, textures[currentTexture], nullptr, &position);
-	info.Move();
-	info.OnRender();
 
 }
 

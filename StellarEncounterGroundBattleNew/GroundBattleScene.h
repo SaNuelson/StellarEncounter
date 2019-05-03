@@ -1,15 +1,13 @@
+#pragma once
 #include "Scene.h"
 #include "stdlib.h"
 #include "ResourceManager.h"
-#include "Tilemap.h"
 #include "GameObject.h"
 #include "Unit.h"
 #include "Item.h"
+#include "UnitActionBlock.h"
 #include "UnitStackBlock.h"
-
-
-class UnitActionBlock;
-class UnitInfoBlock;
+#include "Tilemap.h"
 
 class GroundBattleScene : public Scene {
 public:
@@ -36,7 +34,6 @@ public:
 	std::vector<Item*> items;
 
 
-	UnitInfoBlock infoblock;
 	UnitActionBlock actionblock;
 	UnitStackBlock stackblock;
 };
