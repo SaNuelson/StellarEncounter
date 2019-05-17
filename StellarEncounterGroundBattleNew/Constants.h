@@ -3,6 +3,12 @@
 
 #include "stdlib.h"
 
+// RETCODES
+
+Sint32 RC_NEW_GAME = 1;
+Sint32 RC_OPTIONS = 2;
+Sint32 RC_QUIT_GAME = 3;
+
 // CUSTOM DATA TYPES
 
 enum Attribute {

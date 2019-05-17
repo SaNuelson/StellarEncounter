@@ -8,6 +8,7 @@ class Unit;
 class Tile;
 class TileMap;
 class Scene;
+class Button;
 
 class ResourceManager
 {
@@ -26,6 +27,8 @@ public:
 	static void RenderText(std::string caption, SDL_Rect& dst_rect);
 
 	static SDL_Rect CreateRectangle(int x, int y, int w, int h); // for quick creation
+
+	static Button* CreateButton();
 
 	static void FreeTextures();
 
@@ -46,6 +49,8 @@ private:
 	static TTF_Font * default_font;
 
 	static std::vector<std::unique_ptr<GameObject>> GameObjects;
+
+	static std::vector<std::unique_ptr<Button>> Buttons;
 
 };
 

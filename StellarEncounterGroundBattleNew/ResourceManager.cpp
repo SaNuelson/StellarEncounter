@@ -4,6 +4,7 @@
 #include "Item.h"
 #include "Tile.h"
 #include "Tilemap.h"
+#include "Button.h"
 
 SDL_Renderer * ResourceManager::ren = nullptr;
 SDL_Window * ResourceManager::win = nullptr;
@@ -12,6 +13,7 @@ bool ResourceManager::initialized = false;
 std::map<std::string, SDL_Texture*> ResourceManager::TextureMap;
 TTF_Font * ResourceManager::default_font;
 std::vector<std::unique_ptr<GameObject>> ResourceManager::GameObjects;
+std::vector<std::unique_ptr<Button>> ResourceManager::Buttons;
 
 void ResourceManager::Init(SDL_Renderer * renderer, SDL_Window* window, Scene * pscene) {
 	ren = renderer; initialized = true;
@@ -146,6 +148,12 @@ SDL_Rect ResourceManager::CreateRectangle(int x, int y, int w, int h)
 	return rect;
 }
 
+Button* ResourceManager::CreateButton()
+{
+	Buttons.push_back(std::make_unique<Button>(Button::Default()));
+	return Buttons[Buttons.size() - 1].get();
+}
+
 void ResourceManager::FreeTextures()
 {
 	for (auto tex_pair : TextureMap) {
@@ -157,11 +165,11 @@ void ResourceManager::FreeTextures()
 Unit * ResourceManager::CreateUnit(big HP, big SP, small AP, Tile * tile, std::string texSrc, TileMap * tilemap, bool playerTeam)
 {
 	GameObjects.push_back(std::make_unique<Unit>(HP, SP, AP, tile, texSrc, tilemap, playerTeam));
-	return (Unit*) GameObjects[GameObjects.size() - 1]->getPtr();
+	return (Unit*) GameObjects[GameObjects.size() - 1].get();
 }
 
 Item * ResourceManager::CreateItem(std::string texSrc, Tile* tile, TileMap * tilemap, bool usable)
 {
 	GameObjects.push_back(std::make_unique<Item>(texSrc, tile, tilemap, usable));
-	return (Item*)GameObjects[GameObjects.size() - 1]->getPtr();
+	return (Item*)GameObjects[GameObjects.size() - 1].get();
 }

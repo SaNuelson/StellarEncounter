@@ -28,9 +28,10 @@ public:
 		btn.caption = "New_Button";
 		btn.rect = rect;
 		btn.retcode = 1;
-		btn.idle_tex = ResourceManager::LoadTextureWithCaption("Resources/button_idle.png", btn.caption);
-		btn.hover_tex = ResourceManager::LoadTextureWithCaption("Resources/button_hover.png", btn.caption);
-		btn.click_tex = ResourceManager::LoadTextureWithCaption("Resources/button_click.png", btn.caption);
+		btn.idle_tex = ResourceManager::LoadTexture("Resources/button_idle.png");
+		btn.hover_tex = ResourceManager::LoadTexture("Resources/button_hover.png");
+		btn.click_tex = ResourceManager::LoadTexture("Resources/button_click.png");
+		btn.caption_tex = ResourceManager::LoadCaption(btn.caption);
 
 		return btn;
 	}
@@ -40,8 +41,9 @@ public:
 	std::string GetCaption() {
 		return caption;
 	};
-	void SetCaption(std::string &new_caption) {
+	void SetCaption(std::string new_caption) {
 		if (new_caption != "" && new_caption != caption) caption = new_caption;
+		caption_tex = ResourceManager::LoadCaption(caption);
 	};
 
 	SDL_Rect GetRect() {
@@ -141,8 +143,11 @@ public:
 		}
 	}
 
-	void OnRender(SDL_Renderer * ren) {
-		SDL_RenderCopy(ren, GetButtonTex(), nullptr, &rect);
+	void OnRender() {
+		SDL_RenderCopy(ResourceManager::ren, GetButtonTex(), nullptr, &rect);
+		if (caption != "") {
+			SDL_RenderCopy(ResourceManager::ren, caption_tex, nullptr, &rect);
+		}
 	}
 
 	void DispatchEvent() {
@@ -163,9 +168,10 @@ private:
 
 	int8_t button_state = 0;
 
-	SDL_Texture * idle_tex;
-	SDL_Texture * hover_tex;
-	SDL_Texture * click_tex;
+	SDL_Texture* idle_tex = nullptr;
+	SDL_Texture* hover_tex = nullptr;
+	SDL_Texture* click_tex = nullptr;
+	SDL_Texture* caption_tex = nullptr;
 
 	bool isMouseHolding = false;
 
