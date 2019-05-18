@@ -35,9 +35,11 @@ void Tile::OnUpdate() {
 }
 
 void Tile::OnRender() {
-	
 	SDL_RenderCopy(ResourceManager::ren, tex, nullptr, &pos);
+}
 
+void Tile::AfterRender()
+{
 	if (occ != nullptr)
 		occ->OnRender();
 }

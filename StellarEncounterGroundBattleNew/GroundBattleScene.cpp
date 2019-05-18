@@ -12,6 +12,10 @@ void GroundBattleScene::StartDemo1() {
 
 	units.push_back(ResourceManager::CreateUnit(hero_source));
 	tilemap.PutOnTile(units[0], 1, 3);
+	units[0]->isPlayer = true;
+	units.push_back(ResourceManager::CreateUnit(hero_source));
+	tilemap.PutOnTile(units[1], 5, 3);
+	units[1]->isPlayer = false;
 	/*
 	//units.push_back(ResourceManager::CreateUnit(15, 5, 5, tilemap.GetTile(1, 3), "Graphics/GameObjects/Hero/idle1.png", &tilemap, true));
 	//units[0]->name = "Sir Longderston";
@@ -42,7 +46,7 @@ void GroundBattleScene::ResolveInput(SDL_Event & e) {
 			break;
 		}
 	}
-	else if (e.type == SDL_KEYDOWN) {
+	else if (units[currentUnit]->currentAction == 0 && e.type == SDL_KEYDOWN) {
 		switch (e.key.keysym.sym) {
 		case SDLK_UP:
 		case SDLK_w:

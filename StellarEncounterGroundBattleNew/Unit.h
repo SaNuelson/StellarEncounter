@@ -39,6 +39,8 @@ public:
 	// GameLogic
 	// TileMap* tilemap = nullptr;	<- ingerited from GameObject
 	bool isPlayer = false;
+	small currentAction = -1;
+	small nextAction = 0;
 
 	// HitPoints
 	big MaxHP = 100;
@@ -51,6 +53,9 @@ public:
 	small CurAP = 5;
 
 	SDL_Rect position;
+	SDL_Point move_vec;
+	big moveSpeed = 20;
+	big moveTimeLeft = moveSpeed;
 	// Tile* tile = nullptr;	<- inherited from GameObject
 
 	// Equip
@@ -59,9 +64,9 @@ public:
 	
 
 	// Render
+	bool flip = false;
 	big textureSpeed = 100;
 	big textureTimeLeft = textureSpeed;
-	small currentTextureSet = 0;
 	small currentTexture = 0;
 	std::vector<SDL_Texture*> textures;
 	std::map<small, std::pair<small, small>> textureSets;

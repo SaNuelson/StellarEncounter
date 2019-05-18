@@ -19,6 +19,7 @@ public:
 
 	void OnUpdate();
 	void OnRender();
+	void AfterRender(); // render units after OnRender to avoid overlapping
 
 	SDL_Point GetCenter();
 

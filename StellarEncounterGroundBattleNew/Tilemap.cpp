@@ -105,6 +105,14 @@ int TileMap::GetDistance(Tile * t1, Tile * t2) {
 	return 1; // todo
 }
 
+SDL_Point TileMap::GetMoveVec(Tile* t1, Tile* t2)
+{
+	SDL_Point p;
+	p.x = t2->pos.x - t1->pos.x;
+	p.y = t2->pos.y - t1->pos.y;
+	return p;
+}
+
 bool TileMap::CanMove(Tile * tile)
 {
 	if (tile == nullptr)
@@ -186,5 +194,8 @@ void TileMap::OnRender() {
 	for (auto &line : tiles)
 		for (auto &tile : line)
 			tile.OnRender();
+	for (auto& line : tiles)
+		for (auto& tile : line)
+			tile.AfterRender();
 
 }

@@ -31,6 +31,7 @@ public:
 	//int GetDistance(SDL_Point &p1, SDL_Point &p2);
 	//int GetDistance(int &tx1, int &tx2, int &ty1, int &ty2);
 	int GetDistance(Tile* t1, Tile* t2);
+	SDL_Point GetMoveVec(Tile* t1, Tile* t2);
 
 	bool CanMove(Tile* tile);
 	bool CanAttack(Unit* unit, Tile* tile);

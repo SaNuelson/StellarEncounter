@@ -3,6 +3,9 @@
 
 #include "stdlib.h"
 
+using big = int16_t;
+using small = int8_t;
+
 // RETCODES
 
 const Sint32 RC_NEW_GAME = 1;
@@ -10,17 +13,19 @@ const Sint32 RC_OPTIONS = 2;
 const Sint32 RC_QUIT_GAME = 3;
 
 // RENDER CODES
-const int TEX_IDLE = 0;
-const int TEX_WALK = 1;
-const int TEX_ATTACK = 2;
-const int TEX_HIT = 3;
-const int TEX_REACT = 4;
-const int TEX_DYING = 5;
-const int TEX_DEAD = 6;
+const small UNIT_ACTION_IDLE = 0;
+const small UNIT_ACTION_MOVE = 1;
+const small UNIT_ACTION_ATTACK = 2;
+const small UNIT_ACTION_HIT = 3;
+const small UNIT_ACTION_REACT = 4;
+const small UNIT_ACTION_DYING = 5;
+const small UNIT_ACTION_DEAD = 6;
+
+const std::string Actions[7] = { "Idle","Move","Attack","Hit","React","Dying","Dead" };
 
 // DEMO UNITS
 
-const std::string hero_source = "HP=100\nMaxSP=30\nCurSP=15\nAP=6\nName=Lord Farquad\nWeapon=15\nTextureSpeed=200\nTextures\n0=11|Graphics/GameObjects/Skeleton/Idle/tile";
+const std::string hero_source = "HP=100\nMaxSP=30\nCurSP=15\nAP=6\nName=Lord Farquad\nWeapon=15\nTextureSpeed=200\nTextures=Graphics/GameObjects/Skeleton";
 
 // CUSTOM DATA TYPES
 
@@ -36,9 +41,6 @@ enum Direction {
 	Left = 4,
 	UpLeft = 5
 };
-
-using big = int16_t;
-using small = int8_t;
 
 // WINDOW INFO
 

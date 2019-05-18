@@ -13,7 +13,6 @@ Unit::Unit(std::string source) {
 }
 
 Unit::Unit(big HP, big SP, small AP, Tile* tile, std::string texSrc, TileMap* tilemap, bool playerTeam) {
-
 	MaxHP = HP;
 	CurHP = HP;
 	MaxAP = AP;
@@ -33,12 +32,68 @@ void Unit::LoadTextures(std::string texSrc)
 
 void Unit::OnUpdate(double delta) {
 
+	// change animation if needed
+	if (currentAction != nextAction) {
+		currentAction = nextAction;
+		textureTimeLeft = textureSpeed;
+		currentTexture = textureSets[currentAction].first;
+
+		if (currentAction == 0) {
+			flip = !isPlayer;
+			SDL_Point p = tile->GetCenter();
+			position.x = p.x - position.w / 2;
+			position.y = p.y - position.h;
+		}
+
+	}
+
+	if (currentAction == 1) {
+		if (move_vec.x == 0 && move_vec.y == 0) {
+			nextAction = 0;
+		}
+		else {
+			if (move_vec.x < 0)
+				flip = true;
+			else
+				flip = false;
+			moveTimeLeft--;
+			if (moveTimeLeft == 0) {
+				if (move_vec.x != 0 && move_vec.y != 0)
+					moveTimeLeft = 2 * moveSpeed;
+				else
+					moveTimeLeft = moveSpeed;
+				int mx;
+				int my;
+				if (move_vec.x > 0)
+					mx = 1;
+				else if (move_vec.x < 0)
+					mx = -1;
+				else
+					mx = 0;
+				if (move_vec.y > 0)
+					my = 1;
+				else if (move_vec.y < 0)
+					my = -1;
+				else
+					my = 0;
+				move_vec.x -= mx;
+				move_vec.y -= my;
+				position.x += mx;
+				position.y += my;
+			}
+		}
+	}
+
+	// add movement to animataion if needed
+
+
+	// update animation, always
 	textureTimeLeft -= delta;
 	if (textureTimeLeft <= 0) {
 		textureTimeLeft = textureSpeed;
 		currentTexture++;
-		if (textureSets[currentTextureSet].second < currentTexture) {
-			currentTexture = textureSets[currentTextureSet].first;
+		if (textureSets[currentAction].second < currentTexture) {
+			currentTexture = textureSets[currentAction].first;
 		}
 	}
 
@@ -64,7 +119,9 @@ void Unit::ReceiveAction(int amount)
 
 void Unit::Move(Tile * tile)
 {
-	this->CurAP -= tilemap->GetDistance(this->tile, tile);
+	nextAction = UNIT_ACTION_MOVE;
+	move_vec = tilemap->GetMoveVec(this->tile, tile);
+	this->CurAP -= tilemap->GetDistance(this->tile, tile); // todo after moving
 	
 	this->tile->SetOccupant(nullptr);
 	tile->SetOccupant(this);
@@ -172,10 +229,7 @@ void Unit::Die()
 }
 
 void Unit::OnRender() {
-	SDL_Point p = tile->GetCenter();
-	position.x = p.x - position.w / 2;
-	position.y = p.y - position.h;
-	SDL_RenderCopy(ResourceManager::ren, textures[currentTexture], nullptr, &position);
+	SDL_RenderCopyEx(ResourceManager::ren, textures[currentTexture], nullptr, &position, 0, nullptr, (flip ? SDL_RendererFlip::SDL_FLIP_HORIZONTAL : SDL_RendererFlip::SDL_FLIP_NONE));
 }
 
 bool Unit::isEnemy() { return !isPlayer; }
@@ -218,77 +272,74 @@ void Unit::ParseSource(Unit* unit, std::string& source)
 		<TEXTURE_SET_CODE>=<COUNT>|<TEXTURE_PATH(in format: path/fileX.png)>\n
 	*/
 
-	bool textures = false;
 	std::stringstream ss(source);
 	std::string line;
 	while (std::getline(ss, line)) {
 		std::string attrib = line.substr(0, line.find('='));
 		std::string value = line.substr(line.find('=') + 1, line.size());
 		std::cout << "Parsed attrib = " << attrib << " and val = " << value << std::endl;
-		if(!textures){
-			if (attrib == "Name") {
-				unit->name = value;
-			}
-			else if (attrib == "HP") {
-				unit->MaxHP = std::stoi(value);
-				unit->CurHP = std::stoi(value);
-			}
-			else if (attrib == "MaxHP") {
-				unit->MaxHP = std::stoi(value);
-			}
-			else if (attrib == "CurHP") {
-				unit->CurHP = std::stoi(value);
-			}
-			else if (attrib == "SP") {
-				unit->MaxSP = std::stoi(value);
-				unit->CurSP = std::stoi(value);
-			}
-			else if (attrib == "MaxSP") {
-				unit->MaxSP = std::stoi(value);
-			}
-			else if (attrib == "CurSP") {
-				unit->CurSP = std::stoi(value);
-			}
-			else if (attrib == "AP") {
-				unit->MaxAP = std::stoi(value);
-				unit->CurAP = std::stoi(value);
-			}
-			else if (attrib == "CurAP") {
-				unit->MaxAP = std::stoi(value);
-			}
-			else if (attrib == "MaxAP") {
-				unit->CurAP = std::stoi(value);
-			}
-			else if (attrib == "Weapon") {
-				unit->weapon = Weapon(value);
-			}
-			else if (attrib == "TextureSpeed") {
-				unit->textureSpeed = std::stoi(value);
-			}
-			else if (attrib == "Textures") {
-				textures = true;
-			}
-			else {
-				std::cout << "Mistake in pair " << attrib << " " << value << ".\n Attribute unknown.\n";
+		if (attrib == "Name") {
+			unit->name = value;
+		}
+		else if (attrib == "HP") {
+			unit->MaxHP = std::stoi(value);
+			unit->CurHP = std::stoi(value);
+		}
+		else if (attrib == "MaxHP") {
+			unit->MaxHP = std::stoi(value);
+		}
+		else if (attrib == "CurHP") {
+			unit->CurHP = std::stoi(value);
+		}
+		else if (attrib == "SP") {
+			unit->MaxSP = std::stoi(value);
+			unit->CurSP = std::stoi(value);
+		}
+		else if (attrib == "MaxSP") {
+			unit->MaxSP = std::stoi(value);
+		}
+		else if (attrib == "CurSP") {
+			unit->CurSP = std::stoi(value);
+		}
+		else if (attrib == "AP") {
+			unit->MaxAP = std::stoi(value);
+			unit->CurAP = std::stoi(value);
+		}
+		else if (attrib == "CurAP") {
+			unit->MaxAP = std::stoi(value);
+		}
+		else if (attrib == "MaxAP") {
+			unit->CurAP = std::stoi(value);
+		}
+		else if (attrib == "Weapon") {
+			unit->weapon = Weapon(value);
+		}
+		else if (attrib == "TextureSpeed") {
+			unit->textureSpeed = std::stoi(value);
+		}
+		else if (attrib == "Textures") {
+			// <TEXTURE_SET_CODE>=<COUNT>|<TEXTURE_PATH(in format: path/file[X.png] -- part in [] added automatically)>
+			// eg. "Graphics/GameObjects/Hero/idle1.png , ... , Graphics/GameObjects/Hero/idle12.png changes to Graphics/GameObjects/Hero/idle
+
+			std::string path_base = value;
+			for(int i = 0; i < Actions->size(); i++) {
+				int start = unit->textures.size();
+				int count = 0;
+				while (true) {
+					SDL_Texture* tex = ResourceManager::LoadTexture(path_base + "/" + Actions[i] + "/tile0" + (count < 10 ? "0" : "") + std::to_string(count) + ".png");
+					if (tex == nullptr) {
+						break;
+					}
+					else {
+						unit->textures.push_back(tex);
+						count++;
+					}
+				}
+				unit->textureSets[i] = std::make_pair(start, start + count - 1);
 			}
 		}
 		else {
-			// <TEXTURE_SET_CODE>=<COUNT>|<TEXTURE_PATH(in format: path/file[X.png] -- part in [] added automatically)>
-			// eg. "Graphics/GameObjects/Hero/idle1.png , ... , Graphics/GameObjects/Hero/idle12.png changes to 12|Graphics/GameObjects/Hero/idle
-			int count = std::stoi(value.substr(0, value.find('|')));
-			std::string path = value.substr(value.find('|') + 1, value.size());
-			int start = unit->textures.size();
-			int end = start + count - 1;
-			for (int i = 0; i < count; i++)
-			{
-				if (i < 10) {
-					unit->textures.push_back(ResourceManager::LoadTexture(path + "00" + std::to_string(i) + ".png"));
-				}
-				else {
-					unit->textures.push_back(ResourceManager::LoadTexture(path + "0" + std::to_string(i) + ".png"));
-				}
-			}
-			unit->textureSets[std::stoi(attrib)] = std::make_pair(start, end);
+			std::cout << "Mistake in pair " << attrib << " " << value << ".\n Attribute unknown.\n";
 		}
 	}
 
