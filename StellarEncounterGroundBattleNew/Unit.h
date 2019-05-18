@@ -10,9 +10,10 @@ class Unit : public GameObject {
 public:
 	Unit();
 	Unit(std::string source);
-	Unit(big HP, big SP, small AP, Tile* tile, std::string texSrc, TileMap* tilemap, bool playerTeam);
+	Unit(big HP, big SP, small AP, Tile* tile, std::string texSrc, TileMap* tilemap, small team);
 
-	void LoadTextures(std::string texSrc);
+	void LoadTextures(std::string texSrc); // debug only
+	void Resize();
 
 	void OnUpdate(double delta);
 
@@ -30,15 +31,12 @@ public:
 
 	void OnRender() override;
 
-	bool isEnemy() override;
-
 	std::string toString() override;
 
 	//private:
 
 	// GameLogic
 	// TileMap* tilemap = nullptr;	<- ingerited from GameObject
-	bool isPlayer = false;
 	small currentAction = -1;
 	small nextAction = 0;
 

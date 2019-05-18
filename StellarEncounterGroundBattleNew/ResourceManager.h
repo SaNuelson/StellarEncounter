@@ -30,6 +30,7 @@ public:
 
 	static SDL_Rect CreateRectangle(int x, int y, int w, int h); // for quick creation
 
+	static void DispatchEvent(Sint32 code, void* data1, void* data2);
 
 	static void FreeTextures();
 

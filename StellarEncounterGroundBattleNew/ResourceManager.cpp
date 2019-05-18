@@ -19,7 +19,7 @@ void ResourceManager::Init(SDL_Renderer * renderer, SDL_Window* window, Scene * 
 	ren = renderer; initialized = true;
 	win = window;
 	scene = pscene;
-	default_font = TTF_OpenFont("Resources/default_font.ttf", 40);
+	default_font = TTF_OpenFont("Resources/default_font.ttf", 20);
 }
 void ResourceManager::Quit()
 {
@@ -158,6 +158,16 @@ SDL_Rect ResourceManager::CreateRectangle(int x, int y, int w, int h)
 	rect.w = w;
 	rect.h = h;
 	return rect;
+}
+
+void ResourceManager::DispatchEvent(Sint32 code, void* data1, void* data2)
+{
+	SDL_Event e;
+	e.type = SDL_USEREVENT;
+	e.user.code = code;
+	e.user.data1 = data1;
+	e.user.data2 = data2;
+	SDL_PushEvent(&e);
 }
 
 Button* ResourceManager::CreateButton()

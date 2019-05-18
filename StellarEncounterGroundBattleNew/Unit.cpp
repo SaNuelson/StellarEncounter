@@ -12,7 +12,7 @@ Unit::Unit(std::string source) {
 	position.w = dims.x * xTileSize / dims.y;
 }
 
-Unit::Unit(big HP, big SP, small AP, Tile* tile, std::string texSrc, TileMap* tilemap, bool playerTeam) {
+Unit::Unit(big HP, big SP, small AP, Tile* tile, std::string texSrc, TileMap* tilemap, small team) {
 	MaxHP = HP;
 	CurHP = HP;
 	MaxAP = AP;
@@ -21,13 +21,22 @@ Unit::Unit(big HP, big SP, small AP, Tile* tile, std::string texSrc, TileMap* ti
 	tile->occ = this;
 	LoadTextures(texSrc);
 	this->tilemap = tilemap;
-	isPlayer = playerTeam;
+	Team = team;
 }
 
 void Unit::LoadTextures(std::string texSrc)
 {
 	textures.push_back(ResourceManager::LoadTexture(texSrc));
 	SDL_QueryTexture(textures[0], nullptr, nullptr, &position.w, &position.h);
+}
+
+void Unit::Resize()
+{
+	SDL_Point dims;
+	SDL_QueryTexture(textures[currentTexture], nullptr, nullptr, &dims.x, &dims.y);
+	int mult = yTileSize / dims.y;
+	position.h = yTileSize;
+	position.w = dims.x * xTileSize / dims.y;
 }
 
 void Unit::OnUpdate(double delta) {
@@ -37,9 +46,10 @@ void Unit::OnUpdate(double delta) {
 		currentAction = nextAction;
 		textureTimeLeft = textureSpeed;
 		currentTexture = textureSets[currentAction].first;
+		Resize();
 
-		if (currentAction == 0) {
-			flip = !isPlayer;
+		if (currentAction == UNIT_ACTION_IDLE) {
+			flip = (Team != 0);
 			SDL_Point p = tile->GetCenter();
 			position.x = p.x - position.w / 2;
 			position.y = p.y - position.h;
@@ -47,7 +57,7 @@ void Unit::OnUpdate(double delta) {
 
 	}
 
-	if (currentAction == 1) {
+	if (currentAction == UNIT_ACTION_MOVE) {
 		if (move_vec.x == 0 && move_vec.y == 0) {
 			nextAction = 0;
 		}
@@ -83,6 +93,21 @@ void Unit::OnUpdate(double delta) {
 			}
 		}
 	}
+	else if (currentAction == UNIT_ACTION_ATTACK) {
+		if (currentTexture == textureSets[UNIT_ACTION_ATTACK].second) {
+			nextAction = UNIT_ACTION_IDLE;
+		}
+	}
+	else if (currentAction == UNIT_ACTION_HIT) {
+		if (currentTexture == textureSets[UNIT_ACTION_HIT].second) {
+			nextAction = UNIT_ACTION_IDLE;
+		}
+	}
+	else if (currentAction == UNIT_ACTION_DYING) {
+		if (currentTexture == textureSets[UNIT_ACTION_DYING].second) {
+			nextAction = UNIT_ACTION_DEAD;
+		}
+	}
 
 	// add movement to animataion if needed
 
@@ -107,13 +132,17 @@ void Unit::OnUpdate(double delta) {
 
 void Unit::UseAction(GameObject * defender)
 {
+	nextAction = UNIT_ACTION_ATTACK;
+	if (defender->tile->pos.x < tile->pos.x)
+		flip = (Team == 0);
 	std::cout << toString() << " uses action against " << defender->toString() << std::endl;
-	CurAP--; // will vary with equip
+	ChangeAP(-1);  // will vary with equip
 	defender->ReceiveAction(weapon.GetStrength());
 }
 
 void Unit::ReceiveAction(int amount)
 {
+	nextAction = UNIT_ACTION_HIT;
 	ChangeSP(amount, true);
 }
 
@@ -121,7 +150,7 @@ void Unit::Move(Tile * tile)
 {
 	nextAction = UNIT_ACTION_MOVE;
 	move_vec = tilemap->GetMoveVec(this->tile, tile);
-	this->CurAP -= tilemap->GetDistance(this->tile, tile); // todo after moving
+	ChangeAP(-tilemap->GetDistance(this->tile, tile));
 	
 	this->tile->SetOccupant(nullptr);
 	tile->SetOccupant(this);
@@ -168,13 +197,16 @@ void Unit::ChangeHP(big amount, bool overload)
 	CurHP += amount;
 	if (CurHP < 0) {
 		CurHP = 0;
-		Die();
+		nextAction = UNIT_ACTION_DYING;
 	}
 	else if (CurHP >= MaxHP) {
 		if (overload)
 			ChangeSP(CurHP - MaxHP, false);
 		CurHP = MaxHP;
 	}
+
+	ResourceManager::DispatchEvent(RC_UNIT_STAT_CHANGE, this, nullptr);
+
 }
 
 void Unit::ChangeSP(big amount, bool overload)
@@ -199,15 +231,17 @@ void Unit::ChangeSP(big amount, bool overload)
 	else if (CurSP >= MaxSP) {
 		CurSP = MaxSP;
 	}
+
+	ResourceManager::DispatchEvent(RC_UNIT_STAT_CHANGE, this, nullptr);
 }
 
 void Unit::ChangeAP(big amount)
 {
 	// for debug
-	if (amount > 0) {
+	if (amount < 0) {
 		std::cout << toString() << " is exhausted by " << amount << "points of stamina." << std::endl;
 	}
-	else if (amount < 0) {
+	else if (amount > 0) {
 		std::cout << toString() << " catches it's breath and gains back " << amount << " points of stamina." << std::endl;
 	}
 	else {
@@ -221,18 +255,13 @@ void Unit::ChangeAP(big amount)
 	else if (CurAP >= MaxAP) {
 		CurAP = MaxAP;
 	}
-}
 
-void Unit::Die() 
-{
-	
+	ResourceManager::DispatchEvent(RC_UNIT_STAT_CHANGE, this, nullptr);
 }
 
 void Unit::OnRender() {
 	SDL_RenderCopyEx(ResourceManager::ren, textures[currentTexture], nullptr, &position, 0, nullptr, (flip ? SDL_RendererFlip::SDL_FLIP_HORIZONTAL : SDL_RendererFlip::SDL_FLIP_NONE));
 }
-
-bool Unit::isEnemy() { return !isPlayer; }
 
 std::string Unit::toString()
 {
@@ -242,7 +271,7 @@ std::string Unit::toString()
 	auto str = "GameObject::Unit( HP: " + std::to_string(CurHP) + "/" + std::to_string(MaxHP) +
 		", SP: " + std::to_string(CurSP) + "/" + std::to_string(MaxSP) +
 		", AP: " + std::to_string(CurAP) + "/" + std::to_string(MaxAP) +
-		(isPlayer ? "PU" : "NPU") + ")";
+		", Team: " + std::to_string(Team) + ")";
 	return str;
 }
 

@@ -127,7 +127,7 @@ bool TileMap::CanAttack(Unit * unit, Tile * tile)
 	if (tile == nullptr)
 		return false;
 	// std::cout << "TileMap::CanAttack " << tile->occ->isEnemy() << " against " << unit->isEnemy() << std::endl;
-	if (tile->occ->isEnemy() != unit->isEnemy())
+	if (tile->occ->GetTeam() != unit->GetTeam())
 		return true;
 	return false;
 }

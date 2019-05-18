@@ -20,7 +20,7 @@ public:
 	void OnUpdate(double delta) override;
 	void OnRender() override;
 
-	bool IsPlayerTurn();
+	// bool IsPlayerTurn();
 
 	bool UpKey = false;
 	bool DownKey = false;

@@ -12,7 +12,10 @@ const Sint32 RC_NEW_GAME = 1;
 const Sint32 RC_OPTIONS = 2;
 const Sint32 RC_QUIT_GAME = 3;
 
+const Sint32 RC_UNIT_STAT_CHANGE = 4;
+
 // RENDER CODES
+
 const small UNIT_ACTION_IDLE = 0;
 const small UNIT_ACTION_MOVE = 1;
 const small UNIT_ACTION_ATTACK = 2;
@@ -25,13 +28,10 @@ const std::string Actions[7] = { "Idle","Move","Attack","Hit","React","Dying","D
 
 // DEMO UNITS
 
-const std::string hero_source = "HP=100\nMaxSP=30\nCurSP=15\nAP=6\nName=Lord Farquad\nWeapon=15\nTextureSpeed=200\nTextures=Graphics/GameObjects/Skeleton";
+const std::string skeleton_source = "HP=100\nMaxSP=30\nCurSP=15\nAP=6\nName=Lord Farquad\nWeapon=15\nTextureSpeed=200\nTextures=Graphics/GameObjects/Skeleton";
+const std::string hero_source = "HP=80\nSP=20\nAP=8\nName=A Little Humble Hero\nWeapon=10\nTextureSpeed=200\nTextures=Graphics/GameObjects/Hero";
 
 // CUSTOM DATA TYPES
-
-enum Attribute {
-
-};
 
 enum Direction {
 	UpRight = 0,
@@ -64,6 +64,57 @@ const TileRenderFlag TILE_HOVER =	2;
 const TileRenderFlag TILE_MOVE =	4;
 const TileRenderFlag TILE_RUN =		8;
 const TileRenderFlag TILE_ATTACK =	16;
+
+#pragma region CONST LAYOUT
+
+// EDITABLE SECTION
+const int SET_STACK_BLOCK_WIDTH = 300;
+const int SET_STACK_BLOCK_BLOCK_HEIGHT = 200;
+const int SET_STACK_BLOCK_X_MARGIN = 10;
+const int SET_STACK_BLOCK_Y_MARGIN = 10;
+const int SET_STACK_BLOCK_BLOCK_X_MARGIN = 5;
+const int SET_STACK_BLOCK_BLOCK_Y_MARGIN = 5;
+
+// CALCULATED SECTION
+const int STACK_BLOCK_W = SET_STACK_BLOCK_WIDTH;
+const int STACK_BLOCK_X = scr_width - STACK_BLOCK_W;
+const int STACK_BLOCK_Y = 0;
+const int STACK_BLOCK_H = scr_height;
+
+const int STACK_BLOCK_MARGIN_X = SET_STACK_BLOCK_X_MARGIN;
+const int STACK_BLOCK_MARGIN_Y = SET_STACK_BLOCK_Y_MARGIN;
+
+const int STACK_BLOCK_BLOCK_MARGIN_X = SET_STACK_BLOCK_BLOCK_X_MARGIN;
+const int STACK_BLOCK_BLOCK_MARGIN_Y = SET_STACK_BLOCK_BLOCK_Y_MARGIN;
+
+const int STACK_BLOCK_BLOCK_W = STACK_BLOCK_W - 2 * STACK_BLOCK_MARGIN_X;
+const int STACK_BLOCK_BLOCK_H = SET_STACK_BLOCK_BLOCK_HEIGHT;
+const int STACK_BLOCK_BLOCK_X = STACK_BLOCK_X + STACK_BLOCK_MARGIN_X;
+const int STACK_BLOCK_BLOCK_Y = STACK_BLOCK_Y + STACK_BLOCK_MARGIN_Y;
+
+const int STACK_BLOCK_PORTRAIT_X = STACK_BLOCK_BLOCK_X + STACK_BLOCK_BLOCK_MARGIN_X;
+const int STACK_BLOCK_PORTRAIT_Y = STACK_BLOCK_BLOCK_Y + STACK_BLOCK_BLOCK_MARGIN_Y;
+const int STACK_BLOCK_PORTRAIT_H = STACK_BLOCK_BLOCK_H - 2 * STACK_BLOCK_BLOCK_MARGIN_Y;
+const int STACK_BLOCK_PORTRAIT_W = STACK_BLOCK_PORTRAIT_H;
+
+const int STACK_BLOCK_NAME_X = STACK_BLOCK_PORTRAIT_X + STACK_BLOCK_PORTRAIT_W + STACK_BLOCK_BLOCK_MARGIN_X;
+const int STACK_BLOCK_NAME_Y = STACK_BLOCK_BLOCK_Y + STACK_BLOCK_BLOCK_MARGIN_Y;
+const int STACK_BLOCK_NAME_W = STACK_BLOCK_BLOCK_X + STACK_BLOCK_BLOCK_W - STACK_BLOCK_NAME_X - STACK_BLOCK_BLOCK_MARGIN_X;
+const int STACK_BLOCK_NAME_H = STACK_BLOCK_BLOCK_Y + STACK_BLOCK_BLOCK_H - STACK_BLOCK_NAME_Y - STACK_BLOCK_BLOCK_MARGIN_Y;
+
+const int STACK_BLOCK_BAR_X = STACK_BLOCK_NAME_X;
+const int STACK_BLOCK_HP_BAR_Y = STACK_BLOCK_NAME_Y + STACK_BLOCK_NAME_H + STACK_BLOCK_BLOCK_MARGIN_Y;
+const int STACK_BLOCK_SP_BAR_Y = STACK_BLOCK_HP_BAR_Y + STACK_BLOCK_NAME_H + STACK_BLOCK_BLOCK_MARGIN_Y;
+const int STACK_BLOCK_AP_BAR_Y = STACK_BLOCK_SP_BAR_Y + STACK_BLOCK_NAME_H + STACK_BLOCK_BLOCK_MARGIN_Y;
+const int STACK_BLOCK_BAR_W = STACK_BLOCK_NAME_W;
+const int STACK_BLOCK_BAR_H = STACK_BLOCK_NAME_H;
+
+const int STACK_BLOCK_ATTACK_BAR_X = STACK_BLOCK_BAR_X;
+const int STACK_BLOCK_ATTACK_BAR_Y = STACK_BLOCK_AP_BAR_Y + STACK_BLOCK_NAME_H + STACK_BLOCK_BLOCK_MARGIN_Y;
+const int STACK_BLOCK_ATTACK_BAR_W = STACK_BLOCK_BAR_W;
+const int STACK_BLOCK_ATTACK_BAR_H = STACK_BLOCK_BAR_H;
+
+#pragma endregion
 
 // SDL_Color Generator
 static SDL_Color GetColor(std::string color_name) {
@@ -148,8 +199,6 @@ level string composition:
 	- all levels are indicated only by the composition above. Any additional settings will be later implemented. Currently only terrain basis is set, EntityManager afterwards assembles the terrain
 	using biome specific terrain cells.
 */
-
-static std::string level1 = "a,HP=100,AP=5,ATTACK=10;b,HP=70,AP=3,ATTACK=25;300000003,02112220,0211111a20,01111110,021111120,022211b20,300000003;";
 
 static std::string level1tilemap = "00000000,300000003,02112220,021111120,01111110,021111120,02221120,300000003,00000000";
 static std::string level1BoxTilemap = "300000003,021112220,021111120,011111110,021111120,022221120,300000003";

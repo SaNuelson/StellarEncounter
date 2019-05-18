@@ -12,8 +12,6 @@ public:
 	Item() {};
 	Item(std::string texSrc, Tile* tile, TileMap* tilemap, bool usable);
 
-	bool isEnemy() override;
-
 	void OnRender() override;
 
 	void ReceiveAction(int amount) override;

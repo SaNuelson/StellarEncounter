@@ -12,10 +12,10 @@ void GroundBattleScene::StartDemo1() {
 
 	units.push_back(ResourceManager::CreateUnit(hero_source));
 	tilemap.PutOnTile(units[0], 1, 3);
-	units[0]->isPlayer = true;
-	units.push_back(ResourceManager::CreateUnit(hero_source));
+	units[0]->Team = 0;
+	units.push_back(ResourceManager::CreateUnit(skeleton_source));
 	tilemap.PutOnTile(units[1], 5, 3);
-	units[1]->isPlayer = false;
+	units[1]->Team = 1;
 	/*
 	//units.push_back(ResourceManager::CreateUnit(15, 5, 5, tilemap.GetTile(1, 3), "Graphics/GameObjects/Hero/idle1.png", &tilemap, true));
 	//units[0]->name = "Sir Longderston";
@@ -30,11 +30,17 @@ void GroundBattleScene::StartDemo1() {
 	items.push_back(ResourceManager::CreateItem("Graphics/GameObjects/box.png", tilemap.GetTile(3, 3), &tilemap, false));
 	items.push_back(ResourceManager::CreateItem("Graphics/GameObjects/box.png", tilemap.GetTile(3, 4), &tilemap, false));
 	*/
+	stackblock.Populate(); 
 }
 
 void GroundBattleScene::ResolveInput(SDL_Event & e) {
 
-	if (e.type == SDL_KEYUP) {
+	if (e.type == SDL_USEREVENT) {
+		if (e.user.code == RC_UNIT_STAT_CHANGE) {
+			stackblock.ResolveInput(e);
+		}
+	}
+	else if (e.type == SDL_KEYUP) {
 		switch (e.key.keysym.sym) {
 		case SDLK_UP:
 		case SDLK_w:
@@ -123,7 +129,7 @@ void GroundBattleScene::OnUpdate(double delta) {
 	if (currentUnit >= units.size())
 		currentUnit = 0;
 
-	//actionblock.OnUpdate(delta);
+
 	tilemap.OnUpdate(delta);
 	for (auto &unit : units)
 		unit->OnUpdate(delta);
@@ -152,6 +158,6 @@ void GroundBattleScene::OnRender() {
 
 }
 
-bool GroundBattleScene::IsPlayerTurn() { return units[currentUnit]->isPlayer; }
+// bool GroundBattleScene::IsPlayerTurn() { return units[currentUnit]->Team == 0; }
 
 Unit * GroundBattleScene::GetCurrentUnit() { return (units.size() > currentUnit ? units[currentUnit] : nullptr); }

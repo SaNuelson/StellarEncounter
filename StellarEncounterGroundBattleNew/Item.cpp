@@ -10,8 +10,6 @@ Item::Item(std::string texSrc, Tile* tile, TileMap * tilemap, bool usable)
 	isUsable = usable;
 }
 
-bool Item::isEnemy() { return false; }
-
 void Item::OnRender()
 {
 	// TODO Update only if changed
