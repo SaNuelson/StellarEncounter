@@ -41,11 +41,16 @@ void Unit::Resize()
 
 void Unit::OnUpdate(double delta) {
 
+
+
 	// change animation if needed
 	if (currentAction != nextAction) {
+		std::cout << this->toString() << " goes from " << std::to_string(currentAction) << " to " << std::to_string(nextAction) << std::endl;
 		currentAction = nextAction;
 		textureTimeLeft = textureSpeed;
 		currentTexture = textureSets[currentAction].first;
+		if (currentTexture < 0)
+			std::cout << "HERE";
 		Resize();
 
 		if (currentAction == UNIT_ACTION_IDLE) {
@@ -106,6 +111,9 @@ void Unit::OnUpdate(double delta) {
 	else if (currentAction == UNIT_ACTION_DYING) {
 		if (currentTexture == textureSets[UNIT_ACTION_DYING].second) {
 			nextAction = UNIT_ACTION_DEAD;
+			
+			// ResourceManager::DispatchEvent(RC_UNIT_DEATH, this, nullptr);
+			// unnecessary for now
 		}
 	}
 
@@ -122,22 +130,18 @@ void Unit::OnUpdate(double delta) {
 		}
 	}
 
-	if (CurHP <= 0) {
-		CurHP = 0;
-		textures.push_back(ResourceManager::LoadTexture("Graphics/Units/rip.png"));
-		currentTexture++;
-	}
-
 }
 
 void Unit::UseAction(GameObject * defender)
 {
 	nextAction = UNIT_ACTION_ATTACK;
 	if (defender->tile->pos.x < tile->pos.x)
-		flip = (Team == 0);
+		flip = true;
+	else
+		flip = false;
 	std::cout << toString() << " uses action against " << defender->toString() << std::endl;
 	ChangeAP(-1);  // will vary with equip
-	defender->ReceiveAction(weapon.GetStrength());
+	defender->ReceiveAction(-weapon.GetStrength()); // TODO: negative means damage, positive means healing
 }
 
 void Unit::ReceiveAction(int amount)
@@ -347,11 +351,9 @@ void Unit::ParseSource(Unit* unit, std::string& source)
 			unit->textureSpeed = std::stoi(value);
 		}
 		else if (attrib == "Textures") {
-			// <TEXTURE_SET_CODE>=<COUNT>|<TEXTURE_PATH(in format: path/file[X.png] -- part in [] added automatically)>
-			// eg. "Graphics/GameObjects/Hero/idle1.png , ... , Graphics/GameObjects/Hero/idle12.png changes to Graphics/GameObjects/Hero/idle
 
 			std::string path_base = value;
-			for(int i = 0; i < Actions->size(); i++) {
+			for(int i = 0; i < ActionsSize; i++) {
 				int start = unit->textures.size();
 				int count = 0;
 				while (true) {
@@ -364,7 +366,9 @@ void Unit::ParseSource(Unit* unit, std::string& source)
 						count++;
 					}
 				}
-				unit->textureSets[i] = std::make_pair(start, start + count - 1);
+				std::cout << "Found " << count << " textures for i = " << i << " which should be " << Actions[i] << std::endl;
+				if(count > 0)
+					unit->textureSets[i] = std::make_pair(start, start + count - 1);
 			}
 		}
 		else {

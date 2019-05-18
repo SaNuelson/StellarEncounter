@@ -13,6 +13,7 @@ const Sint32 RC_OPTIONS = 2;
 const Sint32 RC_QUIT_GAME = 3;
 
 const Sint32 RC_UNIT_STAT_CHANGE = 4;
+const Sint32 RC_UNIT_DEATH = 5;
 
 // RENDER CODES
 
@@ -24,12 +25,13 @@ const small UNIT_ACTION_REACT = 4;
 const small UNIT_ACTION_DYING = 5;
 const small UNIT_ACTION_DEAD = 6;
 
-const std::string Actions[7] = { "Idle","Move","Attack","Hit","React","Dying","Dead" };
+const int ActionsSize = 7;
+const std::string Actions[ActionsSize] = { "Idle","Move","Attack","Hit","React","Dying","Dead" };
 
 // DEMO UNITS
 
-const std::string skeleton_source = "HP=100\nMaxSP=30\nCurSP=15\nAP=6\nName=Lord Farquad\nWeapon=15\nTextureSpeed=200\nTextures=Graphics/GameObjects/Skeleton";
-const std::string hero_source = "HP=80\nSP=20\nAP=8\nName=A Little Humble Hero\nWeapon=10\nTextureSpeed=200\nTextures=Graphics/GameObjects/Hero";
+const std::string skeleton_source = "HP=100\nMaxSP=30\nCurSP=15\nAP=6\nName=Lord Farquad\nWeapon=50\nTextureSpeed=200\nTextures=Graphics/GameObjects/Skeleton";
+const std::string hero_source = "HP=80\nSP=20\nAP=8\nName=A Little Humble Hero\nWeapon=100\nTextureSpeed=200\nTextures=Graphics/GameObjects/Hero";
 
 // CUSTOM DATA TYPES
 
@@ -44,8 +46,8 @@ enum Direction {
 
 // WINDOW INFO
 
-int scr_height = 768;
-int scr_width = 1280;
+const int scr_height = 768;
+const int scr_width = 1280;
 
 const int xTileSize = 80;
 const int yTileSize = 64;
@@ -68,12 +70,16 @@ const TileRenderFlag TILE_ATTACK =	16;
 #pragma region CONST LAYOUT
 
 // EDITABLE SECTION
-const int SET_STACK_BLOCK_WIDTH = 300;
+const int SET_STACK_BLOCK_WIDTH = 400;
 const int SET_STACK_BLOCK_BLOCK_HEIGHT = 200;
-const int SET_STACK_BLOCK_X_MARGIN = 10;
-const int SET_STACK_BLOCK_Y_MARGIN = 10;
-const int SET_STACK_BLOCK_BLOCK_X_MARGIN = 5;
-const int SET_STACK_BLOCK_BLOCK_Y_MARGIN = 5;
+const int SET_STACK_BLOCK_X_MARGIN = 20;
+const int SET_STACK_BLOCK_Y_MARGIN = 20;
+const int SET_STACK_BLOCK_BLOCK_X_MARGIN = 10;
+const int SET_STACK_BLOCK_BLOCK_Y_MARGIN = 10;
+const int SET_STACK_BLOCK_INTERBAR_Y_MARGIN = 0;
+
+// SEMI-EDITABLE SECTION
+const int SET_STACK_BLOCK_BLOCK_ROW_COUNT = 4;
 
 // CALCULATED SECTION
 const int STACK_BLOCK_W = SET_STACK_BLOCK_WIDTH;
@@ -99,20 +105,25 @@ const int STACK_BLOCK_PORTRAIT_W = STACK_BLOCK_PORTRAIT_H;
 
 const int STACK_BLOCK_NAME_X = STACK_BLOCK_PORTRAIT_X + STACK_BLOCK_PORTRAIT_W + STACK_BLOCK_BLOCK_MARGIN_X;
 const int STACK_BLOCK_NAME_Y = STACK_BLOCK_BLOCK_Y + STACK_BLOCK_BLOCK_MARGIN_Y;
-const int STACK_BLOCK_NAME_W = STACK_BLOCK_BLOCK_X + STACK_BLOCK_BLOCK_W - STACK_BLOCK_NAME_X - STACK_BLOCK_BLOCK_MARGIN_X;
-const int STACK_BLOCK_NAME_H = STACK_BLOCK_BLOCK_Y + STACK_BLOCK_BLOCK_H - STACK_BLOCK_NAME_Y - STACK_BLOCK_BLOCK_MARGIN_Y;
+const int STACK_BLOCK_NAME_W = STACK_BLOCK_BLOCK_X + STACK_BLOCK_BLOCK_W - 2 * STACK_BLOCK_BLOCK_MARGIN_X - STACK_BLOCK_PORTRAIT_X - STACK_BLOCK_PORTRAIT_W;
+const int STACK_BLOCK_NAME_H = ( STACK_BLOCK_BLOCK_H - ( SET_STACK_BLOCK_BLOCK_ROW_COUNT - 1 ) * SET_STACK_BLOCK_INTERBAR_Y_MARGIN - 2 * STACK_BLOCK_BLOCK_MARGIN_Y ) / SET_STACK_BLOCK_BLOCK_ROW_COUNT;
+
+const int STACK_BLOCK_NAME_CENTER_X = STACK_BLOCK_NAME_X + STACK_BLOCK_NAME_W / 2;
+const int STACK_BLOCK_NAME_CENTER_Y = STACK_BLOCK_NAME_Y + STACK_BLOCK_NAME_H / 2;
 
 const int STACK_BLOCK_BAR_X = STACK_BLOCK_NAME_X;
-const int STACK_BLOCK_HP_BAR_Y = STACK_BLOCK_NAME_Y + STACK_BLOCK_NAME_H + STACK_BLOCK_BLOCK_MARGIN_Y;
-const int STACK_BLOCK_SP_BAR_Y = STACK_BLOCK_HP_BAR_Y + STACK_BLOCK_NAME_H + STACK_BLOCK_BLOCK_MARGIN_Y;
-const int STACK_BLOCK_AP_BAR_Y = STACK_BLOCK_SP_BAR_Y + STACK_BLOCK_NAME_H + STACK_BLOCK_BLOCK_MARGIN_Y;
+const int STACK_BLOCK_HP_BAR_Y = STACK_BLOCK_NAME_Y + STACK_BLOCK_NAME_H + SET_STACK_BLOCK_INTERBAR_Y_MARGIN;
+const int STACK_BLOCK_SP_BAR_Y = STACK_BLOCK_HP_BAR_Y + STACK_BLOCK_NAME_H + SET_STACK_BLOCK_INTERBAR_Y_MARGIN;
+const int STACK_BLOCK_AP_BAR_Y = STACK_BLOCK_SP_BAR_Y + STACK_BLOCK_NAME_H + SET_STACK_BLOCK_INTERBAR_Y_MARGIN;
 const int STACK_BLOCK_BAR_W = STACK_BLOCK_NAME_W;
 const int STACK_BLOCK_BAR_H = STACK_BLOCK_NAME_H;
 
 const int STACK_BLOCK_ATTACK_BAR_X = STACK_BLOCK_BAR_X;
-const int STACK_BLOCK_ATTACK_BAR_Y = STACK_BLOCK_AP_BAR_Y + STACK_BLOCK_NAME_H + STACK_BLOCK_BLOCK_MARGIN_Y;
+const int STACK_BLOCK_ATTACK_BAR_Y = STACK_BLOCK_AP_BAR_Y + STACK_BLOCK_NAME_H + SET_STACK_BLOCK_INTERBAR_Y_MARGIN;
 const int STACK_BLOCK_ATTACK_BAR_W = STACK_BLOCK_BAR_W;
 const int STACK_BLOCK_ATTACK_BAR_H = STACK_BLOCK_BAR_H;
+
+const int STACK_BLOCK_SHIFT_Y = STACK_BLOCK_BLOCK_H + STACK_BLOCK_MARGIN_Y;
 
 #pragma endregion
 
@@ -202,15 +213,6 @@ level string composition:
 
 static std::string level1tilemap = "00000000,300000003,02112220,021111120,01111110,021111120,02221120,300000003,00000000";
 static std::string level1BoxTilemap = "300000003,021112220,021111120,011111110,021111120,022221120,300000003";
-
-static std::string GetLevelInfo(int level) {
-	switch (level) {
-	case 1:
-		return level1;
-	default:
-		return "";
-	}
-}
 
 static std::string GetTileCodePath(int tileCode) {
 	switch (tileCode) {

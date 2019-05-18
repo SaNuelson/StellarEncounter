@@ -20,8 +20,6 @@ public:
 	void OnUpdate(double delta) override;
 	void OnRender() override;
 
-	// bool IsPlayerTurn();
-
 	bool UpKey = false;
 	bool DownKey = false;
 
@@ -30,6 +28,7 @@ public:
 	std::vector<Unit*> units;
 	int currentUnit = 0;
 	Unit * GetCurrentUnit();
+	void EndTurn();
 
 	std::vector<Item*> items;
 

@@ -27,8 +27,6 @@ public:
 	void ChangeSP(big amount, bool overload); // overload damages HP with excess damage
 	void ChangeAP(big amount);
 
-	void Die();
-
 	void OnRender() override;
 
 	std::string toString() override;

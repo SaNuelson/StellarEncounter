@@ -6,37 +6,37 @@
 UnitStackBlock::UnitStackBlock(GroundBattleScene * scene) : scene(scene) {
 
 	tex = ResourceManager::LoadTexture("Graphics/UI/unitinfoblockrect.png");
-	rect.x = scr_width - 300;
-	rect.y = 0;
-	rect.h = scr_height;
-	rect.w = 300;
+	rect.x = STACK_BLOCK_X;
+	rect.y = STACK_BLOCK_Y;
+	rect.h = STACK_BLOCK_H;
+	rect.w = STACK_BLOCK_W;
 
 	tex_unit = ResourceManager::LoadTexture("Graphics/UI/button.png");
 	tex_unit_bg = ResourceManager::LoadTexture("Graphics/UI/button.png");
-	rect_unit.w = 280;
-	rect_unit.h = 100;
-	rect_unit.x = rect.x + 10;
+	rect_unit.w = STACK_BLOCK_BLOCK_W;
+	rect_unit.h = STACK_BLOCK_BLOCK_H;
+	rect_unit.x = STACK_BLOCK_BLOCK_X;
 	
-	rect_unit_portrait.x = rect_unit.x + 10;
-	rect_unit_portrait.h = 80;
-	rect_unit_portrait.w = 80;
+	rect_unit_portrait.x = STACK_BLOCK_PORTRAIT_X;
+	rect_unit_portrait.h = STACK_BLOCK_PORTRAIT_H;
+	rect_unit_portrait.w = STACK_BLOCK_PORTRAIT_W;
 
-	name_center.x = rect_unit.x + 190;
+	name_center.x = STACK_BLOCK_NAME_CENTER_X;
 
 	tex_unit_hp = ResourceManager::LoadTexture("Graphics/UI/unitinfoblockhpbar.png");
-	rect_unit_hp.x = rect_unit.x + 110;
-	rect_unit_hp.w = 160;
-	rect_unit_hp.h = 20;
+	rect_unit_hp.x = STACK_BLOCK_BAR_X;
+	rect_unit_hp.w = STACK_BLOCK_BAR_W;
+	rect_unit_hp.h = STACK_BLOCK_BAR_H;
 
 	tex_unit_sp = ResourceManager::LoadTexture("Graphics/UI/unitinfoblockspbar.png");
-	rect_unit_sp.x = rect_unit_hp.x;
-	rect_unit_sp.w = rect_unit_hp.w;
-	rect_unit_sp.h = 20;
+	rect_unit_sp.x = STACK_BLOCK_BAR_X;
+	rect_unit_sp.w = STACK_BLOCK_BAR_W;
+	rect_unit_sp.h = STACK_BLOCK_BAR_H;
 
 	tex_unit_ap = ResourceManager::LoadTexture("Graphics/UI/unitinfoblockapbar.png");
-	rect_unit_ap.x = rect_unit_hp.x;
-	rect_unit_ap.w = rect_unit_hp.w;
-	rect_unit_ap.h = 20;
+	rect_unit_ap.x = STACK_BLOCK_BAR_X;
+	rect_unit_ap.w = STACK_BLOCK_BAR_W;
+	rect_unit_ap.h = STACK_BLOCK_BAR_H;
 
 }
 
@@ -80,12 +80,13 @@ void UnitStackBlock::OnUpdate(double delta)
 void UnitStackBlock::OnRender()
 {
 	SDL_RenderCopy(ResourceManager::ren, tex, nullptr, &rect);
-	rect_unit.y = 10;
-	rect_unit_portrait.y = 20;
-	name_center.y = 25;
-	rect_unit_hp.y = 35;
-	rect_unit_sp.y = 55;
-	rect_unit_ap.y = 75; 
+	rect_unit.y = STACK_BLOCK_BLOCK_Y;
+	rect_unit_portrait.y = STACK_BLOCK_PORTRAIT_Y;
+	name_center.y = STACK_BLOCK_NAME_CENTER_Y;
+	rect_unit_hp.y = STACK_BLOCK_HP_BAR_Y;
+	rect_unit_sp.y = STACK_BLOCK_SP_BAR_Y;
+	rect_unit_ap.y = STACK_BLOCK_AP_BAR_Y;
+
 	for (int i = 0; i < widths.size(); i++) {
 		
 
@@ -125,15 +126,15 @@ void UnitStackBlock::OnRender()
 		SDL_RenderCopy(ResourceManager::ren, tex_unit_ap, nullptr, &rect_unit_ap);
 		SDL_RenderCopy(ResourceManager::ren, captions[i][2], nullptr, &rect_caption_ap);
 
-		rect_unit_hp.w = 160;
-		rect_unit_ap.w = 160;
-		rect_unit_sp.w = 160;
+		rect_unit_hp.w = STACK_BLOCK_BAR_W;
+		rect_unit_ap.w = STACK_BLOCK_BAR_W;
+		rect_unit_sp.w = STACK_BLOCK_BAR_W;
 
-		rect_unit.y += rect_unit.h + 10;
-		rect_unit_portrait.y += rect_unit.h + 10;
-		name_center.y += rect_unit.h + 10;
-		rect_unit_hp.y += rect_unit.h + 10;
-		rect_unit_sp.y += rect_unit.h + 10;
-		rect_unit_ap.y += rect_unit.h + 10;
+		rect_unit.y += STACK_BLOCK_SHIFT_Y;
+		rect_unit_portrait.y += STACK_BLOCK_SHIFT_Y;
+		name_center.y += STACK_BLOCK_SHIFT_Y;
+		rect_unit_hp.y += STACK_BLOCK_SHIFT_Y;
+		rect_unit_sp.y += STACK_BLOCK_SHIFT_Y;
+		rect_unit_ap.y += STACK_BLOCK_SHIFT_Y;
 	}
 }

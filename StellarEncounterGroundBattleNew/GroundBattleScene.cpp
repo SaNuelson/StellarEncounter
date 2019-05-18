@@ -122,18 +122,27 @@ void GroundBattleScene::ResolveInput(SDL_Event & e) {
 
 void GroundBattleScene::OnUpdate(double delta) {
 
+	// End Turn, move units
+	while (units[currentUnit]->currentAction == UNIT_ACTION_DEAD)
+		EndTurn();
 	if (units[currentUnit]->CurAP <= 0) {
 		units[currentUnit]->ChangeAP(units[currentUnit]->MaxAP);
-		currentUnit++;
+		EndTurn();
 	}
-	if (currentUnit >= units.size())
-		currentUnit = 0;
 
 
 	tilemap.OnUpdate(delta);
 	for (auto &unit : units)
 		unit->OnUpdate(delta);
 }
+
+void GroundBattleScene::EndTurn()
+{
+	currentUnit++;
+	if (currentUnit >= units.size())
+		currentUnit = 0;
+}
+
 
 void GroundBattleScene::OnRender() {
 	tilemap.OnRender();
