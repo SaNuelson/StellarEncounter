@@ -23,14 +23,20 @@ public:
 		rect.y = 0;
 		rect.w = 100;
 		rect.h = 30;
+		SDL_Rect caption_rect;
+		caption_rect.x = 5;
+		caption_rect.y = 5;
+		caption_rect.h = 20;
+		caption_rect.w = 90;
 
 		Button btn;
 		btn.caption = "New_Button";
 		btn.rect = rect;
+		btn.caption_rect = caption_rect;
 		btn.retcode = 1;
-		btn.idle_tex = ResourceManager::LoadTexture("Resources/button_idle.png");
-		btn.hover_tex = ResourceManager::LoadTexture("Resources/button_hover.png");
-		btn.click_tex = ResourceManager::LoadTexture("Resources/button_click.png");
+		btn.idle_tex = ResourceManager::LoadTexture("Graphics/UI/button_idle.png");
+		btn.hover_tex = ResourceManager::LoadTexture("Graphics/UI/button_hover.png");
+		btn.click_tex = ResourceManager::LoadTexture("Graphics/UI/button_click.png");
 		btn.caption_tex = ResourceManager::LoadCaption(btn.caption);
 
 		return btn;
@@ -51,6 +57,10 @@ public:
 	}
 	void SetRect(SDL_Rect new_rect) {
 		rect = new_rect;
+		caption_rect.x = new_rect.x + 20;
+		caption_rect.y = new_rect.y + 20;
+		caption_rect.w = new_rect.w - 40;
+		caption_rect.h = new_rect.h - 40;
 	}
 	void SetRect(int x, int y, int w, int h) {
 		if (x != -1) rect.x = x;
@@ -146,13 +156,13 @@ public:
 	void OnRender() {
 		SDL_RenderCopy(ResourceManager::ren, GetButtonTex(), nullptr, &rect);
 		if (caption != "") {
-			SDL_RenderCopy(ResourceManager::ren, caption_tex, nullptr, &rect);
+			SDL_RenderCopy(ResourceManager::ren, caption_tex, nullptr, &caption_rect);
 		}
 	}
 
 	void DispatchEvent() {
 		SDL_Event e;
-		e.type == SDL_EventType::SDL_USEREVENT;
+		e.type = SDL_EventType::SDL_USEREVENT;
 		e.user.code = retcode;
 		e.user.data1 = this;
 		SDL_PushEvent(&e);
@@ -163,6 +173,7 @@ private:
 	std::string caption;
 
 	SDL_Rect rect;
+	SDL_Rect caption_rect;
 
 	Sint32 retcode;
 

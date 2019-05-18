@@ -41,5 +41,3 @@ std::string Item::toString()
 	// TODO
 	return "GameObject::Item";
 }
-
-Item * Item::getPtr() { return this; }

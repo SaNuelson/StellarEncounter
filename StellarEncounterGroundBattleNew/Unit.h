@@ -9,6 +9,7 @@
 class Unit : public GameObject {
 public:
 	Unit();
+	Unit(std::string source);
 	Unit(big HP, big SP, small AP, Tile* tile, std::string texSrc, TileMap* tilemap, bool playerTeam);
 
 	void LoadTextures(std::string texSrc);
@@ -33,13 +34,11 @@ public:
 
 	std::string toString() override;
 
-	Unit* getPtr() override;
-
 	//private:
 
-		// GameLogic
-	TileMap* tilemap;
-	bool isPlayer;
+	// GameLogic
+	// TileMap* tilemap = nullptr;	<- ingerited from GameObject
+	bool isPlayer = false;
 
 	// HitPoints
 	big MaxHP = 100;
@@ -52,7 +51,7 @@ public:
 	small CurAP = 5;
 
 	SDL_Rect position;
-	Tile* tile;
+	// Tile* tile = nullptr;	<- inherited from GameObject
 
 	// Equip
 	// Equipment equip;
@@ -60,8 +59,9 @@ public:
 	
 
 	// Render
-	big textureSpeed;
-	big textureTimeLeft;
+	big textureSpeed = 100;
+	big textureTimeLeft = textureSpeed;
+	small currentTextureSet = 0;
 	small currentTexture = 0;
 	std::vector<SDL_Texture*> textures;
 	std::map<small, std::pair<small, small>> textureSets;
@@ -69,5 +69,9 @@ public:
 
 	// Other
 	std::string name = "";
+
+private:
+
+	static void ParseSource(Unit* unit, std::string& source);
 
 };

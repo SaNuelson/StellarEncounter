@@ -5,6 +5,9 @@ class Weapon {
 public:
 
 	Weapon() : amt(-10) {};
+	Weapon(std::string source) {
+		ParseSource(this, source);
+	}
 	Weapon(int amount) : amt(amount) {};
 
 	int GetStrength() { return amt; }
@@ -12,6 +15,12 @@ public:
 private:
 
 	int amt;
+
+	static void ParseSource(Weapon* weapon, std::string& source) {
+
+		weapon->amt = std::stoi(source);
+
+	}
 
 };
 

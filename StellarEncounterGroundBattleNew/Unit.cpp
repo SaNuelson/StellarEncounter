@@ -2,6 +2,16 @@
 
 Unit::Unit() : weapon(10) {}
 
+Unit::Unit(std::string source) {
+
+	ParseSource(this, source);
+	SDL_Point dims;
+	SDL_QueryTexture(textures[currentTexture], nullptr, nullptr, &dims.x, &dims.y);
+	int mult = yTileSize / dims.y;
+	position.h = yTileSize;
+	position.w = dims.x * xTileSize / dims.y;
+}
+
 Unit::Unit(big HP, big SP, small AP, Tile* tile, std::string texSrc, TileMap* tilemap, bool playerTeam) {
 
 	MaxHP = HP;
@@ -22,6 +32,15 @@ void Unit::LoadTextures(std::string texSrc)
 }
 
 void Unit::OnUpdate(double delta) {
+
+	textureTimeLeft -= delta;
+	if (textureTimeLeft <= 0) {
+		textureTimeLeft = textureSpeed;
+		currentTexture++;
+		if (textureSets[currentTextureSet].second < currentTexture) {
+			currentTexture = textureSets[currentTextureSet].first;
+		}
+	}
 
 	if (CurHP <= 0) {
 		CurHP = 0;
@@ -46,6 +65,7 @@ void Unit::ReceiveAction(int amount)
 void Unit::Move(Tile * tile)
 {
 	this->CurAP -= tilemap->GetDistance(this->tile, tile);
+	
 	this->tile->SetOccupant(nullptr);
 	tile->SetOccupant(this);
 	this->tile = tile;
@@ -152,14 +172,10 @@ void Unit::Die()
 }
 
 void Unit::OnRender() {
-	// std::cout << "Render " << position.x << " " << position.y << " " << position.w << " " << position.h << std::endl;
 	SDL_Point p = tile->GetCenter();
-	SDL_Point s;
-	SDL_QueryTexture(textures[currentTexture], nullptr, nullptr, &s.x, &s.y);
-	position.x = p.x - s.x / 2;
-	position.y = p.y - s.y;
+	position.x = p.x - position.w / 2;
+	position.y = p.y - position.h;
 	SDL_RenderCopy(ResourceManager::ren, textures[currentTexture], nullptr, &position);
-
 }
 
 bool Unit::isEnemy() { return !isPlayer; }
@@ -176,4 +192,104 @@ std::string Unit::toString()
 	return str;
 }
 
-Unit * Unit::getPtr() { return this; }
+void Unit::ParseSource(Unit* unit, std::string& source)
+{
+
+	/*
+		Requirements:
+			Textures is at the end of file
+			Texture paths are all in said format and in .png
+			Any repeated attributes will override former attributes
+
+		<<< <ATTRIB>=<VALUE>\n >>>
+		Name=<VALUE>\n
+		HP=<VALUE>\n
+		(or	MaxHP=<VALUE>\n
+			CurHP=<VALUE>\n)
+		SP=<VALUE>\n
+		(or	MaxSP=<VALUE>\n
+			CurSP=<VALUE>\n)
+		AP=<VALUE>\n
+		(or MaxAP=<VALUE>\n
+			CurAP=<VALUE>\n)
+		Weapon=<WEAPON_SRC>\n
+		TextureSpeed=<VALUE>\n
+		Textures=\n
+		<TEXTURE_SET_CODE>=<COUNT>|<TEXTURE_PATH(in format: path/fileX.png)>\n
+	*/
+
+	bool textures = false;
+	std::stringstream ss(source);
+	std::string line;
+	while (std::getline(ss, line)) {
+		std::string attrib = line.substr(0, line.find('='));
+		std::string value = line.substr(line.find('=') + 1, line.size());
+		std::cout << "Parsed attrib = " << attrib << " and val = " << value << std::endl;
+		if(!textures){
+			if (attrib == "Name") {
+				unit->name = value;
+			}
+			else if (attrib == "HP") {
+				unit->MaxHP = std::stoi(value);
+				unit->CurHP = std::stoi(value);
+			}
+			else if (attrib == "MaxHP") {
+				unit->MaxHP = std::stoi(value);
+			}
+			else if (attrib == "CurHP") {
+				unit->CurHP = std::stoi(value);
+			}
+			else if (attrib == "SP") {
+				unit->MaxSP = std::stoi(value);
+				unit->CurSP = std::stoi(value);
+			}
+			else if (attrib == "MaxSP") {
+				unit->MaxSP = std::stoi(value);
+			}
+			else if (attrib == "CurSP") {
+				unit->CurSP = std::stoi(value);
+			}
+			else if (attrib == "AP") {
+				unit->MaxAP = std::stoi(value);
+				unit->CurAP = std::stoi(value);
+			}
+			else if (attrib == "CurAP") {
+				unit->MaxAP = std::stoi(value);
+			}
+			else if (attrib == "MaxAP") {
+				unit->CurAP = std::stoi(value);
+			}
+			else if (attrib == "Weapon") {
+				unit->weapon = Weapon(value);
+			}
+			else if (attrib == "TextureSpeed") {
+				unit->textureSpeed = std::stoi(value);
+			}
+			else if (attrib == "Textures") {
+				textures = true;
+			}
+			else {
+				std::cout << "Mistake in pair " << attrib << " " << value << ".\n Attribute unknown.\n";
+			}
+		}
+		else {
+			// <TEXTURE_SET_CODE>=<COUNT>|<TEXTURE_PATH(in format: path/file[X.png] -- part in [] added automatically)>
+			// eg. "Graphics/GameObjects/Hero/idle1.png , ... , Graphics/GameObjects/Hero/idle12.png changes to 12|Graphics/GameObjects/Hero/idle
+			int count = std::stoi(value.substr(0, value.find('|')));
+			std::string path = value.substr(value.find('|') + 1, value.size());
+			int start = unit->textures.size();
+			int end = start + count - 1;
+			for (int i = 0; i < count; i++)
+			{
+				if (i < 10) {
+					unit->textures.push_back(ResourceManager::LoadTexture(path + "00" + std::to_string(i) + ".png"));
+				}
+				else {
+					unit->textures.push_back(ResourceManager::LoadTexture(path + "0" + std::to_string(i) + ".png"));
+				}
+			}
+			unit->textureSets[std::stoi(attrib)] = std::make_pair(start, end);
+		}
+	}
+
+}

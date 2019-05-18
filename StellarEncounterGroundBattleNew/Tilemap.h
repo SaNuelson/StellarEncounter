@@ -19,7 +19,9 @@ public:
 
 	// set up tilemap from source
 	void Init(std::string source, int x, int y);
-
+	void PutOnTile(GameObject* obj, Tile* tile);
+	void PutOnTile(GameObject* obj, int x, int y);
+	
 	void ResolveInput(SDL_Event &e);
 	void OnUpdate(double delta);
 	void OnRender();

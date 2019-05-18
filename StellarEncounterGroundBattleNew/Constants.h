@@ -5,9 +5,22 @@
 
 // RETCODES
 
-Sint32 RC_NEW_GAME = 1;
-Sint32 RC_OPTIONS = 2;
-Sint32 RC_QUIT_GAME = 3;
+const Sint32 RC_NEW_GAME = 1;
+const Sint32 RC_OPTIONS = 2;
+const Sint32 RC_QUIT_GAME = 3;
+
+// RENDER CODES
+const int TEX_IDLE = 0;
+const int TEX_WALK = 1;
+const int TEX_ATTACK = 2;
+const int TEX_HIT = 3;
+const int TEX_REACT = 4;
+const int TEX_DYING = 5;
+const int TEX_DEAD = 6;
+
+// DEMO UNITS
+
+const std::string hero_source = "HP=100\nMaxSP=30\nCurSP=15\nAP=6\nName=Lord Farquad\nWeapon=15\nTextureSpeed=200\nTextures\n0=11|Graphics/GameObjects/Skeleton/Idle/tile";
 
 // CUSTOM DATA TYPES
 
@@ -49,7 +62,6 @@ const TileRenderFlag TILE_HOVER =	2;
 const TileRenderFlag TILE_MOVE =	4;
 const TileRenderFlag TILE_RUN =		8;
 const TileRenderFlag TILE_ATTACK =	16;
-
 
 // SDL_Color Generator
 static SDL_Color GetColor(std::string color_name) {

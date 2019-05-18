@@ -2,15 +2,18 @@
 #include "Constants.h"
 #include "ResourceManager.h"
 #include "Tile.h"
+
 #include "Scene.h"
 #include "GroundBattleScene.h"
+#include "MainMenuScene.h"
 
 using namespace std;
 
 SDL_Window * win = nullptr;
 SDL_Renderer * ren = nullptr;
 bool quit = false;
-
+bool scene_change = false;
+Sint32 scene_change_rc = -1;
 
 void Quit() {
 	quit = true;
@@ -62,18 +65,24 @@ int main() {
 	Uint64 t_last = 0;
 	double delta = 0;
 
-	// necessary initializations because... reasons
+	// necessary initialization because... reasons
 	ResourceManager::Init(ren, win, nullptr);
-	GroundBattleScene scene;
-	ResourceManager::scene = &scene;
+
+	std::unique_ptr<Scene> scene = std::make_unique<MainMenuScene>();
+	ResourceManager::scene = scene.get();
 
 	SDL_Event e;
 
-	scene.StartDemo1();
-
-	int currentUnit = 0;
-
 	while (!quit) {
+
+		if (scene_change) {
+			if (scene_change_rc == 1) {
+				scene = std::make_unique<GroundBattleScene>();
+				ResourceManager::scene = scene.get();
+			}
+			scene_change = false;
+			scene_change_rc = -1;
+		}
 
 		// calc delta
 		t_last = t_now;
@@ -83,23 +92,36 @@ int main() {
 		// Handle Inputs
 		while (SDL_PollEvent(&e)) {
 
-			scene.ResolveInput(e);
+			scene->ResolveInput(e);
+
+			if (e.type == SDL_USEREVENT) {
+				if (e.user.code == RC_NEW_GAME) {
+					scene_change = true;
+					scene_change_rc = RC_NEW_GAME;
+				}
+				else if (e.user.code == RC_OPTIONS) {
+					// OPTIONS NOT IMPLEMENTED
+				}
+				else if (e.user.code == RC_QUIT_GAME) {
+					quit = true;
+				}
+			}
 
 			if (e.type == SDL_QUIT)
 				quit = true;
 		}
 
-		scene.OnUpdate(delta);
+		scene->OnUpdate(delta);
 
 		// Render Screen
 		SDL_RenderClear(ren);
-		scene.OnRender();
+		scene->OnRender();
 		SDL_RenderPresent(ren);
 
 	}
 
 
-
+	ResourceManager::Quit();
 	TTF_Quit();
 	IMG_Quit();
 	SDL_Quit();

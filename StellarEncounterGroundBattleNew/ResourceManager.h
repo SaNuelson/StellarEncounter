@@ -15,6 +15,8 @@ class ResourceManager
 public:
 
 	static void Init(SDL_Renderer * renderer, SDL_Window* win, Scene * scene);
+	
+	static void Quit();
 
 	static SDL_Texture * LoadTexture(std::string path);
 
@@ -28,7 +30,6 @@ public:
 
 	static SDL_Rect CreateRectangle(int x, int y, int w, int h); // for quick creation
 
-	static Button* CreateButton();
 
 	static void FreeTextures();
 
@@ -36,6 +37,10 @@ public:
 	static SDL_Window * win;
 	static Scene * scene;
 
+	static Button* CreateButton();
+	static Unit* CreateUnit();
+	static Item* CreateItem();
+	static Unit* CreateUnit(std::string source);
 	static Unit* CreateUnit(big HP, big SP, small AP, Tile* tile, std::string texSrc, TileMap* tilemap, bool playerTeam);
 	static Item* CreateItem(std::string texSrc, Tile* tile, TileMap* tilemap, bool usable);
 

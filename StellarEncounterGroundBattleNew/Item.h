@@ -20,12 +20,8 @@ public:
 
 	std::string toString() override;
 
-	Item* getPtr() override;
-
 private:
 
-	TileMap * tilemap;
-	Tile * tile;
 	bool isUsable;
 
 	SDL_Renderer* ren;

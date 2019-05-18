@@ -2,7 +2,7 @@
 
 GroundBattleScene::GroundBattleScene() : tilemap(this), actionblock(this), stackblock(this) {
 
-	// actionblock.scene = this
+	StartDemo1();
 
 }
 
@@ -10,27 +10,25 @@ void GroundBattleScene::StartDemo1() {
 
 	tilemap.Init(level1tilemap, xTileSize, xTileSize);
 
-	units.push_back(ResourceManager::CreateUnit(100, 100, 5, tilemap.GetTile(1, 3), "Graphics/GameObjects/Hero/idle1.png", &tilemap, true));
-	units[0]->name = "Sir Longderston";
-	units.push_back(ResourceManager::CreateUnit(100, 100, 5, tilemap.GetTile(6, 1), "Graphics/GameObjects/Enemy1/idle1.png", &tilemap, false));
+	units.push_back(ResourceManager::CreateUnit(hero_source));
+	tilemap.PutOnTile(units[0], 1, 3);
+	/*
+	//units.push_back(ResourceManager::CreateUnit(15, 5, 5, tilemap.GetTile(1, 3), "Graphics/GameObjects/Hero/idle1.png", &tilemap, true));
+	//units[0]->name = "Sir Longderston";
+	units.push_back(ResourceManager::CreateUnit(8, 10, 8, tilemap.GetTile(6, 1), "Graphics/GameObjects/Enemy1/idle1.png", &tilemap, false));
 	units[1]->name = "Blair Wraith";
-	units.push_back(ResourceManager::CreateUnit(100, 100, 5, tilemap.GetTile(6, 3), "Graphics/GameObjects/Enemy2/idle1.png", &tilemap, false));
+	units.push_back(ResourceManager::CreateUnit(12, 0, 4, tilemap.GetTile(6, 3), "Graphics/GameObjects/Enemy2/idle1.png", &tilemap, false));
 	units[2]->name = "Crooked Brood";
-	units.push_back(ResourceManager::CreateUnit(100, 100, 5, tilemap.GetTile(6, 5), "Graphics/GameObjects/Enemy3/idle1.png", &tilemap, false));
+	units.push_back(ResourceManager::CreateUnit(10, 8, 6, tilemap.GetTile(6, 5), "Graphics/GameObjects/Enemy3/idle1.png", &tilemap, false));
 	units[3]->name = "Voidslave";
 
 	items.push_back(ResourceManager::CreateItem("Graphics/GameObjects/box.png", tilemap.GetTile(3, 2), &tilemap, false));
 	items.push_back(ResourceManager::CreateItem("Graphics/GameObjects/box.png", tilemap.GetTile(3, 3), &tilemap, false));
 	items.push_back(ResourceManager::CreateItem("Graphics/GameObjects/box.png", tilemap.GetTile(3, 4), &tilemap, false));
-
+	*/
 }
 
 void GroundBattleScene::ResolveInput(SDL_Event & e) {
-	// infoblock.ResolveInput(e);
-	// actionblock.ResolveInput(e);
-
-	// for future AI implementation
-	// if (!units[currentUnit]->isPlayer) return;
 
 	if (e.type == SDL_KEYUP) {
 		switch (e.key.keysym.sym) {

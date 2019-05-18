@@ -19,8 +19,20 @@ void ResourceManager::Init(SDL_Renderer * renderer, SDL_Window* window, Scene * 
 	ren = renderer; initialized = true;
 	win = window;
 	scene = pscene;
-	default_font = TTF_OpenFont("Resources/default_font.ttf", 20);
+	default_font = TTF_OpenFont("Resources/default_font.ttf", 40);
 }
+void ResourceManager::Quit()
+{
+	for (auto& pair : TextureMap) {
+		SDL_DestroyTexture(pair.second);
+	}
+	TextureMap.clear();
+
+	GameObjects.clear();
+	Buttons.clear();
+	TTF_CloseFont(default_font);
+}
+
 SDL_Texture * ResourceManager::LoadTexture(std::string path)
 {
 
@@ -160,6 +172,22 @@ void ResourceManager::FreeTextures()
 		SDL_DestroyTexture(tex_pair.second);
 	}
 	TextureMap.clear();
+}
+
+Unit* ResourceManager::CreateUnit() {
+	GameObjects.push_back(std::make_unique<Unit>());
+	return (Unit*)GameObjects[GameObjects.size() - 1].get();
+}
+
+Item* ResourceManager::CreateItem() {
+	GameObjects.push_back(std::make_unique<Item>());
+	return (Item*)GameObjects[GameObjects.size() - 1].get();
+}
+
+Unit* ResourceManager::CreateUnit(std::string source)
+{
+	GameObjects.push_back(std::make_unique<Unit>(source));
+	return (Unit*)GameObjects[GameObjects.size() - 1].get();
 }
 
 Unit * ResourceManager::CreateUnit(big HP, big SP, small AP, Tile * tile, std::string texSrc, TileMap * tilemap, bool playerTeam)

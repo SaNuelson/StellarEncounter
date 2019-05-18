@@ -18,5 +18,7 @@ public:
 
 	virtual std::string toString() = 0;
 
-	virtual GameObject* getPtr() = 0;
+	TileMap* tilemap;
+	Tile* tile;
+
 };

@@ -84,6 +84,18 @@ void TileMap::Init(std::string source, int x, int y) {
 
 }
 
+void TileMap::PutOnTile(GameObject* obj, Tile* tile)
+{
+	obj->tile = tile;
+	obj->tilemap = this;
+	tile->occ = obj;
+}
+
+void TileMap::PutOnTile(GameObject* obj, int x, int y)
+{
+	PutOnTile(obj, GetTile(x, y));
+}
+
 void TileMap::ResolveInput(SDL_Event & e) {
 
 }
