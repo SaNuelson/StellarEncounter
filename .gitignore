@@ -262,3 +262,4 @@ __pycache__/
 
 #custom - keep SDLPack
 !SDLPack/*
+!SDLPack/lib/x86/*
