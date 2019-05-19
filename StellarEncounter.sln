@@ -14,12 +14,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		build_concept.txt = build_concept.txt
 		Characters.txt = Characters.txt
 		Mechanics.txt = Mechanics.txt
-		StellarEncounterGroundBattle\SDLPack\lib\x86\SDL2.lib = StellarEncounterGroundBattle\SDLPack\lib\x86\SDL2.lib
-		StellarEncounterGroundBattle\SDLPack\lib\x86\SDL2_image.lib = StellarEncounterGroundBattle\SDLPack\lib\x86\SDL2_image.lib
-		StellarEncounterGroundBattle\SDLPack\lib\x86\SDL2_mixer.lib = StellarEncounterGroundBattle\SDLPack\lib\x86\SDL2_mixer.lib
-		StellarEncounterGroundBattle\SDLPack\lib\x86\SDL2_ttf.lib = StellarEncounterGroundBattle\SDLPack\lib\x86\SDL2_ttf.lib
-		StellarEncounterGroundBattle\SDLPack\lib\x86\SDL2main.lib = StellarEncounterGroundBattle\SDLPack\lib\x86\SDL2main.lib
-		StellarEncounterGroundBattle\SDLPack\lib\x86\SDL2test.lib = StellarEncounterGroundBattle\SDLPack\lib\x86\SDL2test.lib
 		Story.txt = Story.txt
 	EndProjectSection
 EndProject

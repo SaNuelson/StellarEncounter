@@ -70,8 +70,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Users\sanue\source\repos\StellarEncounterRepo\StellarEncounterGroundBattle\SDLPack\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\sanue\source\repos\StellarEncounterRepo\StellarEncounterGroundBattle\SDLPack\lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\SDLPack\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\SDLPack\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
