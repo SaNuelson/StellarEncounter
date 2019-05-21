@@ -65,8 +65,9 @@ public:
 
 	// Render
 	bool flip = false;
-	big textureSpeed = 50;
-	big textureTimeLeft = textureSpeed;
+	big TPS = 10; // textures per second
+	float textureTime = 1000 / TPS;
+	float textureTimeCurrent = -1;
 	small currentTexture = 0;
 	std::vector<SDL_Texture*> textures;
 	std::map<small, std::pair<small, small>> textureSets;

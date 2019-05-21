@@ -47,7 +47,7 @@ void Unit::OnUpdate(double delta) {
 	if (currentAction != nextAction) {
 		std::cout << this->toString() << " goes from " << std::to_string(currentAction) << " to " << std::to_string(nextAction) << std::endl;
 		currentAction = nextAction;
-		textureTimeLeft = textureSpeed;
+		textureTimeCurrent = textureTime;
 		currentTexture = textureSets[currentAction].first;
 		if (currentTexture < 0)
 			std::cout << "HERE";
@@ -110,9 +110,9 @@ void Unit::OnUpdate(double delta) {
 
 
 	// update animation, always
-	textureTimeLeft -= delta;
-	if (textureTimeLeft <= 0) {
-		textureTimeLeft = textureSpeed;
+	textureTimeCurrent -= delta;
+	if (textureTimeCurrent <= 0) {
+		textureTimeCurrent = textureTime;
 		currentTexture++;
 		if (textureSets[currentAction].second < currentTexture) {
 			currentTexture = textureSets[currentAction].first;
@@ -159,6 +159,11 @@ void Unit::Move(Tile * tile)
 	std::cout << "Destination p: " << dest_point.x << " " << dest_point.y << std::endl;
 	std::cout << "Magnitude:     " << magn << std::endl;
 	std::cout << "Unit vector:   " << pos_move_unit_vec_x << " " << pos_move_unit_vec_y << std::endl;
+
+	if (dest_point.x < position.x)
+		flip = true;
+	else
+		flip = false;
 
 	this->tile->SetOccupant(nullptr);
 	tile->SetOccupant(this);
@@ -292,21 +297,21 @@ void Unit::ParseSource(Unit* unit, std::string& source)
 			Texture paths are all in said format and in .png
 			Any repeated attributes will override former attributes
 
-		<<< <ATTRIB>=<VALUE>\n >>>
-		Name=<VALUE>\n
-		HP=<VALUE>\n
-		(or	MaxHP=<VALUE>\n
-			CurHP=<VALUE>\n)
-		SP=<VALUE>\n
-		(or	MaxSP=<VALUE>\n
-			CurSP=<VALUE>\n)
-		AP=<VALUE>\n
-		(or MaxAP=<VALUE>\n
-			CurAP=<VALUE>\n)
-		Weapon=<WEAPON_SRC>\n
-		TextureSpeed=<VALUE>\n
-		Textures=\n
-		<TEXTURE_SET_CODE>=<COUNT>|<TEXTURE_PATH(in format: path/fileX.png)>\n
+		<<< <ATTRIB>=<VALUE>, >>>
+		Name=<VALUE>,
+		HP=<VALUE>,
+		MaxHP=<VALUE>,
+		CurHP=<VALUE>,
+		SP=<VALUE>,
+		MaxSP=<VALUE>,
+		CurSP=<VALUE>,
+		AP=<VALUE>,
+		MaxAP=<VALUE>,
+		CurAP=<VALUE>,
+		Weapon=<WEAPON_SRC>,
+		TextureSpeed=<VALUE>,
+		Textures=,
+		<TEXTURE_SET_CODE>=<TEXTURE_PATH(where files for individual unit states can be found (idle/tile000.png, idle/tile001.png, hit/tile000.png, etc.)>
 	*/
 
 	std::stringstream ss(source);
@@ -351,8 +356,9 @@ void Unit::ParseSource(Unit* unit, std::string& source)
 		else if (attrib == "Weapon") {
 			unit->weapon = Weapon(value);
 		}
-		else if (attrib == "TextureSpeed") {
-			unit->textureSpeed = std::stoi(value);
+		else if (attrib == "TextureSpeed" || attrib == "TPS") {
+			// setting most likely unnecessary
+			// unit->TPS = std::stoi(value);
 		}
 		else if (attrib == "Textures") {
 
