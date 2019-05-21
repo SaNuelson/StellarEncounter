@@ -63,39 +63,28 @@ void Unit::OnUpdate(double delta) {
 	}
 
 	if (currentAction == UNIT_ACTION_MOVE) {
-		if (move_vec.x == 0 && move_vec.y == 0) {
-			nextAction = 0;
+		pos_x += pos_move_unit_vec_x * moveSpeed * delta / 100;
+		pos_y += pos_move_unit_vec_y * moveSpeed * delta / 100;
+
+		std::cout << "Resolving movement..." << std::endl;
+		std::cout << "New float position: " << pos_x << " " << pos_y << std::endl;
+		std::cout << "Checking monotonicity of x: " << position.x << " " << dest_point.x << " " << (int)pos_x << std::endl;
+		std::cout << "Checking monotonicity of y: " << position.y << " " << dest_point.y << " " << (int)pos_y << std::endl;
+
+		if (isMonotonic(position.x, dest_point.x, (int)pos_x)) {
+			pos_move_unit_vec_x = 0;
+		}
+		if (isMonotonic(position.y, dest_point.y, (int)pos_y)) {
+			pos_move_unit_vec_y = 0;
+		}
+		if (pos_move_unit_vec_x == 0 && pos_move_unit_vec_y == 0) {
+			position.x = dest_point.x;
+			position.y = dest_point.y;
+			nextAction = UNIT_ACTION_IDLE;
 		}
 		else {
-			if (move_vec.x < 0)
-				flip = true;
-			else
-				flip = false;
-			moveTimeLeft--;
-			if (moveTimeLeft == 0) {
-				if (move_vec.x != 0 && move_vec.y != 0)
-					moveTimeLeft = 2 * moveSpeed;
-				else
-					moveTimeLeft = moveSpeed;
-				int mx;
-				int my;
-				if (move_vec.x > 0)
-					mx = 1;
-				else if (move_vec.x < 0)
-					mx = -1;
-				else
-					mx = 0;
-				if (move_vec.y > 0)
-					my = 1;
-				else if (move_vec.y < 0)
-					my = -1;
-				else
-					my = 0;
-				move_vec.x -= mx;
-				move_vec.y -= my;
-				position.x += mx;
-				position.y += my;
-			}
+			position.x = pos_x;
+			position.y = pos_y;
 		}
 	}
 	else if (currentAction == UNIT_ACTION_ATTACK) {
@@ -153,9 +142,24 @@ void Unit::ReceiveAction(int amount)
 void Unit::Move(Tile * tile)
 {
 	nextAction = UNIT_ACTION_MOVE;
-	move_vec = tilemap->GetMoveVec(this->tile, tile);
+	SDL_Point move_vec = tilemap->GetMoveVec(this->tile, tile);
+	pos_x = position.x;
+	pos_y = position.y;
+	// dest point is left-top point of unit rect with bottom-middle point of it equal to tile.GetCenter()
+	dest_point = tile->GetCenter();
+	dest_point.x -= position.w / 2;
+	dest_point.y -= position.h;
+	int magn = std::abs(move_vec.x) + std::abs(move_vec.y);
+	pos_move_unit_vec_x = move_vec.x / (float)magn;
+	pos_move_unit_vec_y = move_vec.y / (float)magn;
 	ChangeAP(-tilemap->GetDistance(this->tile, tile));
-	
+
+	std::cout << "Got move vec:  " << move_vec.x << " " << move_vec.y << std::endl;
+	std::cout << "Current point: " << position.x << " " << position.y << std::endl;
+	std::cout << "Destination p: " << dest_point.x << " " << dest_point.y << std::endl;
+	std::cout << "Magnitude:     " << magn << std::endl;
+	std::cout << "Unit vector:   " << pos_move_unit_vec_x << " " << pos_move_unit_vec_y << std::endl;
+
 	this->tile->SetOccupant(nullptr);
 	tile->SetOccupant(this);
 	this->tile = tile;

@@ -16,9 +16,6 @@
     <Filter Include="Header Files\GameObjects">
       <UniqueIdentifier>{c82e5895-8288-44bb-909a-f273d05e41e8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\GameObjects">
-      <UniqueIdentifier>{ec2f8daf-e5a9-44f5-8923-591f69453336}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\UIElements">
       <UniqueIdentifier>{bda11ef9-37ff-4d94-b3df-5009b182d817}</UniqueIdentifier>
     </Filter>
@@ -36,6 +33,9 @@
     </Filter>
     <Filter Include="Source Files\Scenes">
       <UniqueIdentifier>{6e7a9b56-cdf6-45b9-93d8-168a70704a04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameObjects">
+      <UniqueIdentifier>{ec2f8daf-e5a9-44f5-8923-591f69453336}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

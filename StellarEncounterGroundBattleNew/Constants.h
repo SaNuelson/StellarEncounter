@@ -309,4 +309,14 @@ void ReadConsole() {
 	}
 }
 
+template <typename T>
+bool isMonotonic(T a, T b, T c) {
+	return ((a <= b) && (b <= c)) || ((a >= b) && (b >= c));
+}
+
+template <typename T>
+bool isStrictlyMonotonic(T a, T b, T c) {
+	return ((a < b) && (b < c) || (a > b) && (b > c));
+}
+
 #endif

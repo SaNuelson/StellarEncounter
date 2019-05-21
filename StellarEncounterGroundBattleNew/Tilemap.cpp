@@ -191,11 +191,17 @@ void TileMap::OnUpdate(double delta) {
 
 void TileMap::OnRender() {
 
-	for (auto &line : tiles)
-		for (auto &tile : line)
+	for (auto& line : tiles) {
+		for (auto& tile : line) {
 			tile.OnRender();
-	for (auto& line : tiles)
-		for (auto& tile : line)
+			//debug
+			SDL_RenderCopy(ResourceManager::ren, ResourceManager::LoadCaption(std::to_string(tile.mappos.x) + " " + std::to_string(tile.mappos.y)), nullptr, &tile.pos);
+		}
+	}
+	for (auto& line : tiles) {
+		for (auto& tile : line){
 			tile.AfterRender();
-
+		}
+	}
+		
 }

@@ -49,8 +49,12 @@ public:
 	small CurAP = 5;
 
 	SDL_Rect position;
-	SDL_Point move_vec;
-	big moveSpeed = 20; // pixels per second
+	SDL_Point dest_point;
+	float pos_move_unit_vec_x = 0;
+	float pos_move_unit_vec_y = 0;
+	float pos_x = 0;
+	float pos_y = 0;
+	float moveSpeed = 20; // tiles per second
 	big moveTimeLeft = moveSpeed;
 	// Tile* tile = nullptr;	<- inherited from GameObject
 
@@ -61,7 +65,7 @@ public:
 
 	// Render
 	bool flip = false;
-	big textureSpeed = 100;
+	big textureSpeed = 50;
 	big textureTimeLeft = textureSpeed;
 	small currentTexture = 0;
 	std::vector<SDL_Texture*> textures;
