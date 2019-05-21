@@ -50,7 +50,7 @@ public:
 
 	SDL_Rect position;
 	SDL_Point move_vec;
-	big moveSpeed = 20;
+	big moveSpeed = 20; // pixels per second
 	big moveTimeLeft = moveSpeed;
 	// Tile* tile = nullptr;	<- inherited from GameObject
 

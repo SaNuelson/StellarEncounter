@@ -307,7 +307,7 @@ void Unit::ParseSource(Unit* unit, std::string& source)
 
 	std::stringstream ss(source);
 	std::string line;
-	while (std::getline(ss, line)) {
+	while (std::getline(ss, line, ',')) {
 		std::string attrib = line.substr(0, line.find('='));
 		std::string value = line.substr(line.find('=') + 1, line.size());
 		std::cout << "Parsed attrib = " << attrib << " and val = " << value << std::endl;

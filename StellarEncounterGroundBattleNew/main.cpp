@@ -94,6 +94,10 @@ int main() {
 
 			scene->ResolveInput(e);
 
+			if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_F1) {
+				ReadConsole();
+			}
+
 			if (e.type == SDL_USEREVENT) {
 				if (e.user.code == RC_NEW_GAME) {
 					scene_change = true;

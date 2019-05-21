@@ -30,8 +30,8 @@ const std::string Actions[ActionsSize] = { "Idle","Move","Attack","Hit","React",
 
 // DEMO UNITS
 
-const std::string skeleton_source = "HP=100\nMaxSP=30\nCurSP=15\nAP=6\nName=Lord Farquad\nWeapon=50\nTextureSpeed=200\nTextures=Graphics/GameObjects/Skeleton";
-const std::string hero_source = "HP=80\nSP=20\nAP=8\nName=A Little Humble Hero\nWeapon=100\nTextureSpeed=200\nTextures=Graphics/GameObjects/Hero";
+const std::string skeleton_source = "HP=100,MaxSP=30,CurSP=15,AP=6,Name=Lord Farquad,Weapon=50,TextureSpeed=200,Textures=Graphics/GameObjects/Skeleton";
+const std::string hero_source = "HP=80,SP=20,AP=8,Name=A Little Humble Hero,Weapon=100,TextureSpeed=200,Textures=Graphics/GameObjects/Hero";
 
 // CUSTOM DATA TYPES
 
@@ -226,6 +226,86 @@ static std::string GetTileCodePath(int tileCode) {
 		return "Graphics/Tiles/t8.png";
 	default:
 		return "";
+	}
+}
+
+
+void ReadConsole() {
+	// load line from console into vector of args
+	std::string input;
+	std::getline(std::cin, input);
+	std::vector<std::string> args;
+	std::stringstream ss(input);
+	std::string data;
+	while (std::getline(ss, data)) {
+		args.push_back(data);
+	}
+
+	if (args[0] == "help" || args[0] == "h") {
+		std::cout << "  CONSOLE COMMAND (FOR DEBUG) HELP" << std::endl;
+		std::cout << "    ----    ----    ----    ----" << std::endl;
+		std::cout << "make/create item/unit <tx> <ty> <src_string>" << std::endl;
+		std::cout << "remove/delete item/unit <tx> <ty>" << std::endl;
+		std::cout << "move item/unit <from_tx> <from_ty> <to_tx> <to_ty>" << std::endl;
+		std::cout << "edit item/unit <tx> <ty> <src_string>" << std::endl;
+		std::cout << "EXAMPLE: " << std::endl;
+		std::cout << "make unit 3 3 HP=10,SP=5,Name=Big Little Joe";
+		std::cout << "    ----    ----    ----    ----" << std::endl;
+	}
+	// new item/unit
+	// "make/create item/unit <tx> <ty> <src_string>"
+	else if (args[0] == "create" || args[0] == "make") {
+		if (args[1] == "item") {
+
+		}
+		else if (args[1] == "unit") {
+
+		}
+		else {
+			std::cout << "Invalid arguments for create at 1: " << args[1] << std::endl;
+		}
+	}
+	// delete item/unit
+	// "delete item/unit <tx> <ty>"
+	else if (args[0] == "remove" || args[0] == "delete") {
+		if (args[1] == "item") {
+
+		}
+		else if (args[1] == "unit") {
+
+		}
+		else {
+			std::cout << "Invalid arguments for remove at 1: " << args[1] << std::endl;
+		}
+	}
+	// move item/unit
+	// "move item/unit <from_tx> <from_ty> <to_tx> <to_ty>"
+	else if (args[0] == "move") {
+		if (args[1] == "item") {
+
+		}
+		else if (args[1] == "unit") {
+
+		}
+		else {
+			std::cout << "Invalid arguments for move at 1: " << args[1] << std::endl;
+		}
+	}
+	// edit item/unit
+	// "edit item/unit <tx> <ty> <src_string>"
+	else if (args[0] == "edit") {
+		if (args[1] == "item") {
+
+		}
+		else if (args[1] == "unit") {
+
+		}
+		else {
+			std::cout << "Invalid arguments for edit at 1: " << args[1] << std::endl;
+		}
+	}
+	else {
+		std::cout << "Invalid argument at 0: " << args[0] << std::endl;
 	}
 }
 
