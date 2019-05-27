@@ -1,7 +1,5 @@
 #include "Unit.h"
 
-Unit::Unit() : weapon(10) {}
-
 Unit::Unit(std::string source) {
 
 	ParseSource(this, source);
@@ -10,18 +8,15 @@ Unit::Unit(std::string source) {
 	int mult = yTileSize / dims.y;
 	position.h = yTileSize;
 	position.w = dims.x * xTileSize / dims.y;
+
+	ResourceManager::DispatchEvent(RC_UNIT_STAT_CHANGE, this, nullptr);
 }
 
-Unit::Unit(big HP, big SP, small AP, Tile* tile, std::string texSrc, TileMap* tilemap, small team) {
-	MaxHP = HP;
-	CurHP = HP;
-	MaxAP = AP;
-	CurAP = AP;
-	this->tile = tile;
-	tile->occ = this;
-	LoadTextures(texSrc);
-	this->tilemap = tilemap;
-	Team = team;
+Unit::~Unit() {}
+
+void Unit::Edit(std::string source)
+{
+	ParseSource(this, source);
 }
 
 void Unit::LoadTextures(std::string texSrc)
@@ -55,6 +50,8 @@ void Unit::OnUpdate(double delta) {
 
 		if (currentAction == UNIT_ACTION_IDLE) {
 			flip = (Team != 0);
+			if (default_flip)
+				flip = !flip;
 			SDL_Point p = tile->GetCenter();
 			position.x = p.x - position.w / 2;
 			position.y = p.y - position.h;
@@ -66,10 +63,12 @@ void Unit::OnUpdate(double delta) {
 		pos_x += pos_move_unit_vec_x * moveSpeed * delta / 100;
 		pos_y += pos_move_unit_vec_y * moveSpeed * delta / 100;
 
+		/*
 		std::cout << "Resolving movement..." << std::endl;
 		std::cout << "New float position: " << pos_x << " " << pos_y << std::endl;
 		std::cout << "Checking monotonicity of x: " << position.x << " " << dest_point.x << " " << (int)pos_x << std::endl;
 		std::cout << "Checking monotonicity of y: " << position.y << " " << dest_point.y << " " << (int)pos_y << std::endl;
+		*/
 
 		if (isMonotonic(position.x, dest_point.x, (int)pos_x)) {
 			pos_move_unit_vec_x = 0;
@@ -100,9 +99,7 @@ void Unit::OnUpdate(double delta) {
 	else if (currentAction == UNIT_ACTION_DYING) {
 		if (currentTexture == textureSets[UNIT_ACTION_DYING].second) {
 			nextAction = UNIT_ACTION_DEAD;
-			
-			// ResourceManager::DispatchEvent(RC_UNIT_DEATH, this, nullptr);
-			// unnecessary for now
+			ResourceManager::DispatchEvent(RC_UNIT_DEATH, this, nullptr);
 		}
 	}
 
@@ -125,9 +122,9 @@ void Unit::UseAction(GameObject * defender)
 {
 	nextAction = UNIT_ACTION_ATTACK;
 	if (defender->tile->pos.x < tile->pos.x)
-		flip = true;
+		flip = !default_flip;
 	else
-		flip = false;
+		flip = default_flip;
 	std::cout << toString() << " uses action against " << defender->toString() << std::endl;
 	ChangeAP(-1);  // will vary with equip
 	defender->ReceiveAction(-weapon.GetStrength()); // TODO: negative means damage, positive means healing
@@ -161,9 +158,9 @@ void Unit::Move(Tile * tile)
 	std::cout << "Unit vector:   " << pos_move_unit_vec_x << " " << pos_move_unit_vec_y << std::endl;
 
 	if (dest_point.x < position.x)
-		flip = true;
+		flip = !default_flip;
 	else
-		flip = false;
+		flip = default_flip;
 
 	this->tile->SetOccupant(nullptr);
 	tile->SetOccupant(this);
@@ -273,7 +270,7 @@ void Unit::ChangeAP(big amount)
 }
 
 void Unit::OnRender() {
-	SDL_RenderCopyEx(ResourceManager::ren, textures[currentTexture], nullptr, &position, 0, nullptr, (flip ? SDL_RendererFlip::SDL_FLIP_HORIZONTAL : SDL_RendererFlip::SDL_FLIP_NONE));
+	SDL_RenderCopyEx(ResourceManager::GetRenderer(), textures[currentTexture], nullptr, &position, 0, nullptr, (flip ? SDL_RendererFlip::SDL_FLIP_HORIZONTAL : SDL_RendererFlip::SDL_FLIP_NONE));
 }
 
 std::string Unit::toString()
@@ -287,6 +284,7 @@ std::string Unit::toString()
 		", Team: " + std::to_string(Team) + ")";
 	return str;
 }
+
 
 void Unit::ParseSource(Unit* unit, std::string& source)
 {
@@ -355,6 +353,9 @@ void Unit::ParseSource(Unit* unit, std::string& source)
 		}
 		else if (attrib == "Weapon") {
 			unit->weapon = Weapon(value);
+		}
+		else if (attrib == "Flip") {
+			unit->default_flip = (value == "t" || value == "true" || value == "True" || value == "1" ? true : false);
 		}
 		else if (attrib == "TextureSpeed" || attrib == "TPS") {
 			// setting most likely unnecessary

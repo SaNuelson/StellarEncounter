@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -129,6 +129,7 @@
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenuScene.cpp" />
+    <ClCompile Include="OptionScene.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Tile.cpp" />
@@ -139,12 +140,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Button.h" />
+    <ClInclude Include="ConsoleLogic.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="Equipment.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GroundBattleScene.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="MainMenuScene.h" />
+    <ClInclude Include="OptionScene.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="stdlib.h" />

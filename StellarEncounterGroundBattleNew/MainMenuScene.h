@@ -1,3 +1,4 @@
+#pragma once
 #include "stdlib.h"
 #include "Scene.h"
 #include "ResourceManager.h"
@@ -17,6 +18,8 @@ public:
 
 	void OnRender() override;
 
+	void SetArgs(int code) override;
+
 private:
 
 	SDL_Rect bg_rect;
@@ -24,6 +27,11 @@ private:
 
 	SDL_Rect title_rect;
 	SDL_Texture* title;
+
+	SDL_Rect subtitle_rect;
+	SDL_Texture* subtitle;
+	std::string subtitle_caption;
+	bool is_subtitle;
 	
 	std::vector<Button*> buttons;
 

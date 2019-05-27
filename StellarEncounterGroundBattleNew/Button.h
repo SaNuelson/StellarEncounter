@@ -136,13 +136,9 @@ public:
 			}
 			else {
 				if (e.button.button == SDL_BUTTON_LEFT && e.type == SDL_MOUSEBUTTONUP && button_state == 2) {
-					std::cout << "Mouse Press" << std::endl;
+					// std::cout << "Mouse Press" << std::endl;
 					DispatchEvent();
 				}
-				/* Might need in near future.
-				else if (hover_func != nullptr)
-					(*hover_func)();
-				*/
 				isMouseHolding = false;
 				button_state = 1;
 			}
@@ -154,9 +150,9 @@ public:
 	}
 
 	void OnRender() {
-		SDL_RenderCopy(ResourceManager::ren, GetButtonTex(), nullptr, &rect);
+		SDL_RenderCopy(ResourceManager::GetRenderer(), GetButtonTex(), nullptr, &rect);
 		if (caption != "") {
-			SDL_RenderCopy(ResourceManager::ren, caption_tex, nullptr, &caption_rect);
+			SDL_RenderCopy(ResourceManager::GetRenderer(), caption_tex, nullptr, &caption_rect);
 		}
 	}
 

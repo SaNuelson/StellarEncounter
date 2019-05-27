@@ -20,6 +20,8 @@ public:
 	void OnUpdate(double delta) override;
 	void OnRender() override;
 
+	bool CheckEndGame();
+
 	bool UpKey = false;
 	bool DownKey = false;
 

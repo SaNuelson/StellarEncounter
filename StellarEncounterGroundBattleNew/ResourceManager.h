@@ -14,7 +14,9 @@ class ResourceManager
 {
 public:
 
-	static void Init(SDL_Renderer * renderer, SDL_Window* win, Scene * scene);
+	static int InitFramework();
+	static int InitWinRen(std::string win_title, int win_x, int win_y, int win_w, int win_h, SDL_WindowFlags win_flag, SDL_RendererFlags ren_flag);
+	static int Init(SDL_Renderer * renderer, SDL_Window* win);
 	
 	static void Quit();
 
@@ -34,18 +36,27 @@ public:
 
 	static void FreeTextures();
 
-	static SDL_Renderer * ren;
-	static SDL_Window * win;
-	static Scene * scene;
+	static Scene* GetScene();
+	static Scene* CreateScene(Sint32 scene_code);
+
+	static SDL_Window* GetWindow();
+	// static void SetWindow(SDL_Window* win);
+
+	static SDL_Renderer* GetRenderer();
+	// static void SetRenderer(SDL_Renderer* ren);
 
 	static Button* CreateButton();
+	
 	static Unit* CreateUnit();
-	static Item* CreateItem();
 	static Unit* CreateUnit(std::string source);
-	static Unit* CreateUnit(big HP, big SP, small AP, Tile* tile, std::string texSrc, TileMap* tilemap, bool playerTeam);
+
+	static Item* CreateItem();
 	static Item* CreateItem(std::string texSrc, Tile* tile, TileMap* tilemap, bool usable);
 
 private:
+	static SDL_Renderer* ren;
+	static SDL_Window* win;
+	static std::unique_ptr<Scene> scene;
 
 	static bool initialized;
 

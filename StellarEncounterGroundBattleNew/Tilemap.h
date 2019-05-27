@@ -26,7 +26,7 @@ public:
 	void OnUpdate(double delta);
 	void OnRender();
 
-	Tile* GetTile(int x, int y) { return &tiles[y][x]; }
+	Tile* GetTile(int x, int y);
 
 	//int GetDistance(SDL_Point &p1, SDL_Point &p2);
 	//int GetDistance(int &tx1, int &tx2, int &ty1, int &ty2);

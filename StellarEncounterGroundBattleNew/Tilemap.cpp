@@ -86,6 +86,8 @@ void TileMap::Init(std::string source, int x, int y) {
 
 void TileMap::PutOnTile(GameObject* obj, Tile* tile)
 {
+	if (obj->tile != nullptr)
+		obj->tile->occ = nullptr;
 	obj->tile = tile;
 	obj->tilemap = this;
 	tile->occ = obj;
@@ -195,7 +197,7 @@ void TileMap::OnRender() {
 		for (auto& tile : line) {
 			tile.OnRender();
 			//debug
-			SDL_RenderCopy(ResourceManager::ren, ResourceManager::LoadCaption(std::to_string(tile.mappos.x) + " " + std::to_string(tile.mappos.y)), nullptr, &tile.pos);
+			SDL_RenderCopy(ResourceManager::GetRenderer(), ResourceManager::LoadCaption(std::to_string(tile.mappos.x) + " " + std::to_string(tile.mappos.y)), nullptr, &tile.pos);
 		}
 	}
 	for (auto& line : tiles) {
@@ -204,4 +206,12 @@ void TileMap::OnRender() {
 		}
 	}
 		
+}
+
+Tile* TileMap::GetTile(int x, int y) {
+	if (x < 0 || tiles.size() <= x)
+		return nullptr;
+	if (y < 0 || tiles[x].size() <= y)
+		return nullptr;
+	return &tiles[y][x]; 
 }

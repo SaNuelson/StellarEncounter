@@ -16,4 +16,6 @@ public:
 	virtual void OnUpdate(double delta) = 0;
 	virtual void OnRender() = 0;
 
+	virtual void SetArgs(int code) {};
+
 };

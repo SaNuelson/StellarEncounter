@@ -1,6 +1,9 @@
 #include "stdlib.h"
 #include "Constants.h"
 #include "ResourceManager.h"
+
+#include "ConsoleLogic.h"
+
 #include "Tile.h"
 
 #include "Scene.h"
@@ -9,79 +12,48 @@
 
 using namespace std;
 
-SDL_Window * win = nullptr;
-SDL_Renderer * ren = nullptr;
+// ptrs for faster access
+Scene* scene = nullptr;
+SDL_Window* win = nullptr;
+SDL_Renderer* ren = nullptr;
+
+// loop and logic variables
+SDL_Event e;
 bool quit = false;
 bool scene_change = false;
-Sint32 scene_change_rc = -1;
-
-void Quit() {
-	quit = true;
-}
+int scene_msg = -1;
+Sint32 current_scene = RC_MAIN_MENU;
 
 int main() {
 
-	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
-		cout << "SDL_Init Error: " << SDL_GetError() << endl;
-		return 1;
-	}
+	// init section
+	int ret = ResourceManager::InitFramework();
+	if (ret != 0)
+		return ret;
 
-	if ((IMG_Init(IMG_INIT_PNG)) & IMG_INIT_PNG != IMG_INIT_PNG) {
-		cout << "IMG_Init Error: " << SDL_GetError() << endl;
-		SDL_Quit();
-		return 2;
-	}
+	ret = ResourceManager::InitWinRen("StellarEncounter v0.1", scr_offset_x, scr_offset_y, scr_width, scr_height, SDL_WINDOW_SHOWN, SDL_RENDERER_ACCELERATED);
+	if (ret != 0)
+		return ret;
 
-	if (TTF_Init() != 0) {
-		cout << "TTF_Init Error: " << SDL_GetError() << endl;
-		IMG_Quit();
-		SDL_Quit();
-		return 3;
-	}
-
-	win = SDL_CreateWindow("UIWindow", 50, 50, scr_width, scr_height, SDL_WINDOW_SHOWN);
-	if (win == nullptr) {
-		cout << "SDL_CreateWindow Error: " << SDL_GetError() << endl;
-		TTF_Quit();
-		IMG_Quit();
-		SDL_Quit();
-		SDL_DestroyWindow(win);
-		return -2;
-	}
-
-	ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
-	if (ren == nullptr) {
-		cout << "SDL_CreateRenderer Error: " << SDL_GetError() << endl;
-		TTF_Quit();
-		IMG_Quit();
-		SDL_Quit();
-		SDL_DestroyRenderer(ren);
-		SDL_DestroyWindow(win);
-		return -1;
-	}
+	win = ResourceManager::GetWindow();
+	ren = ResourceManager::GetRenderer();
+	scene = ResourceManager::CreateScene(RC_MAIN_MENU);
 
 	//timer
 	Uint64 t_now = SDL_GetPerformanceCounter();
 	Uint64 t_last = 0;
 	double delta = 0;
 
-	// necessary initialization because... reasons
-	ResourceManager::Init(ren, win, nullptr);
-
-	std::unique_ptr<Scene> scene = std::make_unique<MainMenuScene>();
-	ResourceManager::scene = scene.get();
-
-	SDL_Event e;
 
 	while (!quit) {
 
+		// change scenes if needed
 		if (scene_change) {
-			if (scene_change_rc == 1) {
-				scene = std::make_unique<GroundBattleScene>();
-				ResourceManager::scene = scene.get();
-			}
+			scene = ResourceManager::CreateScene(current_scene);
 			scene_change = false;
-			scene_change_rc = -1;
+			if (current_scene == RC_MAIN_MENU) {
+				scene->SetArgs(scene_msg);
+			}
 		}
 
 		// calc delta
@@ -94,20 +66,42 @@ int main() {
 
 			scene->ResolveInput(e);
 
-			if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_F1) {
+			// enable console input (mostly for debugging for easier creation of demo cases)
+			if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_F1) { // e.key.keysym.sym == SDLK_<<KEYBOARD_KEY_CODE>>
 				ReadConsole();
 			}
 
+			// resolve custom events (here specifically for change between scenes)
 			if (e.type == SDL_USEREVENT) {
+
 				if (e.user.code == RC_NEW_GAME) {
 					scene_change = true;
-					scene_change_rc = RC_NEW_GAME;
+					current_scene = RC_NEW_GAME;
 				}
+				// options screen is currently not implemented
+				/* 
 				else if (e.user.code == RC_OPTIONS) {
-					// OPTIONS NOT IMPLEMENTED
+					scene_change = true;
+					current_scene = RC_OPTIONS;
 				}
-				else if (e.user.code == RC_QUIT_GAME) {
-					quit = true;
+				*/
+				else if (e.user.code == RC_BACK) {
+					if(current_scene == RC_MAIN_MENU)
+						quit = true;
+					else {
+						scene_change = true;
+						current_scene = RC_MAIN_MENU;
+					}
+				}
+				else if (e.user.code == RC_TEAM_0_WIN) {
+					scene_change = true;
+					current_scene = RC_MAIN_MENU;
+					scene_msg = 0;
+				}
+				else if (e.user.code == RC_TEAM_1_WIN) {
+					scene_change = true;
+					current_scene = RC_MAIN_MENU;
+					scene_msg = 1;
 				}
 			}
 
@@ -115,6 +109,7 @@ int main() {
 				quit = true;
 		}
 
+		// Update Elements
 		scene->OnUpdate(delta);
 
 		// Render Screen
@@ -126,10 +121,5 @@ int main() {
 
 
 	ResourceManager::Quit();
-	TTF_Quit();
-	IMG_Quit();
-	SDL_Quit();
-	SDL_DestroyRenderer(ren);
-	SDL_DestroyWindow(win);
 	return 0;
 }

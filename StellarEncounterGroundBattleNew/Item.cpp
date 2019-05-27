@@ -3,7 +3,7 @@
 Item::Item(std::string texSrc, Tile* tile, TileMap * tilemap, bool usable)
 {
 	tex = ResourceManager::LoadTexture(texSrc);
-	ren = ResourceManager::ren;
+	ren = ResourceManager::GetRenderer();
 	this->tilemap = tilemap;
 	this->tile = tile;
 	tile->occ = this;
@@ -21,7 +21,7 @@ void Item::OnRender()
 	position.w = s.x;
 	position.h = s.y;
 	// std::cout << "Item::OnRender on position: " << position.x << " " << position.y << " " << position.w << " " << position.h << std::endl;
-	SDL_RenderCopy(ResourceManager::ren, tex, nullptr, &position);
+	SDL_RenderCopy(ren, tex, nullptr, &position);
 }
 
 void Item::ReceiveAction(int amount)

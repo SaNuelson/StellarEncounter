@@ -6,21 +6,73 @@
 #include "Tilemap.h"
 #include "Button.h"
 
+#include "Scene.h"
+#include "MainMenuScene.h"
+#include "OptionScene.h"
+#include "GroundBattleScene.h"
+
+
 SDL_Renderer * ResourceManager::ren = nullptr;
 SDL_Window * ResourceManager::win = nullptr;
-Scene * ResourceManager::scene = nullptr;
+std::unique_ptr<Scene> ResourceManager::scene = nullptr;
 bool ResourceManager::initialized = false;
 std::map<std::string, SDL_Texture*> ResourceManager::TextureMap;
 TTF_Font * ResourceManager::default_font;
 std::vector<std::unique_ptr<GameObject>> ResourceManager::GameObjects;
 std::vector<std::unique_ptr<Button>> ResourceManager::Buttons;
 
-void ResourceManager::Init(SDL_Renderer * renderer, SDL_Window* window, Scene * pscene) {
-	ren = renderer; initialized = true;
-	win = window;
-	scene = pscene;
-	default_font = TTF_OpenFont("Resources/default_font.ttf", 20);
+int ResourceManager::InitFramework()
+{
+	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
+		std::cout << "SDL_Init Error: " << SDL_GetError() << std::endl;
+		return 1;
+	}
+
+	if (((IMG_Init(IMG_INIT_PNG)) & IMG_INIT_PNG) != IMG_INIT_PNG) {
+		std::cout << "IMG_Init Error: " << SDL_GetError() << std::endl;
+		SDL_Quit();
+		return 2;
+	}
+
+	if (TTF_Init() != 0) {
+		std::cout << "TTF_Init Error: " << SDL_GetError() << std::endl;
+		IMG_Quit();
+		SDL_Quit();
+		return 3;
+	}
+
+	return 0;
 }
+
+int ResourceManager::InitWinRen(std::string win_title, int win_x, int win_y, int win_w, int win_h, SDL_WindowFlags win_flag, SDL_RendererFlags ren_flag)
+{
+	win = SDL_CreateWindow(win_title.c_str(), win_x, win_y, win_w, win_h, win_flag);
+	if (win == nullptr) {
+		std::cout << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
+		TTF_Quit();
+		IMG_Quit();
+		SDL_Quit();
+		SDL_DestroyWindow(win);
+		return -2;
+	}
+
+	ren = SDL_CreateRenderer(win, -1, ren_flag);
+	if (ren == nullptr) {
+		std::cout << "SDL_CreateRenderer Error: " << SDL_GetError() << std::endl;
+		TTF_Quit();
+		IMG_Quit();
+		SDL_Quit();
+		SDL_DestroyRenderer(ren);
+		SDL_DestroyWindow(win);
+		return -1;
+	}
+
+	initialized = true;
+	default_font = TTF_OpenFont("Resources/default_font.ttf", 20); // TODO temporary
+
+	return 0;
+}
+
 void ResourceManager::Quit()
 {
 	for (auto& pair : TextureMap) {
@@ -31,6 +83,11 @@ void ResourceManager::Quit()
 	GameObjects.clear();
 	Buttons.clear();
 	TTF_CloseFont(default_font);
+	SDL_DestroyRenderer(ren);
+	SDL_DestroyWindow(win);
+	TTF_Quit();
+	IMG_Quit();
+	SDL_Quit();
 }
 
 SDL_Texture * ResourceManager::LoadTexture(std::string path)
@@ -176,6 +233,16 @@ Button* ResourceManager::CreateButton()
 	return Buttons[Buttons.size() - 1].get();
 }
 
+Unit* ResourceManager::CreateUnit()
+{
+	return nullptr;
+}
+
+Item* ResourceManager::CreateItem()
+{
+	return nullptr;
+}
+
 void ResourceManager::FreeTextures()
 {
 	for (auto tex_pair : TextureMap) {
@@ -184,14 +251,39 @@ void ResourceManager::FreeTextures()
 	TextureMap.clear();
 }
 
-Unit* ResourceManager::CreateUnit() {
-	GameObjects.push_back(std::make_unique<Unit>());
-	return (Unit*)GameObjects[GameObjects.size() - 1].get();
+Scene* ResourceManager::GetScene()
+{
+	return scene.get();
 }
 
-Item* ResourceManager::CreateItem() {
-	GameObjects.push_back(std::make_unique<Item>());
-	return (Item*)GameObjects[GameObjects.size() - 1].get();
+Scene* ResourceManager::CreateScene(Sint32 scene_code)
+{
+	// unique_ptr should destroy previous instance if existed
+	switch (scene_code) {
+	case RC_NEW_GAME:
+		scene = std::make_unique<GroundBattleScene>();
+		break;
+	case RC_OPTIONS:
+		scene = std::make_unique<OptionScene>();
+		break;
+	case RC_MAIN_MENU:
+		scene = std::make_unique<MainMenuScene>();
+		break;
+	}
+	if (scene == nullptr) {
+		std::cout << "Error at creating new scene of type " << scene_code << std::endl;
+	}
+	return scene.get();
+}
+
+SDL_Window* ResourceManager::GetWindow()
+{
+	return win;
+}
+
+SDL_Renderer* ResourceManager::GetRenderer()
+{
+	return ren;
 }
 
 Unit* ResourceManager::CreateUnit(std::string source)
@@ -199,13 +291,6 @@ Unit* ResourceManager::CreateUnit(std::string source)
 	GameObjects.push_back(std::make_unique<Unit>(source));
 	return (Unit*)GameObjects[GameObjects.size() - 1].get();
 }
-
-Unit * ResourceManager::CreateUnit(big HP, big SP, small AP, Tile * tile, std::string texSrc, TileMap * tilemap, bool playerTeam)
-{
-	GameObjects.push_back(std::make_unique<Unit>(HP, SP, AP, tile, texSrc, tilemap, playerTeam));
-	return (Unit*) GameObjects[GameObjects.size() - 1].get();
-}
-
 Item * ResourceManager::CreateItem(std::string texSrc, Tile* tile, TileMap * tilemap, bool usable)
 {
 	GameObjects.push_back(std::make_unique<Item>(texSrc, tile, tilemap, usable));

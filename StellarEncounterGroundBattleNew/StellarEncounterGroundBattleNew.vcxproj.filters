@@ -75,6 +75,9 @@
     <ClCompile Include="MainMenuScene.cpp">
       <Filter>Source Files\Scenes</Filter>
     </ClCompile>
+    <ClCompile Include="OptionScene.cpp">
+      <Filter>Source Files\Scenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Constants.h">
@@ -120,6 +123,12 @@
       <Filter>Header Files\UIElements</Filter>
     </ClInclude>
     <ClInclude Include="MainMenuScene.h">
+      <Filter>Header Files\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="ConsoleLogic.h">
+      <Filter>Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="OptionScene.h">
       <Filter>Header Files\Scenes</Filter>
     </ClInclude>
   </ItemGroup>

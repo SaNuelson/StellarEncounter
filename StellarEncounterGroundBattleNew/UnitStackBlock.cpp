@@ -11,8 +11,13 @@ UnitStackBlock::UnitStackBlock(GroundBattleScene * scene) : scene(scene) {
 	rect.h = STACK_BLOCK_H;
 	rect.w = STACK_BLOCK_W;
 
+	tex_unit_active = ResourceManager::LoadTexture("Graphics/UI/arrow.png");
+	rect_unit_active.w = 50;
+	rect_unit_active.h = 50;
+	rect_unit_active.x = STACK_BLOCK_X;
+
 	tex_unit = ResourceManager::LoadTexture("Graphics/UI/button.png");
-	tex_unit_bg = ResourceManager::LoadTexture("Graphics/UI/button.png");
+	tex_unit_bg = ResourceManager::LoadTexture("Graphics/UI/button_hover.png");
 	rect_unit.w = STACK_BLOCK_BLOCK_W;
 	rect_unit.h = STACK_BLOCK_BLOCK_H;
 	rect_unit.x = STACK_BLOCK_BLOCK_X;
@@ -41,6 +46,10 @@ UnitStackBlock::UnitStackBlock(GroundBattleScene * scene) : scene(scene) {
 }
 
 void UnitStackBlock::Populate() {
+
+	widths.clear();
+	captions.clear();
+
 	for (auto& unit : scene->units) {
 		std::vector<int> line;
 		line.push_back(unit->CurHP * rect_unit_hp.w / unit->MaxHP);
@@ -56,9 +65,19 @@ void UnitStackBlock::Populate() {
 	}
 }
 
+void UnitStackBlock::Reload()
+{
+
+}
+
 void UnitStackBlock::ResolveInput(SDL_Event& e)
 {
 	if (e.type == SDL_USEREVENT && e.user.code == RC_UNIT_STAT_CHANGE) {
+
+		if (scene->units.size() != widths.size()) {
+			Populate();
+		}
+
 		for (int i = 0; i < scene->units.size(); i++) {
 			if (scene->units[i] == (Unit*)e.user.data1) {
 				widths[i][0] = scene->units[i]->CurHP * rect_unit_hp.w / scene->units[i]->MaxHP;
@@ -79,52 +98,55 @@ void UnitStackBlock::OnUpdate(double delta)
 
 void UnitStackBlock::OnRender()
 {
-	SDL_RenderCopy(ResourceManager::ren, tex, nullptr, &rect);
+	SDL_RenderCopy(ResourceManager::GetRenderer(), tex, nullptr, &rect);
 	rect_unit.y = STACK_BLOCK_BLOCK_Y;
 	rect_unit_portrait.y = STACK_BLOCK_PORTRAIT_Y;
 	name_center.y = STACK_BLOCK_NAME_CENTER_Y;
 	rect_unit_hp.y = STACK_BLOCK_HP_BAR_Y;
 	rect_unit_sp.y = STACK_BLOCK_SP_BAR_Y;
 	rect_unit_ap.y = STACK_BLOCK_AP_BAR_Y;
+	rect_unit_active.y = STACK_BLOCK_BLOCK_Y + STACK_BLOCK_BLOCK_H / 2 - rect_unit_active.h / 2;
 
 	for (int i = 0; i < widths.size(); i++) {
-		
 
-		SDL_RenderCopy(ResourceManager::ren, tex_unit, nullptr, &rect_unit);
+		SDL_RenderCopy(ResourceManager::GetRenderer(), tex_unit, nullptr, &rect_unit);
 
-		SDL_RenderCopy(ResourceManager::ren, tex_unit_bg, nullptr, &rect_unit_portrait);
-		SDL_RenderCopy(ResourceManager::ren, scene->units[i]->textures[scene->units[i]->currentTexture], nullptr, &rect_unit_portrait);
+		SDL_RenderCopy(ResourceManager::GetRenderer(), tex_unit_bg, nullptr, &rect_unit_portrait);
+		SDL_RenderCopy(ResourceManager::GetRenderer(), scene->units[i]->textures[scene->units[i]->currentTexture], nullptr, &rect_unit_portrait);
 
 		SDL_Texture* name_tex = ResourceManager::LoadCaption(scene->units[i]->toString());
 		SDL_Rect rect_unit_name;
 		SDL_QueryTexture(name_tex, nullptr, nullptr, &rect_unit_name.w, &rect_unit_name.h);
 		rect_unit_name.x = name_center.x - rect_unit_name.w / 2;
 		rect_unit_name.y = name_center.y - rect_unit_name.h / 2;
-		SDL_RenderCopy(ResourceManager::ren, name_tex, nullptr, &rect_unit_name);
+		SDL_RenderCopy(ResourceManager::GetRenderer(), name_tex, nullptr, &rect_unit_name);
 		
 		SDL_Rect rect_caption_hp;
 		SDL_QueryTexture(captions[i][0], nullptr, nullptr, &rect_caption_hp.w, &rect_caption_hp.h);
 		rect_caption_hp.x = rect_unit_hp.x + rect_unit_hp.w / 2 - rect_caption_hp.w / 2;
 		rect_caption_hp.y = rect_unit_hp.y + rect_unit_hp.h / 2 - rect_caption_hp.h / 2;
 		rect_unit_hp.w = widths[i][0];
-		SDL_RenderCopy(ResourceManager::ren, tex_unit_hp, nullptr, &rect_unit_hp);
-		SDL_RenderCopy(ResourceManager::ren, captions[i][0], nullptr, &rect_caption_hp);
+		SDL_RenderCopy(ResourceManager::GetRenderer(), tex_unit_hp, nullptr, &rect_unit_hp);
+		SDL_RenderCopy(ResourceManager::GetRenderer(), captions[i][0], nullptr, &rect_caption_hp);
 
 		SDL_Rect rect_caption_sp;
 		SDL_QueryTexture(captions[i][1], nullptr, nullptr, &rect_caption_sp.w, &rect_caption_sp.h);
 		rect_caption_sp.x = rect_unit_sp.x + rect_unit_sp.w / 2 - rect_caption_sp.w / 2;
 		rect_caption_sp.y = rect_unit_sp.y + rect_unit_sp.h / 2 - rect_caption_sp.h / 2;
 		rect_unit_sp.w = widths[i][1];
-		SDL_RenderCopy(ResourceManager::ren, tex_unit_sp, nullptr, &rect_unit_sp);
-		SDL_RenderCopy(ResourceManager::ren, captions[i][1], nullptr, &rect_caption_sp);
+		SDL_RenderCopy(ResourceManager::GetRenderer(), tex_unit_sp, nullptr, &rect_unit_sp);
+		SDL_RenderCopy(ResourceManager::GetRenderer(), captions[i][1], nullptr, &rect_caption_sp);
 
 		SDL_Rect rect_caption_ap;
 		SDL_QueryTexture(captions[i][2], nullptr, nullptr, &rect_caption_ap.w, &rect_caption_ap.h);
 		rect_caption_ap.x = rect_unit_ap.x + rect_unit_ap.w / 2 - rect_caption_ap.w / 2;
 		rect_caption_ap.y = rect_unit_ap.y + rect_unit_ap.h / 2 - rect_caption_ap.h / 2;
 		rect_unit_ap.w = widths[i][2];
-		SDL_RenderCopy(ResourceManager::ren, tex_unit_ap, nullptr, &rect_unit_ap);
-		SDL_RenderCopy(ResourceManager::ren, captions[i][2], nullptr, &rect_caption_ap);
+		SDL_RenderCopy(ResourceManager::GetRenderer(), tex_unit_ap, nullptr, &rect_unit_ap);
+		SDL_RenderCopy(ResourceManager::GetRenderer(), captions[i][2], nullptr, &rect_caption_ap);
+
+		if (i == scene->currentUnit)
+			SDL_RenderCopy(ResourceManager::GetRenderer(), tex_unit_active, nullptr, &rect_unit_active);
 
 		rect_unit_hp.w = STACK_BLOCK_BAR_W;
 		rect_unit_ap.w = STACK_BLOCK_BAR_W;
@@ -136,5 +158,6 @@ void UnitStackBlock::OnRender()
 		rect_unit_hp.y += STACK_BLOCK_SHIFT_Y;
 		rect_unit_sp.y += STACK_BLOCK_SHIFT_Y;
 		rect_unit_ap.y += STACK_BLOCK_SHIFT_Y;
+		rect_unit_active.y += STACK_BLOCK_SHIFT_Y;
 	}
 }

@@ -35,7 +35,7 @@ void Tile::OnUpdate() {
 }
 
 void Tile::OnRender() {
-	SDL_RenderCopy(ResourceManager::ren, tex, nullptr, &pos);
+	SDL_RenderCopy(ResourceManager::GetRenderer(), tex, nullptr, &pos);
 }
 
 void Tile::AfterRender()

@@ -8,9 +8,11 @@
 
 class Unit : public GameObject {
 public:
-	Unit();
+
 	Unit(std::string source);
-	Unit(big HP, big SP, small AP, Tile* tile, std::string texSrc, TileMap* tilemap, small team);
+	~Unit();
+
+	void Edit(std::string source);
 
 	void LoadTextures(std::string texSrc); // debug only
 	void Resize();
@@ -30,7 +32,7 @@ public:
 	void OnRender() override;
 
 	std::string toString() override;
-
+	
 	//private:
 
 	// GameLogic
@@ -64,6 +66,7 @@ public:
 	
 
 	// Render
+	bool default_flip = false;
 	bool flip = false;
 	big TPS = 10; // textures per second
 	float textureTime = 1000 / TPS;
