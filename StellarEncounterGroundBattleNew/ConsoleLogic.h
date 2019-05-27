@@ -19,7 +19,7 @@ void ReadConsole() {
 	std::vector<std::string> args;
 	std::stringstream ss(input);
 	std::string data;
-	while (std::getline(ss, data,' ')) { // can't put additional spaces in source string
+	while (std::getline(ss, data,' ')) { // can't put additional spaces in source string, quote implementation would be necessary otherwise
 		args.push_back(data);
 	}
 
@@ -46,13 +46,13 @@ void ReadConsole() {
 
 	GroundBattleScene* scene = (GroundBattleScene*)ResourceManager::GetScene();
 
-	// pre-check tx,ty tile position (mandatory in all commands)
+	// pre-check tx,ty tile position (mandatory in all following commands)
 	int tx; int ty;
 	try
 	{
 		tx = std::stoi(args[2]);
 		ty = std::stoi(args[3]);
-		if (scene->tilemap.GetTile(tx, ty) == nullptr) {
+		if (scene->GetTilemap()->GetTile(tx, ty) == nullptr) {
 			std::cout << "Tile position out of bounds." << std::endl;
 			return;
 		}
@@ -70,8 +70,8 @@ void ReadConsole() {
 		}
 		else if (args[1] == "unit") {
 			auto unit = ResourceManager::CreateUnit(args[4]);
-			scene->tilemap.PutOnTile(unit, tx, ty);
-			scene->units.push_back(unit);
+			scene->GetTilemap()->PutOnTile(unit, tx, ty);
+			scene->AddUnit(unit);
 		}
 		else {
 			std::cout << "Invalid arguments for create at 1: " << args[1] << std::endl;
@@ -84,7 +84,7 @@ void ReadConsole() {
 			// TODO
 		}
 		else if (args[1] == "unit") {
-			auto occ = scene->tilemap.GetTile(tx, ty)->occ;
+			auto occ = scene->GetTilemap()->GetTile(tx, ty)->occ;
 			if (occ != nullptr) {
 				occ->~GameObject();
 			}
@@ -101,7 +101,7 @@ void ReadConsole() {
 		{
 			ttx = std::stoi(args[2]);
 			tty = std::stoi(args[3]);
-			if (scene->tilemap.GetTile(ttx, tty) == nullptr) {
+			if (scene->GetTilemap()->GetTile(ttx, tty) == nullptr) {
 				std::cout << "Destination tile position out of bounds." << std::endl;
 				return;
 			}
@@ -114,9 +114,9 @@ void ReadConsole() {
 			// TODO
 		}
 		else if (args[1] == "unit") {
-			auto occ = scene->tilemap.GetTile(tx, ty)->occ;
-			if (occ != nullptr && scene->tilemap.GetTile(ttx,tty) == nullptr) {
-				scene->tilemap.PutOnTile(occ, ttx, tty);
+			auto occ = scene->GetTilemap()->GetTile(tx, ty)->occ;
+			if (occ != nullptr && scene->GetTilemap()->GetTile(ttx,tty) == nullptr) {
+				scene->GetTilemap()->PutOnTile(occ, ttx, tty);
 			}
 		}
 		else {
@@ -130,7 +130,7 @@ void ReadConsole() {
 			// TODO
 		}
 		else if (args[1] == "unit") {
-			auto occ = scene->tilemap.GetTile(tx, ty)->occ;
+			auto occ = scene->GetTilemap()->GetTile(tx, ty)->occ;
 			if (occ != nullptr) {
 				if (dynamic_cast<Unit*>(occ) != nullptr) {
 					((Unit*)occ)->Edit(args[4]);

@@ -5,7 +5,7 @@
 
 Tile::Tile(std::string source, SDL_Point position, SDL_Point mapposition, TileMap* tilemap) {
 	tex = ResourceManager::LoadTexture(source);
-	SDL_QueryTexture(tex, nullptr, nullptr, &pos.w, &pos.h);
+	SDL_QueryTexture(tex, nullptr, nullptr, &pos.w, &pos.h); // saves tile dimensions into position rectangle
 	pos.x = position.x;
 	pos.y = position.y;
 	mappos = mapposition;
@@ -31,8 +31,7 @@ void Tile::SetOccupant(GameObject* obj) {
 	occ = obj;
 }
 
-void Tile::OnUpdate() {
-}
+void Tile::OnUpdate() {}
 
 void Tile::OnRender() {
 	SDL_RenderCopy(ResourceManager::GetRenderer(), tex, nullptr, &pos);

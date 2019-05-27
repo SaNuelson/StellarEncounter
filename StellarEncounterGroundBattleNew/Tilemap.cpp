@@ -5,8 +5,8 @@ void TileMap::Init(std::string source, int x, int y) {
 
 	/*
 	
-	for now source must be in format with rectangle-like proportions, starting with margined line.
-	that means every odd line starting with first, must have N-1 cells
+	For now source must be in format with rectangle-like proportions, starting with margined line. (the line which has 1 tile less than the lines around it).
+	That means every odd line starting with first, must have N-1 cells,
 		while every even line must have N cells, because of specific indexation of the tiles.
 
 	*/
@@ -98,13 +98,8 @@ void TileMap::PutOnTile(GameObject* obj, int x, int y)
 	PutOnTile(obj, GetTile(x, y));
 }
 
-void TileMap::ResolveInput(SDL_Event & e) {
-
-}
-
 int TileMap::GetDistance(Tile * t1, Tile * t2) {
-	
-	return 1; // todo
+	return 1; // TODO - for now it works just well enough, because tiles are pretty identical, no special logic (like harsh terrain etc...)
 }
 
 SDL_Point TileMap::GetMoveVec(Tile* t1, Tile* t2)
@@ -137,13 +132,15 @@ bool TileMap::CanAttack(Unit * unit, Tile * tile)
 void TileMap::OnUpdate(double delta) {
 
 	// if any change on field occured, change states of tiles accordingly
-	if (true) { //stateChange
+	if (false) { //stateChange
 
 		for (int x = 0; x < tiles.size(); x++) {
 			for (int y = 0; y < tiles[x].size(); y++) {
 				tiles[x][y].OnUpdate();
 			}
 		}
+
+		// this part was formerly used to create come indication around current Unit about where it can go, attack... by tinting the tiles with low-alpha colors
 		/*
 		auto cu = scene->GetCurrentUnit();
 		int len = cu->CurAP;
@@ -196,13 +193,13 @@ void TileMap::OnRender() {
 	for (auto& line : tiles) {
 		for (auto& tile : line) {
 			tile.OnRender();
-			//debug
+			// For debug purposes, but I thought it looked pretty nice so I left it in, easy to comment out. Labels all tiles with their positions.
 			SDL_RenderCopy(ResourceManager::GetRenderer(), ResourceManager::LoadCaption(std::to_string(tile.mappos.x) + " " + std::to_string(tile.mappos.y)), nullptr, &tile.pos);
 		}
 	}
 	for (auto& line : tiles) {
 		for (auto& tile : line){
-			tile.AfterRender();
+			tile.AfterRender(); // for rendering units standing on tiles. Needs to be called after rendering tiles, otherwise tiles rendered after units can overlap their textures
 		}
 	}
 		

@@ -37,6 +37,12 @@
     <Filter Include="Source Files\GameObjects">
       <UniqueIdentifier>{ec2f8daf-e5a9-44f5-8923-591f69453336}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\NotImplemented">
+      <UniqueIdentifier>{20ecafdb-e8f1-4064-afc7-2546d2378ba7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\NotImplemented">
+      <UniqueIdentifier>{cbc6c52c-20ce-4dc1-bede-1ea476390d80}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -54,12 +60,6 @@
     <ClCompile Include="Unit.cpp">
       <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
-    <ClCompile Include="Item.cpp">
-      <Filter>Source Files\GameObjects</Filter>
-    </ClCompile>
-    <ClCompile Include="UnitActionBlock.cpp">
-      <Filter>Source Files\UIElements</Filter>
-    </ClCompile>
     <ClCompile Include="ResourceManager.cpp">
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
@@ -69,14 +69,20 @@
     <ClCompile Include="GroundBattleScene.cpp">
       <Filter>Source Files\Scenes</Filter>
     </ClCompile>
-    <ClCompile Include="UnitStackBlock.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="MainMenuScene.cpp">
       <Filter>Source Files\Scenes</Filter>
     </ClCompile>
+    <ClCompile Include="Item.cpp">
+      <Filter>Source Files\NotImplemented</Filter>
+    </ClCompile>
     <ClCompile Include="OptionScene.cpp">
-      <Filter>Source Files\Scenes</Filter>
+      <Filter>Source Files\NotImplemented</Filter>
+    </ClCompile>
+    <ClCompile Include="UnitActionBlock.cpp">
+      <Filter>Source Files\NotImplemented</Filter>
+    </ClCompile>
+    <ClCompile Include="UnitStackBlock.cpp">
+      <Filter>Source Files\UIElements</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -89,29 +95,14 @@
     <ClInclude Include="GameObject.h">
       <Filter>Header Files\GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="Tile.h">
-      <Filter>Header Files\GameObjects</Filter>
-    </ClInclude>
-    <ClInclude Include="UnitActionBlock.h">
-      <Filter>Header Files\UIElements</Filter>
-    </ClInclude>
     <ClInclude Include="Button.h">
       <Filter>Header Files\UIElements</Filter>
-    </ClInclude>
-    <ClInclude Include="Tilemap.h">
-      <Filter>Header Files\GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="Unit.h">
       <Filter>Header Files\GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="Item.h">
-      <Filter>Header Files\GameObjects</Filter>
-    </ClInclude>
     <ClInclude Include="ResourceManager.h">
       <Filter>Header Files\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="Equipment.h">
-      <Filter>Header Files\GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="Scene.h">
       <Filter>Header Files\Scenes</Filter>
@@ -128,8 +119,23 @@
     <ClInclude Include="ConsoleLogic.h">
       <Filter>Header Files\Managers</Filter>
     </ClInclude>
+    <ClInclude Include="Tilemap.h">
+      <Filter>Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Tile.h">
+      <Filter>Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Item.h">
+      <Filter>Header Files\NotImplemented</Filter>
+    </ClInclude>
+    <ClInclude Include="Equipment.h">
+      <Filter>Header Files\NotImplemented</Filter>
+    </ClInclude>
     <ClInclude Include="OptionScene.h">
-      <Filter>Header Files\Scenes</Filter>
+      <Filter>Header Files\NotImplemented</Filter>
+    </ClInclude>
+    <ClInclude Include="UnitActionBlock.h">
+      <Filter>Header Files\NotImplemented</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

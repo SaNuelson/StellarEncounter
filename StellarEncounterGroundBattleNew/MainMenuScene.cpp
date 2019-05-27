@@ -4,6 +4,7 @@
 
 MainMenuScene::MainMenuScene() {
 
+	// lots and lots of layout...
 	bg_rect.x = 0;
 	bg_rect.y = 0;
 	bg_rect.w = scr_width;
@@ -54,9 +55,7 @@ void MainMenuScene::ResolveInput(SDL_Event& e)
 	}
 }
 
-void MainMenuScene::OnUpdate(double delta)
-{
-}
+void MainMenuScene::OnUpdate(double delta) {}
 
 void MainMenuScene::OnRender()
 {

@@ -6,12 +6,14 @@
 class TileMap;
 class GameObject;
 
-class Tile {
+// part of tilemap. Is struct by itself for easier interaction
+struct Tile {
 
 public:
 
 	Tile(std::string source, SDL_Point position, SDL_Point mappos, TileMap* tilemap);
 
+	// an unfortunate solution to hold so many pointers in each tile, but it works well and IMHO enables much less messy code
 	void SetNeighbors(Tile* up_left, Tile* up_right, Tile* right, Tile* down_right, Tile* down_left, Tile* left);
 
 	GameObject* GetOccupant();
@@ -19,8 +21,11 @@ public:
 
 	void OnUpdate();
 	void OnRender();
-	void AfterRender(); // render units after OnRender to avoid overlapping
 
+	// render units after OnRender to avoid overlapping
+	void AfterRender(); 
+
+	// called by units to render standing in the middle of their tile
 	SDL_Point GetCenter();
 
 	TileMap* tilemap;
@@ -32,61 +37,13 @@ public:
 	Tile* tile_down_right = nullptr;
 	Tile* tile_down_left = nullptr;
 
+	// exact pixel position for rendering
 	SDL_Rect pos;
+
+	// indexes in tilemap for easy access
 	SDL_Point mappos;
+
 	GameObject * occ;
 	SDL_Texture * tex;
 
 };
-
-/*
-class Tile {
-
-public:
-
-	static void Init();
-
-	Tile(std::string source, SDL_Point position, SDL_Point mappos, TileMap* tilemap);
-
-	void SetNeighbors(Tile* left, Tile* up, Tile* right, Tile* down);
-
-	GameObject* GetOccupant();
-	void SetOccupant(GameObject* obj);
-
-	void OnUpdate();
-	void OnRender();
-
-	void AddState(TileRenderFlag flag);
-	void SetState(TileRenderFlag flag);
-	void DelState(TileRenderFlag flag);
-	bool GetState(TileRenderFlag flag);
-
-	SDL_Point GetCenter();
-
-	TileMap* tilemap;
-
-	// keeping current state of tile (hovered, moveable, adjacent_to_enemy... all updated it Tilemap::OnUpdate
-	TileRenderFlag state;
-
-	SDL_Texture* tex_default;
-	static SDL_Texture* tex_move;
-	static SDL_Texture* tex_run;
-	static SDL_Texture* tex_hover;
-	static SDL_Texture* tex_attack;
-
-	Tile* tile_up = nullptr;
-	Tile* tile_left = nullptr;
-	Tile* tile_right = nullptr;
-	Tile* tile_down = nullptr;
-
-	SDL_Rect pos;
-	SDL_Point mappos;
-	GameObject * occ;
-
-	// static for debug
-	const std::string src_move = "Graphics/txmove.png";
-	const std::string src_run = "Graphics/txrun.png";
-	const std::string src_hover = "Graphics/txhover.png";
-
-};
-*/

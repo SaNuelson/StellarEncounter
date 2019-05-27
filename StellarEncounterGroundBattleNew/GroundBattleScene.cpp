@@ -1,6 +1,6 @@
 #include "GroundBattleScene.h"
 
-GroundBattleScene::GroundBattleScene() : tilemap(this), actionblock(this), stackblock(this) {
+GroundBattleScene::GroundBattleScene() : tilemap(this), stackblock(this) {
 
 	StartDemo1();
 
@@ -44,7 +44,7 @@ void GroundBattleScene::ResolveInput(SDL_Event & e) {
 			break;
 		}
 	}
-	else if (units[currentUnit]->currentAction == 0 && e.type == SDL_KEYDOWN) {
+	else if (e.type == SDL_KEYDOWN) {
 		switch (e.key.keysym.sym) {
 		case SDLK_UP:
 		case SDLK_w:
@@ -58,68 +58,71 @@ void GroundBattleScene::ResolveInput(SDL_Event & e) {
 			break;
 		case SDLK_LEFT:
 		case SDLK_a:
-			if (UpKey) {
-				// move up_left
-				if (tilemap.CanMove(units[currentUnit]->tile->tile_up_left))
-					units[currentUnit]->Move(Direction::UpLeft);
-				else if (tilemap.CanAttack(units[currentUnit], units[currentUnit]->tile->tile_up_left))
-					units[currentUnit]->UseAction(units[currentUnit]->tile->tile_up_left->occ);
-			}
-			else if (DownKey) {
-				// move down_left
-				if (tilemap.CanMove(units[currentUnit]->tile->tile_down_left))
-					units[currentUnit]->Move(Direction::DownLeft);
-				else if (tilemap.CanAttack(units[currentUnit], units[currentUnit]->tile->tile_down_left))
-					units[currentUnit]->UseAction(units[currentUnit]->tile->tile_down_left->occ);
-			}
-			else {
-				// move left
-				if (tilemap.CanMove(units[currentUnit]->tile->tile_left))
-					units[currentUnit]->Move(Direction::Left);
-				else if (tilemap.CanAttack(units[currentUnit], units[currentUnit]->tile->tile_left))
-					units[currentUnit]->UseAction(units[currentUnit]->tile->tile_left->occ);
+			if (units[currentUnit]->GetCurrentAction() == UNIT_ACTION_IDLE) { // movement possible only if active unit is idle
+				if (UpKey) {
+					// move up_left
+					if (tilemap.CanMove(units[currentUnit]->tile->tile_up_left))
+						units[currentUnit]->Move(Direction::UpLeft);
+					else if (tilemap.CanAttack(units[currentUnit], units[currentUnit]->tile->tile_up_left))
+						units[currentUnit]->UseAction(units[currentUnit]->tile->tile_up_left->occ);
+				}
+				else if (DownKey) {
+					// move down_left
+					if (tilemap.CanMove(units[currentUnit]->tile->tile_down_left))
+						units[currentUnit]->Move(Direction::DownLeft);
+					else if (tilemap.CanAttack(units[currentUnit], units[currentUnit]->tile->tile_down_left))
+						units[currentUnit]->UseAction(units[currentUnit]->tile->tile_down_left->occ);
+				}
+				else {
+					// move left
+					if (tilemap.CanMove(units[currentUnit]->tile->tile_left))
+						units[currentUnit]->Move(Direction::Left);
+					else if (tilemap.CanAttack(units[currentUnit], units[currentUnit]->tile->tile_left))
+						units[currentUnit]->UseAction(units[currentUnit]->tile->tile_left->occ);
+				}
 			}
 			break;
 
 		case SDLK_RIGHT:
 		case SDLK_d:
-			if (UpKey) {
-				// move up_right
-				if (tilemap.CanMove(units[currentUnit]->tile->tile_up_right))
-					units[currentUnit]->Move(Direction::UpRight);
-				else if (tilemap.CanAttack(units[currentUnit], units[currentUnit]->tile->tile_up_right))
-					units[currentUnit]->UseAction(units[currentUnit]->tile->tile_up_right->occ);
-			}
-			else if (DownKey) {
-				// move down_right
-				if (tilemap.CanMove(units[currentUnit]->tile->tile_down_right))
-					units[currentUnit]->Move(Direction::DownRight);
-				else if (tilemap.CanAttack(units[currentUnit], units[currentUnit]->tile->tile_down_right))
-					units[currentUnit]->UseAction(units[currentUnit]->tile->tile_down_right->occ);
-			}
-			else {
-				// move right
-				if (tilemap.CanMove(units[currentUnit]->tile->tile_right))
-					units[currentUnit]->Move(Direction::Right);
-				else if (tilemap.CanAttack(units[currentUnit], units[currentUnit]->tile->tile_right))
-					units[currentUnit]->UseAction(units[currentUnit]->tile->tile_right->occ);
+			if (units[currentUnit]->GetCurrentAction() == UNIT_ACTION_IDLE) { // movement possible only if active unit is idle
+				if (UpKey) {
+					// move up_right
+					if (tilemap.CanMove(units[currentUnit]->tile->tile_up_right))
+						units[currentUnit]->Move(Direction::UpRight);
+					else if (tilemap.CanAttack(units[currentUnit], units[currentUnit]->tile->tile_up_right))
+						units[currentUnit]->UseAction(units[currentUnit]->tile->tile_up_right->occ);
+				}
+				else if (DownKey) {
+					// move down_right
+					if (tilemap.CanMove(units[currentUnit]->tile->tile_down_right))
+						units[currentUnit]->Move(Direction::DownRight);
+					else if (tilemap.CanAttack(units[currentUnit], units[currentUnit]->tile->tile_down_right))
+						units[currentUnit]->UseAction(units[currentUnit]->tile->tile_down_right->occ);
+				}
+				else {
+					// move right
+					if (tilemap.CanMove(units[currentUnit]->tile->tile_right))
+						units[currentUnit]->Move(Direction::Right);
+					else if (tilemap.CanAttack(units[currentUnit], units[currentUnit]->tile->tile_right))
+						units[currentUnit]->UseAction(units[currentUnit]->tile->tile_right->occ);
+				}
 			}
 			break;
 		}
 	}
 	
-
 	tilemap.ResolveInput(e);
 }
 
 void GroundBattleScene::OnUpdate(double delta) {
 
 	// End Turn, move units
-	while (units[currentUnit]->currentAction == UNIT_ACTION_DEAD) {
+	while (units[currentUnit]->GetCurrentAction() == UNIT_ACTION_DEAD) {
 		EndTurn();
 	}
-	if (units[currentUnit]->CurAP <= 0) {
-		units[currentUnit]->ChangeAP(units[currentUnit]->MaxAP);
+	if (units[currentUnit]->GetCurAP() <= 0) {
+		units[currentUnit]->ChangeAP(units[currentUnit]->GetCurAP());
 		EndTurn();
 	}
 
@@ -143,19 +146,19 @@ void GroundBattleScene::OnRender() {
 
 bool GroundBattleScene::CheckEndGame()
 {
-	std::cout << "Checking endgame... " << std::endl;
+	// std::cout << "Checking endgame... " << std::endl;
 	bool player_alive = false;
 	bool enemy_alive = false;
 	for (int i = 0; i < units.size(); i++) {
 		if (player_alive && enemy_alive)
 			return false;
-		else if (units[i]->nextAction != UNIT_ACTION_DEAD &&  units[i]->Team == 0){
+		else if (units[i]->GetNextAction() != UNIT_ACTION_DEAD &&  units[i]->Team == 0){
 			player_alive = true;
-			std::cout << "Friendly unit " << units[i]->toString() << "alive. " << std::endl;
+			// std::cout << "Friendly unit " << units[i]->toString() << "alive. " << std::endl;
 		}
-		else if (units[i]->nextAction != UNIT_ACTION_DEAD && units[i]->Team != 0) {
+		else if (units[i]->GetNextAction() != UNIT_ACTION_DEAD && units[i]->Team != 0) {
 			enemy_alive = true;
-			std::cout << "Enemy unit " << units[i]->toString() << "alive." << std::endl;
+			// std::cout << "Enemy unit " << units[i]->toString() << "alive." << std::endl;
 		}
 	}
 	if (player_alive && enemy_alive)
@@ -171,6 +174,10 @@ bool GroundBattleScene::CheckEndGame()
 	return true;
 }
 
-// bool GroundBattleScene::IsPlayerTurn() { return units[currentUnit]->Team == 0; }
+void GroundBattleScene::AddUnit(Unit* unit)
+{
+	units.push_back(unit);
+	ResourceManager::DispatchEvent(RC_UNIT_STAT_CHANGE, unit, nullptr);
+}
 
 Unit * GroundBattleScene::GetCurrentUnit() { return (units.size() > currentUnit ? units[currentUnit] : nullptr); }

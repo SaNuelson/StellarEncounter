@@ -3,13 +3,14 @@
 
 class GroundBattleScene;
 
+// shows panel (on right side by default) filled with units along with their data and arrow indicating current unit
 class UnitStackBlock {
 
 public:
 
 	UnitStackBlock(GroundBattleScene* scene);
+	// set up all units
 	void Populate();
-	void Reload();
 
 	void ResolveInput(SDL_Event& e);
 	void OnUpdate(double delta);
@@ -19,6 +20,12 @@ private:
 
 	GroundBattleScene* scene = nullptr;
 
+	// widths are current_health / max_health * bar_width    for each unit
+	std::vector<std::vector<int>> widths;
+	// Unit names along with textual representation of their data
+	std::vector<std::vector<SDL_Texture*>> captions;
+
+	// graphical layout
 	SDL_Rect rect;
 	
 	SDL_Rect rect_unit;
@@ -38,7 +45,5 @@ private:
 	SDL_Texture* tex_unit_sp = nullptr;
 	SDL_Texture* tex_unit_ap = nullptr;
 
-	std::vector<std::vector<int>> widths;
-	std::vector<std::vector<SDL_Texture*>> captions;
 
 };

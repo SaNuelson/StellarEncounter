@@ -2,6 +2,7 @@
 #include "stdlib.h"
 #include "ResourceManager.h"
 
+// imported from StellarEncounterUI
 class Button
 {
 public:
@@ -42,7 +43,7 @@ public:
 		return btn;
 	}
 
-#pragma region Getters/Setters
+	// getters/setters
 
 	std::string GetCaption() {
 		return caption;
@@ -111,7 +112,7 @@ public:
 		return retcode;
 	}
 
-#pragma endregion
+	// helpful functions
 
 	bool IsInBounds(int &x, int &y) {
 		if (rect.x <= x && x <= rect.x + rect.w && rect.y <= y && y <= rect.y + rect.h)
@@ -137,7 +138,7 @@ public:
 			else {
 				if (e.button.button == SDL_BUTTON_LEFT && e.type == SDL_MOUSEBUTTONUP && button_state == 2) {
 					// std::cout << "Mouse Press" << std::endl;
-					DispatchEvent();
+					ResourceManager::DispatchEvent(retcode, this, nullptr);
 				}
 				isMouseHolding = false;
 				button_state = 1;
@@ -156,30 +157,27 @@ public:
 		}
 	}
 
-	void DispatchEvent() {
-		SDL_Event e;
-		e.type = SDL_EventType::SDL_USEREVENT;
-		e.user.code = retcode;
-		e.user.data1 = this;
-		SDL_PushEvent(&e);
-	}
-
 private:
 
+	// graphical layout
 	std::string caption;
 
 	SDL_Rect rect;
 	SDL_Rect caption_rect;
 
-	Sint32 retcode;
-
-	int8_t button_state = 0;
 
 	SDL_Texture* idle_tex = nullptr;
 	SDL_Texture* hover_tex = nullptr;
 	SDL_Texture* click_tex = nullptr;
 	SDL_Texture* caption_tex = nullptr;
 
+	// logic
+
+	// code to dispatch upon button press
+	Sint32 retcode;
+
+	// 0 = default, 1 = hover, 2 = press
+	int8_t button_state = 0;
 	bool isMouseHolding = false;
 
 };

@@ -90,9 +90,11 @@ void ResourceManager::Quit()
 	SDL_Quit();
 }
 
+// any already existing textures aren't loaded repeatedly, just pulled from vector
+// The current format of key in textureMap is <image_path>@<caption>#<alpha>
+// that can cause some issues with malicious captions, but so far works alright and can be easily changed in the future.
 SDL_Texture * ResourceManager::LoadTexture(std::string path)
 {
-
 	if (TextureMap.find(path) != TextureMap.end())
 		return TextureMap[path];
 
@@ -233,24 +235,6 @@ Button* ResourceManager::CreateButton()
 	return Buttons[Buttons.size() - 1].get();
 }
 
-Unit* ResourceManager::CreateUnit()
-{
-	return nullptr;
-}
-
-Item* ResourceManager::CreateItem()
-{
-	return nullptr;
-}
-
-void ResourceManager::FreeTextures()
-{
-	for (auto tex_pair : TextureMap) {
-		SDL_DestroyTexture(tex_pair.second);
-	}
-	TextureMap.clear();
-}
-
 Scene* ResourceManager::GetScene()
 {
 	return scene.get();
@@ -258,7 +242,7 @@ Scene* ResourceManager::GetScene()
 
 Scene* ResourceManager::CreateScene(Sint32 scene_code)
 {
-	// unique_ptr should destroy previous instance if existed
+	scene.reset();
 	switch (scene_code) {
 	case RC_NEW_GAME:
 		scene = std::make_unique<GroundBattleScene>();
@@ -291,8 +275,8 @@ Unit* ResourceManager::CreateUnit(std::string source)
 	GameObjects.push_back(std::make_unique<Unit>(source));
 	return (Unit*)GameObjects[GameObjects.size() - 1].get();
 }
-Item * ResourceManager::CreateItem(std::string texSrc, Tile* tile, TileMap * tilemap, bool usable)
+Item * ResourceManager::CreateItem(std::string source)
 {
-	GameObjects.push_back(std::make_unique<Item>(texSrc, tile, tilemap, usable));
-	return (Item*)GameObjects[GameObjects.size() - 1].get();
+	std::cout << "Use of not implemented ResourceManager::CreateItem(std::string source)" << std::endl;
+	return nullptr;
 }

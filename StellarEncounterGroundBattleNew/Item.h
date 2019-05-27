@@ -5,10 +5,12 @@
 #include "Tile.h"
 #include "ResourceManager.h"
 
+// currently working, but doesn't do much except stand in the way, I was thinking about possible expansion for usable/destroyable items (chests, potions, portals...)
 class Item : public GameObject {
 
 public:
 
+	// if reimplemented, constructor should take std::string, which will be parsed similarly to how units currently work
 	Item() {};
 	Item(std::string texSrc, Tile* tile, TileMap* tilemap, bool usable);
 

@@ -5,6 +5,7 @@
 
 UnitStackBlock::UnitStackBlock(GroundBattleScene * scene) : scene(scene) {
 
+	// bunch of layout...
 	tex = ResourceManager::LoadTexture("Graphics/UI/unitinfoblockrect.png");
 	rect.x = STACK_BLOCK_X;
 	rect.y = STACK_BLOCK_Y;
@@ -50,51 +51,50 @@ void UnitStackBlock::Populate() {
 	widths.clear();
 	captions.clear();
 
+	// fill widths and captions
 	for (auto& unit : scene->units) {
 		std::vector<int> line;
-		line.push_back(unit->CurHP * rect_unit_hp.w / unit->MaxHP);
-		line.push_back(unit->CurSP * rect_unit_sp.w / unit->MaxSP);
-		line.push_back(unit->CurAP * rect_unit_ap.w / unit->MaxAP);
+		line.push_back(unit->GetCurHP() * rect_unit_hp.w / unit->GetMaxHP());
+		line.push_back(unit->GetCurSP() * rect_unit_sp.w / unit->GetMaxSP());
+		line.push_back(unit->GetCurAP() * rect_unit_ap.w / unit->GetMaxAP());
 		widths.push_back(line);
 
 		std::vector<SDL_Texture*> caption_line;
-		caption_line.push_back(ResourceManager::LoadCaption(std::to_string(unit->CurHP) + "/" + std::to_string(unit->MaxHP)));
-		caption_line.push_back(ResourceManager::LoadCaption(std::to_string(unit->CurSP) + "/" + std::to_string(unit->MaxSP)));
-		caption_line.push_back(ResourceManager::LoadCaption(std::to_string(unit->CurAP) + "/" + std::to_string(unit->MaxAP)));
+		caption_line.push_back(ResourceManager::LoadCaption(std::to_string(unit->GetCurHP()) + "/" + std::to_string(unit->GetMaxHP())));
+		caption_line.push_back(ResourceManager::LoadCaption(std::to_string(unit->GetCurSP()) + "/" + std::to_string(unit->GetMaxSP())));
+		caption_line.push_back(ResourceManager::LoadCaption(std::to_string(unit->GetCurAP()) + "/" + std::to_string(unit->GetMaxAP())));
 		captions.push_back(caption_line);
 	}
-}
-
-void UnitStackBlock::Reload()
-{
-
 }
 
 void UnitStackBlock::ResolveInput(SDL_Event& e)
 {
 	if (e.type == SDL_USEREVENT && e.user.code == RC_UNIT_STAT_CHANGE) {
 
+		// need to repopulate if event was called by newly created or destroyed unit
 		if (scene->units.size() != widths.size()) {
 			Populate();
 		}
+		// update only unit that changed
+		else{
+			for (int i = 0; i < scene->units.size(); i++) {
+				if (scene->units[i] == (Unit*)e.user.data1) {
+					widths[i][0] = scene->units[i]->GetCurHP() * rect_unit_hp.w / scene->units[i]->GetMaxHP();
+					widths[i][1] = scene->units[i]->GetCurSP() * rect_unit_sp.w / scene->units[i]->GetMaxSP();
+					widths[i][2] = scene->units[i]->GetCurAP() * rect_unit_ap.w / scene->units[i]->GetMaxAP();
 
-		for (int i = 0; i < scene->units.size(); i++) {
-			if (scene->units[i] == (Unit*)e.user.data1) {
-				widths[i][0] = scene->units[i]->CurHP * rect_unit_hp.w / scene->units[i]->MaxHP;
-				widths[i][1] = scene->units[i]->CurSP * rect_unit_sp.w / scene->units[i]->MaxSP;
-				widths[i][2] = scene->units[i]->CurAP * rect_unit_ap.w / scene->units[i]->MaxAP;
-
-				captions[i][0] = ResourceManager::LoadCaption(std::to_string(scene->units[i]->CurHP) + "/" + std::to_string(scene->units[i]->MaxHP));
-				captions[i][1] = ResourceManager::LoadCaption(std::to_string(scene->units[i]->CurSP) + "/" + std::to_string(scene->units[i]->MaxSP));
-				captions[i][2] = ResourceManager::LoadCaption(std::to_string(scene->units[i]->CurAP) + "/" + std::to_string(scene->units[i]->MaxAP));
+					captions[i][0] = ResourceManager::LoadCaption(std::to_string(scene->units[i]->GetCurHP()) + "/" + std::to_string(scene->units[i]->GetMaxHP()));
+					captions[i][1] = ResourceManager::LoadCaption(std::to_string(scene->units[i]->GetCurSP()) + "/" + std::to_string(scene->units[i]->GetMaxSP()));
+					captions[i][2] = ResourceManager::LoadCaption(std::to_string(scene->units[i]->GetCurAP()) + "/" + std::to_string(scene->units[i]->GetMaxAP()));
+				}
 			}
 		}
+
+		
 	}
 }
 
-void UnitStackBlock::OnUpdate(double delta)
-{
-}
+void UnitStackBlock::OnUpdate(double delta) {}
 
 void UnitStackBlock::OnRender()
 {
@@ -112,7 +112,7 @@ void UnitStackBlock::OnRender()
 		SDL_RenderCopy(ResourceManager::GetRenderer(), tex_unit, nullptr, &rect_unit);
 
 		SDL_RenderCopy(ResourceManager::GetRenderer(), tex_unit_bg, nullptr, &rect_unit_portrait);
-		SDL_RenderCopy(ResourceManager::GetRenderer(), scene->units[i]->textures[scene->units[i]->currentTexture], nullptr, &rect_unit_portrait);
+		SDL_RenderCopy(ResourceManager::GetRenderer(), scene->units[i]->GetCurrentTex(), nullptr, &rect_unit_portrait);
 
 		SDL_Texture* name_tex = ResourceManager::LoadCaption(scene->units[i]->toString());
 		SDL_Rect rect_unit_name;

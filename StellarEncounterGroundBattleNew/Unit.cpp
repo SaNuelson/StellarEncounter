@@ -2,13 +2,17 @@
 
 Unit::Unit(std::string source) {
 
+	// parse source and modify unit
 	ParseSource(this, source);
+
+	// resize unit texture while keeping the ratio
 	SDL_Point dims;
 	SDL_QueryTexture(textures[currentTexture], nullptr, nullptr, &dims.x, &dims.y);
 	int mult = yTileSize / dims.y;
 	position.h = yTileSize;
 	position.w = dims.x * xTileSize / dims.y;
 
+	// let unit stack block know there's a new sheriff in town
 	ResourceManager::DispatchEvent(RC_UNIT_STAT_CHANGE, this, nullptr);
 }
 
@@ -17,12 +21,6 @@ Unit::~Unit() {}
 void Unit::Edit(std::string source)
 {
 	ParseSource(this, source);
-}
-
-void Unit::LoadTextures(std::string texSrc)
-{
-	textures.push_back(ResourceManager::LoadTexture(texSrc));
-	SDL_QueryTexture(textures[0], nullptr, nullptr, &position.w, &position.h);
 }
 
 void Unit::Resize()
@@ -38,14 +36,12 @@ void Unit::OnUpdate(double delta) {
 
 
 
-	// change animation if needed
+	// change state/action if needed
 	if (currentAction != nextAction) {
-		std::cout << this->toString() << " goes from " << std::to_string(currentAction) << " to " << std::to_string(nextAction) << std::endl;
+		// std::cout << this->toString() << " goes from " << std::to_string(currentAction) << " to " << std::to_string(nextAction) << std::endl;
 		currentAction = nextAction;
 		textureTimeCurrent = textureTime;
 		currentTexture = textureSets[currentAction].first;
-		if (currentTexture < 0)
-			std::cout << "HERE";
 		Resize();
 
 		if (currentAction == UNIT_ACTION_IDLE) {
@@ -59,7 +55,28 @@ void Unit::OnUpdate(double delta) {
 
 	}
 
+	// here resolve any changes associated with current state
 	if (currentAction == UNIT_ACTION_MOVE) {
+		/*
+			Movement animation (position change, not texture changing) was painful to implement, and while I'm not still entirely satisfied,
+			it's probably the best I can do at the moment.
+
+			Position is set by SDL_Rect, which is a quadruple of ints. That makes it practically impossible to move by fractioning the move vector.
+			The fraction almost always rounds down to zero and unit doesn't move at all.
+			Then I tried to move by fixed amount (1 pixel after fixed timeframes), which worked, but for whatever reason the game ran considerably slower
+			if I moved the window onto my second screen, and I couldn't really set a precise speed in any way.
+			So I had to add new float variables which take care of the fractions, so the don't get lost when rounding to ints.
+			Currently unit asks for SDL_Point move_vec, 2D vector of movement from its tile to destination tile.
+			This move_vec is then converted into unit float 2D vector (2 independent floats (pos_move_unit_vec_x/_y)).
+			I thought implementing struct Vec2D(float,float) was an overkill.
+			Afterwards, a pos_x, pos_y (again a float 2D vector) gets incremented on every update by pos_move_unit_vec multiplied by delta.
+			Last but not least, pos_x,pos_y gets converted back into int and that's saved as new coordinates of the SDL_Rect position.
+			
+			To prevent unit from jumping over the destination tile, isMonotonic(last_position,destination_position,current_position) is called.
+			If it returns true, it means the unit is currently either standing on the destination tile, or it has passed the destination tile.
+			In that case it gets moved on the destination tile and the movement ends.
+
+		*/
 		pos_x += pos_move_unit_vec_x * moveSpeed * delta / 100;
 		pos_y += pos_move_unit_vec_y * moveSpeed * delta / 100;
 
@@ -86,6 +103,7 @@ void Unit::OnUpdate(double delta) {
 			position.y = pos_y;
 		}
 	}
+	// apart from movement, update only needs to check if any animation is done and set the next animation. ATTACK -> IDLE, HIT -> IDLE, DYING -> DEAD (+ let know the game there's a killer on the loose)
 	else if (currentAction == UNIT_ACTION_ATTACK) {
 		if (currentTexture == textureSets[UNIT_ACTION_ATTACK].second) {
 			nextAction = UNIT_ACTION_IDLE;
@@ -103,15 +121,12 @@ void Unit::OnUpdate(double delta) {
 		}
 	}
 
-	// add movement to animataion if needed
-
-
 	// update animation, always
-	textureTimeCurrent -= delta;
+	textureTimeCurrent -= delta; // every texture lasts a certain timeframe. Upon reaching zero, timeframe resets and next texture is set
 	if (textureTimeCurrent <= 0) {
 		textureTimeCurrent = textureTime;
 		currentTexture++;
-		if (textureSets[currentAction].second < currentTexture) {
+		if (textureSets[currentAction].second < currentTexture) { // loop to start if on the end of textureSet
 			currentTexture = textureSets[currentAction].first;
 		}
 	}
@@ -120,13 +135,14 @@ void Unit::OnUpdate(double delta) {
 
 void Unit::UseAction(GameObject * defender)
 {
+	// currently only ATTACK exists. And healing... technically (if your weapon deals negative damage)
 	nextAction = UNIT_ACTION_ATTACK;
-	if (defender->tile->pos.x < tile->pos.x)
+	if (defender->tile->pos.x < tile->pos.x) // turn around if needed
 		flip = !default_flip;
 	else
 		flip = default_flip;
-	std::cout << toString() << " uses action against " << defender->toString() << std::endl;
-	ChangeAP(-1);  // will vary with equip
+	// std::cout << toString() << " uses action against " << defender->toString() << std::endl;
+	ChangeAP(-1);  // will vary with equip, currently everything costs 1 action point
 	defender->ReceiveAction(-weapon.GetStrength()); // TODO: negative means damage, positive means healing
 }
 
@@ -139,30 +155,31 @@ void Unit::ReceiveAction(int amount)
 void Unit::Move(Tile * tile)
 {
 	nextAction = UNIT_ACTION_MOVE;
-	SDL_Point move_vec = tilemap->GetMoveVec(this->tile, tile);
+	SDL_Point move_vec = tilemap->GetMoveVec(this->tile, tile); // get movement vector
 	pos_x = position.x;
-	pos_y = position.y;
-	// dest point is left-top point of unit rect with bottom-middle point of it equal to tile.GetCenter()
-	dest_point = tile->GetCenter();
+	pos_y = position.y;	// set up floats for vector fractioning
+	dest_point = tile->GetCenter();	// units stand in center of tile, so destination is center as well
 	dest_point.x -= position.w / 2;
-	dest_point.y -= position.h;
+	dest_point.y -= position.h;	// and calculate x,y using the dimensions of the current unit texture
+	// calculate unit vector
 	int magn = std::abs(move_vec.x) + std::abs(move_vec.y);
 	pos_move_unit_vec_x = move_vec.x / (float)magn;
 	pos_move_unit_vec_y = move_vec.y / (float)magn;
 	ChangeAP(-tilemap->GetDistance(this->tile, tile));
-
+	/*
 	std::cout << "Got move vec:  " << move_vec.x << " " << move_vec.y << std::endl;
 	std::cout << "Current point: " << position.x << " " << position.y << std::endl;
 	std::cout << "Destination p: " << dest_point.x << " " << dest_point.y << std::endl;
 	std::cout << "Magnitude:     " << magn << std::endl;
 	std::cout << "Unit vector:   " << pos_move_unit_vec_x << " " << pos_move_unit_vec_y << std::endl;
-
-	if (dest_point.x < position.x)
+	*/
+	if (dest_point.x < position.x) // flip if moving on other direction
 		flip = !default_flip;
 	else
 		flip = default_flip;
-
-	this->tile->SetOccupant(nullptr);
+	
+	// this should be probably set only after the movement is done, but because nothing else will happend during movement, it doesn't matter all that much
+	this->tile->SetOccupant(nullptr);	
 	tile->SetOccupant(this);
 	this->tile = tile;
 }
@@ -207,7 +224,7 @@ void Unit::ChangeHP(big amount, bool overload)
 	CurHP += amount;
 	if (CurHP < 0) {
 		CurHP = 0;
-		nextAction = UNIT_ACTION_DYING;
+		nextAction = UNIT_ACTION_DYING;	// Dispatching RC_UNIT_DEATH only after the DYING animation is finished (in OnUpdate)
 	}
 	else if (CurHP >= MaxHP) {
 		if (overload)
@@ -229,7 +246,7 @@ void Unit::ChangeSP(big amount, bool overload)
 		std::cout << toString() << "'s shields are damaged for " << amount << " points." << std::endl;
 	}
 	else {
-		std::cout << toString() << " felt some distant breeze, its health not changed at all." << std::endl;
+		std::cout << toString() << " felt some distant breeze, its shield not changed at all." << std::endl;
 	}
 
 	CurSP += amount;
@@ -278,6 +295,8 @@ std::string Unit::toString()
 	if (name != "")
 		return name;
 
+	// If no name is set, print out an obnoxiously long and detailed info about unit that gives practically zero info and readability.
+	// Made me realise quite quickly how important the names are...
 	auto str = "GameObject::Unit( HP: " + std::to_string(CurHP) + "/" + std::to_string(MaxHP) +
 		", SP: " + std::to_string(CurSP) + "/" + std::to_string(MaxSP) +
 		", AP: " + std::to_string(CurAP) + "/" + std::to_string(MaxAP) +
@@ -291,25 +310,31 @@ void Unit::ParseSource(Unit* unit, std::string& source)
 
 	/*
 		Requirements:
-			Textures is at the end of file
-			Texture paths are all in said format and in .png
-			Any repeated attributes will override former attributes
+			Textures need to be in correct format and should include all needed action types. Otherwise there might be some issues.
+
+		Additional info:
+			Attributes can be in any order, multiple times or missing entirely.
+			Invalid attributes are skipped, no harm done.
+			Any repeated attributes will override former attributes (eg. HP after CurHP)
+			Missing attributes stay empty or are set by default. I think only the textures part is mandatory, name part is highly recommended.
 
 		<<< <ATTRIB>=<VALUE>, >>>
-		Name=<VALUE>,
-		HP=<VALUE>,
-		MaxHP=<VALUE>,
-		CurHP=<VALUE>,
-		SP=<VALUE>,
-		MaxSP=<VALUE>,
-		CurSP=<VALUE>,
-		AP=<VALUE>,
-		MaxAP=<VALUE>,
-		CurAP=<VALUE>,
-		Weapon=<WEAPON_SRC>,
-		TextureSpeed=<VALUE>,
-		Textures=,
-		<TEXTURE_SET_CODE>=<TEXTURE_PATH(where files for individual unit states can be found (idle/tile000.png, idle/tile001.png, hit/tile000.png, etc.)>
+		Name=<VALUE>,			(string)
+		HP=<VALUE>,				(int16_t)
+		MaxHP=<VALUE>,			(int16_t)
+		CurHP=<VALUE>,			(int16_t)
+		SP=<VALUE>,				(int16_t)
+		MaxSP=<VALUE>,			(int16_t)
+		CurSP=<VALUE>,			(int16_t)
+		AP=<VALUE>,				(int16_t)
+		MaxAP=<VALUE>,			(int16_t)
+		CurAP=<VALUE>,			(int16_t)
+		Weapon=<WEAPON_SRC>,	(see Weapon.h ParseSource())
+		TextureSpeed=<VALUE>,	(int16_t)
+		Flip=<t/true/True/1>,	(false by default)
+		Textures=<TEXTURE_PATH>	(should be string leading from $(SolutionDir) to folder where folders for all Actions (see Constants.h Actions) with all textures can be found)
+			(Textures in all folders should be labelled tileXXX.png, where XXX is [000..N])
+			(For reference on how to write Textures, see folder Graphics/GameObjects/ and Constants.h, part with DEMO UNIT SOURCES)
 	*/
 
 	std::stringstream ss(source);
@@ -317,7 +342,7 @@ void Unit::ParseSource(Unit* unit, std::string& source)
 	while (std::getline(ss, line, ',')) {
 		std::string attrib = line.substr(0, line.find('='));
 		std::string value = line.substr(line.find('=') + 1, line.size());
-		std::cout << "Parsed attrib = " << attrib << " and val = " << value << std::endl;
+		// std::cout << "Parsed attrib = " << attrib << " and val = " << value << std::endl;
 		if (attrib == "Name") {
 			unit->name = value;
 		}
@@ -355,11 +380,11 @@ void Unit::ParseSource(Unit* unit, std::string& source)
 			unit->weapon = Weapon(value);
 		}
 		else if (attrib == "Flip") {
-			unit->default_flip = (value == "t" || value == "true" || value == "True" || value == "1" ? true : false);
+			unit->default_flip = (value == "t" || value == "true" || value == "True" || value == "1");
 		}
 		else if (attrib == "TextureSpeed" || attrib == "TPS") {
 			// setting most likely unnecessary
-			// unit->TPS = std::stoi(value);
+			unit->TPS = std::stoi(value);
 		}
 		else if (attrib == "Textures") {
 

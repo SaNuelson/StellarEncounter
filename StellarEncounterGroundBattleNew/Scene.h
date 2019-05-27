@@ -6,6 +6,7 @@
 #include "Unit.h"
 #include "Item.h"
 
+// parent to all scenes
 class Scene {
 public:
 

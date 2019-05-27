@@ -18,10 +18,12 @@ public:
 
 	void OnRender() override;
 
+	// A "redneck" temporary solution to at least write some kind of message about who won the last game
 	void SetArgs(int code) override;
 
 private:
 
+	// graphical layout variables
 	SDL_Rect bg_rect;
 	SDL_Texture* bg;
 
