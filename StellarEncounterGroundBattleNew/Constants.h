@@ -3,6 +3,9 @@
 
 #include "stdlib.h"
 
+// Global variables, mostly for debugging etc.
+bool Global_show_tilenums = false;
+
 // Constants are just a big mess of constants and misc functions for easier readability and writing of code
 
 // CUSTOM DATA ALIASES
@@ -30,6 +33,10 @@ const Sint32 RC_QUIT = 7;
 const Sint32 RC_TEAM_0_WIN = 8;
 const Sint32 RC_TEAM_1_WIN = 9;
 
+const Sint32 RC_INGAME_MENU_SHOW = 10;
+const Sint32 RC_PAUSE_GAME = 11;
+const Sint32 RC_RESUME_GAME = 12;
+
 // I learned way too late how useful and suprisingly easy it is to implement custom events, these are used for communication between independent parts of program
 // and they work really well
 const Sint32 RC_UNIT_STAT_CHANGE = 4; // on change of HP/SP/AP of unit, this code is read by UnitStackBlock to update specific unit ((void*) e.user.data1 = changed_unit)
@@ -48,8 +55,14 @@ const small UNIT_ACTION_DEAD = 5;
 
 // these are used in source_str parsing when creating/editing units
 const int ActionsSize = 7;
-const std::string Actions[ActionsSize] = { "Idle","Move","Attack","Hit","React","Dying","Dead" };
+const std::string Actions[ActionsSize] = { "Idle","Move","Attack","Hit","Dying","Dead" };
 
+// Resource hardcoded paths
+const std::string PATH_BTN_IDLE = "Graphics/UI/button.png";
+const std::string PATH_BTN_HOVER = "Graphics/UI/button_idle.png";
+const std::string PATH_BTN_CLICK = "Graphics/UI/button_click.png"; 
+const std::string PATH_SHADE = "Graphics/UI/unitinfoblockrect.png";
+const std::string PATH_INGAME_MENU_RECT = "Graphics/UI/buttonhover.png";
 
 // DEMO UNIT SOURCE STRINGS
 // more on their composition in Unit::ParseSource()
@@ -82,9 +95,16 @@ const int yMargin = 50;
 
 #pragma region CONST LAYOUT
 
+const int INGAME_MENU_WIDTH = 400;
+const int INGAME_MENU_HEIGHT = 400;
+const int INGAME_MENU_BTN_WIDTH = 300;
+const int INGAME_MENU_BTN_HEIGHT = 120;
+const int INGAME_MENU_SBTN_WIDTH = 120;
+const int INGAME_MENU_SBTN_HEIGHT = 50;
+
 // EDITABLE SECTION - whole stack block layout uses exclusively these values, by changing these, whole stack block adapts
 const int SET_STACK_BLOCK_WIDTH = 400;
-const int SET_STACK_BLOCK_BLOCK_HEIGHT = 200;
+const int SET_STACK_BLOCK_BLOCK_HEIGHT = 100;
 const int SET_STACK_BLOCK_X_MARGIN = 20;
 const int SET_STACK_BLOCK_Y_MARGIN = 20;
 const int SET_STACK_BLOCK_BLOCK_X_MARGIN = 10;
@@ -137,6 +157,7 @@ const int STACK_BLOCK_ATTACK_BAR_W = STACK_BLOCK_BAR_W;
 const int STACK_BLOCK_ATTACK_BAR_H = STACK_BLOCK_BAR_H;
 
 const int STACK_BLOCK_SHIFT_Y = STACK_BLOCK_BLOCK_H + STACK_BLOCK_MARGIN_Y;
+const int STACK_BLOCK_UNITS_VISIBLE = scr_height / (SET_STACK_BLOCK_BLOCK_HEIGHT + STACK_BLOCK_MARGIN_Y);
 
 #pragma endregion
 

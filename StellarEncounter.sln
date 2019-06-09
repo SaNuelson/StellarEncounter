@@ -4,12 +4,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.28803.352
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2CC1B5F8-6BF1-4B60-991F-2610EAD45887}"
-	ProjectSection(SolutionItems) = preProject
-		build_concept.txt = build_concept.txt
-		Characters.txt = Characters.txt
-		Mechanics.txt = Mechanics.txt
-		Story.txt = Story.txt
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StellarEncounterGroundBattleNew", "StellarEncounterGroundBattleNew\StellarEncounterGroundBattleNew.vcxproj", "{36814477-8614-4C48-8634-979ACE5A8641}"
 EndProject

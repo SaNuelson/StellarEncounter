@@ -117,7 +117,10 @@ SDL_Texture * ResourceManager::LoadTexture(std::string srcpath, Uint8 alpha)
 	if (tex == nullptr) {
 		std::cout << "IMG_LoadTexture Error on path: " << path << SDL_GetError() << std::endl;
 	}
-	SDL_SetTextureAlphaMod(tex, alpha);
+	auto ret = SDL_SetTextureAlphaMod(tex, alpha);
+	if (ret != 0) {
+		std::cout << "IMG_LoadTexture Error on alpha: " << SDL_GetError() << std::endl;
+	}
 	TextureMap[path] = tex;
 	return tex;
 }
@@ -226,6 +229,7 @@ void ResourceManager::DispatchEvent(Sint32 code, void* data1, void* data2)
 	e.user.code = code;
 	e.user.data1 = data1;
 	e.user.data2 = data2;
+	std::cout << "Dispatching event with code " << code << ".\n";
 	SDL_PushEvent(&e);
 }
 

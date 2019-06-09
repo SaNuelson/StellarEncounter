@@ -194,7 +194,8 @@ void TileMap::OnRender() {
 		for (auto& tile : line) {
 			tile.OnRender();
 			// For debug purposes, but I thought it looked pretty nice so I left it in, easy to comment out. Labels all tiles with their positions.
-			SDL_RenderCopy(ResourceManager::GetRenderer(), ResourceManager::LoadCaption(std::to_string(tile.mappos.x) + " " + std::to_string(tile.mappos.y)), nullptr, &tile.pos);
+			if (Global_show_tilenums)
+				SDL_RenderCopy(ResourceManager::GetRenderer(), ResourceManager::LoadCaption(std::to_string(tile.mappos.x) + " " + std::to_string(tile.mappos.y)), nullptr, &tile.pos);
 		}
 	}
 	for (auto& line : tiles) {

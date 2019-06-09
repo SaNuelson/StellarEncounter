@@ -8,13 +8,12 @@ class Button
 public:
 
 	Button() {};
-	Button(std::string btn_caption, SDL_Rect &btn_rect, Sint32 return_code, SDL_Texture * tex_idle, SDL_Texture * tex_hover, SDL_Texture * tex_click) :
-		caption(btn_caption), rect(btn_rect), retcode(return_code), idle_tex(tex_idle), hover_tex(tex_hover), click_tex(tex_idle) {};
-	Button(std::string btn_caption, SDL_Rect &btn_rect, Sint32 return_code, std::string tex_idle_path, std::string tex_hover_path, std::string tex_click_path) :
-		caption(btn_caption), rect(btn_rect), retcode(return_code) {
+	Button(std::string btn_caption, SDL_Rect &btn_rect, Sint32 return_code, std::string tex_idle_path, std::string tex_hover_path, std::string tex_click_path, Sint32 keybind = -1) :
+		caption(btn_caption), rect(btn_rect), retcode(return_code), bound_key(keybind) {
 		idle_tex = ResourceManager::LoadTexture(tex_idle_path);
 		hover_tex = ResourceManager::LoadTexture(tex_hover_path);
 		click_tex = ResourceManager::LoadTexture(tex_click_path);
+		SetCaption(caption);
 	};
 	~Button() {};
 
@@ -51,6 +50,7 @@ public:
 	void SetCaption(std::string new_caption) {
 		if (new_caption != "" && new_caption != caption) caption = new_caption;
 		caption_tex = ResourceManager::LoadCaption(caption);
+		CenterCaption();
 	};
 
 	SDL_Rect GetRect() {
@@ -58,10 +58,7 @@ public:
 	}
 	void SetRect(SDL_Rect new_rect) {
 		rect = new_rect;
-		caption_rect.x = new_rect.x + 20;
-		caption_rect.y = new_rect.y + 20;
-		caption_rect.w = new_rect.w - 40;
-		caption_rect.h = new_rect.h - 40;
+		CenterCaption();
 	}
 	void SetRect(int x, int y, int w, int h) {
 		if (x != -1) rect.x = x;
@@ -112,6 +109,13 @@ public:
 		return retcode;
 	}
 
+	Sint32 GetBoundKey() {
+		return bound_key;
+	}
+	void SetBoundKey(Sint32 key) {
+		bound_key = key;
+	}
+
 	// helpful functions
 
 	bool IsInBounds(int &x, int &y) {
@@ -130,6 +134,10 @@ public:
 		// idle if not mouse on
 		// hover if mouse on && not lmb down
 		// click if mouse on && lmb down
+		if (e.type == SDL_KEYDOWN && e.key.keysym.sym == bound_key) {
+			ResourceManager::DispatchEvent(retcode, this, nullptr);
+		}
+		
 		if (IsMouseOn()) {
 			if ((e.button.button == SDL_BUTTON_LEFT && e.type == SDL_MOUSEBUTTONDOWN) || (isMouseHolding && e.type != SDL_MOUSEBUTTONUP)) {
 				isMouseHolding = true;
@@ -159,6 +167,26 @@ public:
 
 private:
 
+	void CenterCaption() {
+		SDL_QueryTexture(caption_tex, nullptr, nullptr, &caption_rect.w, &caption_rect.h);
+		auto x_offset = rect.w / 2 - caption_rect.w / 2;
+		if (x_offset <= 0) {
+			caption_rect.w = rect.w;
+			caption_rect.x = rect.x;
+		}
+		else {
+			caption_rect.x = rect.x + x_offset;
+		}
+		auto y_offset = rect.h / 2 - caption_rect.h / 2;
+		if (y_offset <= 0) {
+			caption_rect.h = rect.h;
+			caption_rect.y = rect.y;
+		}
+		else {
+			caption_rect.y = rect.y + y_offset;
+		}
+	}
+
 	// graphical layout
 	std::string caption;
 
@@ -175,6 +203,7 @@ private:
 
 	// code to dispatch upon button press
 	Sint32 retcode;
+	SDL_Keycode bound_key;
 
 	// 0 = default, 1 = hover, 2 = press
 	int8_t button_state = 0;

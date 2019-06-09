@@ -27,7 +27,8 @@ private:
 
 	// graphical layout
 	SDL_Rect rect;
-	
+	int shift = 0;
+
 	SDL_Rect rect_unit;
 	SDL_Point name_center;
 	SDL_Rect rect_unit_hp;

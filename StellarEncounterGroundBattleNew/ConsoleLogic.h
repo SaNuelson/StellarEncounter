@@ -9,6 +9,24 @@
 #include "Unit.h"
 #include "Item.h"
 
+
+const std::string TrueAlts[] = { "true","True","t","T","1","Yes","yes","y","Y" };
+const std::string FalseAlts[] = { "False","false","F","f","0","no","No","n","N" };
+int GetVal(std::string src) {
+	if (std::find(std::begin(TrueAlts), std::end(TrueAlts), src) != std::end(TrueAlts))
+		return 1;
+	else if (std::find(std::begin(FalseAlts), std::end(FalseAlts), src) != std::end(FalseAlts))
+		return 0;
+	else {
+		try {
+			return std::stoi(src);
+		}
+		catch (...) {
+			return -1;
+		}
+	}
+}
+
 void ReadConsole() {
 	
 	// here should be focus set on console, but that requires way too many additional heads along with libs...
@@ -45,6 +63,16 @@ void ReadConsole() {
 	}
 
 	GroundBattleScene* scene = (GroundBattleScene*)ResourceManager::GetScene();
+
+	if (args[0] == "showtilenums") {
+		auto val = GetVal(args[1]);
+		if (val == 1)
+			Global_show_tilenums = true;
+		else if (val == 0)
+			Global_show_tilenums = false;
+		else
+			std::cout << "New value not recognized." << std::endl;
+	}
 
 	// pre-check tx,ty tile position (mandatory in all following commands)
 	int tx; int ty;
@@ -144,5 +172,7 @@ void ReadConsole() {
 	else {
 		std::cout << "Invalid argument at 0: " << args[0] << std::endl;
 	}
-}
 
+
+
+}

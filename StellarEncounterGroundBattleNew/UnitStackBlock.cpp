@@ -98,14 +98,22 @@ void UnitStackBlock::OnUpdate(double delta) {}
 
 void UnitStackBlock::OnRender()
 {
+	// if currentunit block under half of screen and not last unit visible -> shift
+	if (scene->currentUnit == 0) {
+		shift = 0;
+	}
+	else if (STACK_BLOCK_SHIFT_Y * (scene->currentUnit - shift) > scr_height / 2) {
+		shift++;
+	}
+
 	SDL_RenderCopy(ResourceManager::GetRenderer(), tex, nullptr, &rect);
-	rect_unit.y = STACK_BLOCK_BLOCK_Y;
-	rect_unit_portrait.y = STACK_BLOCK_PORTRAIT_Y;
-	name_center.y = STACK_BLOCK_NAME_CENTER_Y;
-	rect_unit_hp.y = STACK_BLOCK_HP_BAR_Y;
-	rect_unit_sp.y = STACK_BLOCK_SP_BAR_Y;
-	rect_unit_ap.y = STACK_BLOCK_AP_BAR_Y;
-	rect_unit_active.y = STACK_BLOCK_BLOCK_Y + STACK_BLOCK_BLOCK_H / 2 - rect_unit_active.h / 2;
+	rect_unit.y = STACK_BLOCK_BLOCK_Y - (STACK_BLOCK_SHIFT_Y * shift);
+	rect_unit_portrait.y = STACK_BLOCK_PORTRAIT_Y - (STACK_BLOCK_SHIFT_Y * shift);
+	name_center.y = STACK_BLOCK_NAME_CENTER_Y - (STACK_BLOCK_SHIFT_Y * shift);
+	rect_unit_hp.y = STACK_BLOCK_HP_BAR_Y - (STACK_BLOCK_SHIFT_Y * shift);
+	rect_unit_sp.y = STACK_BLOCK_SP_BAR_Y - (STACK_BLOCK_SHIFT_Y * shift);
+	rect_unit_ap.y = STACK_BLOCK_AP_BAR_Y - (STACK_BLOCK_SHIFT_Y * shift);
+	rect_unit_active.y = STACK_BLOCK_BLOCK_Y + STACK_BLOCK_BLOCK_H / 2 - rect_unit_active.h / 2 - (STACK_BLOCK_SHIFT_Y * shift);
 
 	for (int i = 0; i < widths.size(); i++) {
 

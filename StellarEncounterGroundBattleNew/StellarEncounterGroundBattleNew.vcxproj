@@ -145,6 +145,7 @@
     <ClInclude Include="Equipment.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GroundBattleScene.h" />
+    <ClInclude Include="InGameMenu.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="MainMenuScene.h" />
     <ClInclude Include="OptionScene.h" />
@@ -159,6 +160,10 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="StellarEncounterGroundBattleNew.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ProgrammersGuide.txt" />
+    <Text Include="UserGuide.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

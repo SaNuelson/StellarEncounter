@@ -1,0 +1,61 @@
+	Stellar Encounter: Battle Demo - User Guide
+
+	DISCLAIMER: This guide is to be considered satirical at best. While all information about game functionality is true, everything else is added merely to ease the users
+pain while trying to play this "game". Our team of professionals sympathizes with the user deeply and sends its most sincere regards.
+
+Dear user, welcome to Stellar Encounter: Battle Demo, a simple yet suprisingly hard to code game (or more of a splinter of a game).
+
+The game (in its current state) is a 2-(or more)-player game, in which you try to exterminate your enemies using quite straight-forward tactics.
+
+	### Main Menu ###
+
+	Upon start-up, you're welcomed by a simple menu, consisting of few self-explanatory buttons by which you can get to the game.
+	
+	New Game - starts your game right up, pulling up a simple demo.
+	Options - is a trap for all those self-proclaimed "gourmets" - unsatisfiable users that always want to "cutomize their user experience". Hmpf...
+	Quit Game - let's you quit the game and move on with your life (it's the best button in the game)
+
+	### Game ###
+
+	Game itself - as I've mentioned before, you start with a demo already set up for you. Team 0 is looking right, team 1 is looking left. Why start with 0 you ask?
+That's a programmer thing, don't worry about it. Moving on...
+	One of you two sitting in front of the screen (provided that you have a friend to play with... don't worry, I don't have either) is Team 0. 
+His or her (JK... rule 16, right?) units are 3 lost heroes, trying to save the world by exterminating the greatest undead threat: Lord Farquad (yes I know it's from Shrek).
+On the other side of the ring is his majesty himself along with 3 arabian cutthroats ready to protect their master (that's your team Player 2 by the way).
+
+	The fight takes place on a hexagonal plane (in another universe with different space-time curvature and physical properties so hexagons can make up a planet there, of course).
+	
+	Units have set amount of health, shields and action points. Action points are used for movement and attacking. All of those actions consume 1 action point.
+
+	You can move in 6 directions using either WASD or arrow keys. Moving left and right is easy. Moving diagonally takes a bit of coordination. You first have to press W (up) or D (down) and only after that you can press A (left) or D (right). Thus moving for example top-right would require pressing W+D (up+right) in said order.
+	
+	Attacking is just as easy. If you're standing next to an enemy and it's your turn, simply move towards him, your unit will smell the enemy immediately and lunge at him with his sword, halberd or whatever he has in his hand at the very moment.
+
+	If your unit runs out of action points, it will simply take some time to catch its breath. In the meantime, next unit will start its move.
+	To keep things clear, a blue arrow on the right panel in the game, keeps track of the unit that's currently active.
+
+	Apart from the arrow, the panel is fairly important. It gives you insight about how alive (or how dead) your units are.
+
+	If you (or your nemesis) manages to eradicate the opposing team, the game ends with the last breath of a dying enemy, sending you back to game menu with the glory of a world champion or shame of a loser.
+	Here you can start over, click that "Options" button (which works just as much as it did last time), or you can quit.
+
+	However, if you just lack the exquisite taste needed to appreciate a masterpiece such as this game, you can return from the game into main menu anytime by pressing "Escape" key (or Menu button in the top left corner), bringing out an ingame menu.
+
+	### Advanced Info ###
+
+	If you managed to get through the demo and thought to yourself: "Hm, I want more..." (which according to our statistics is almost completely impossible), we also included console commands.
+	Yep, exactly, there are usable console commands purely for your enjoyment (and prior extensive debug).
+	To use it, simply press "F1" and write commands in the console. For quick reference, here's a copied "help" from the console (which you can read at any time by using "help" command in console).
+		make/create item/unit <tx> <ty> <src_string>
+		remove/delete item/unit <tx> <ty>
+		move item/unit <from_tx> <from_ty> <to_tx> <to_ty>
+		edit item/unit <tx> <ty> <src_string>
+		EXAMPLE
+			make unit 3 3 HP=10,SP=5,Name=Big Little Joe
+
+	If you would like to easily read the tile coordinates, simply type "showtilenums true" into console, which will print coordinates on all tiles in current tilemap.
+	Another important is (as mentioned before) "help" which will bring out a simple summary of all other commands.
+	By using these commands you can extensively shape your user experience. Adding, removing or editing units.
+	Let's say you want to give Lord Farquad 1000 Health, to top up the difficulty a bit. You'll first find his coordinates,and then simply type:
+	"edit unit 3 5 HP=1000"
+	BOOM! Simple as that. Done.

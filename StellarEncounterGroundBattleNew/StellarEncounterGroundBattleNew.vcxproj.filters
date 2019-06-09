@@ -137,10 +137,17 @@
     <ClInclude Include="UnitActionBlock.h">
       <Filter>Header Files\NotImplemented</Filter>
     </ClInclude>
+    <ClInclude Include="InGameMenu.h">
+      <Filter>Header Files\UIElements</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="StellarEncounterGroundBattleNew.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="UserGuide.txt" />
+    <Text Include="ProgrammersGuide.txt" />
   </ItemGroup>
 </Project>

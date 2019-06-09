@@ -1,0 +1,46 @@
+	Stellar Encounter: Battle Demo - Programmers Guide
+
+Stellar Encounter is a local multiplayer tactical turn-based HoMaM-like game with basic functionality implemented.
+
+Because of simplicity, the top-most-level of application runs inside main function.
+The app uses simplified scenes, which currently aren't kept in a stack (because it isn't necessary in the current state), but only one instance is held and looped at any time.
+There are two Scenes currently:
+		MainMenuScene - This is a start-up scene. Consists only of buttons (custom class, dispatches user events on click).
+		GroundBattleScene	- consists of Tilemap, UnitStackBlock, InGameMenu.
+							- keeps some of the top-level logic and variables (eg. units, as they are used by both Tilemap and UnitStackBlock)
+		
+		- one of the main principles is to avoid using "bloated" classes. Because of frequent changes in states of units, captions, etc., resources are prefferably held in
+		ResourceManager, a static class that holds unique_ptrs for Textures, Buttons, Units (and maybe in future Items). These can then be destroyed by passing raw pointers
+		(eg. when changing scenes) or simply by calling method for destroying all resources upon closing the app.
+
+		ResourceManager
+
+		- ResourceManager also contains functions used for constructing these instances, as to avoid uncontrolled instances created directly.
+		- Because of that, there needed to be a unified way of passing parameters to these functions for classes that changed frequently. This in the end lead to simply pass
+		string, which is parsed inside the created class. That also enables much more freedom in construction, enables easy editing of existing instances, passing incomplete
+		parameters or mentioning identical parameters multiple times without causing any errors.
+
+		UnitStackBlock
+
+		- another idea that formed during the writing of the code is to isolate constants from the rest of code, mainly layout constants. These are now kept in Constants.h (along
+		with a quantity of other mess used in code). The modifiable part of constants is held separated and everything else is calculated using those, which enables easy modification
+		of existing layout of current game. It also enables moving current layout into external xml file and using current layout as default values.
+
+		- this class also brought a problem of extensive class-to-class methods. With every iteration a unit could change that would need to be shown in this class.
+		However checking all info about all units at every iteration would be just plainly wrong so there needed to be a way to communicate change in unit to UnitStackBlock.
+		Problem was, they were conected via GroundBattleScene and creating another mid-point would make too much unnecessary coupling between the three classes.
+		Thankfully, the SDL framework has implemented SDL_Events (used for communicating user input to app), which had already implemented user events, that used a simple
+		Sint32 code as the identifier (with addition to two pointers). By implementing a simple user event dispatcher in ResourceManager, the unit could then easily push an
+		event with code saying its data changed along a pointer for easier identification of the modified unit within all units.
+
+		Unit
+
+		- a bit unpolished but suprisingly effective is how the units are created. Because their composition changed extensively throughout the writing of the codebase,
+		and because of the fact they were constructed using ResourceManager's functions, there was a frightening amount of coupling, which needed to be addressed.
+		Because I wanted to avoid using templates (which could case even more mess and basically untrackable exceptions within code), I tried using simple strings.
+		From inside the code, units can be constructed and edited simply by calling their getters/setters. From outside, strings can be used with the same efficiency.
+		Also the way the textures are loaded is quite efficient and even enables easy adding of new units whatsoever (provided that they are in correct format).
+		Parser tries to find folder inside specified path for every action unit can take (idling,attacking,moving,dying,being hit,being dead) and incrementally loads pngs
+		found withing. The moment it fails to find another one, it stops and moves to another set. From this it constructs a kind of movie tape that creates unit's animations.
+		One great thing about this string parsing is the fact that any changes made to the composition of the unit class won't change logic outside of itself
+		(in terms of generating units, not overall logic).

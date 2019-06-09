@@ -222,8 +222,10 @@ void Unit::ChangeHP(big amount, bool overload)
 	}
 
 	CurHP += amount;
-	if (CurHP < 0) {
+	if (CurHP <= 0) {
 		CurHP = 0;
+		CurAP = 0;
+		CurSP = 0;
 		nextAction = UNIT_ACTION_DYING;	// Dispatching RC_UNIT_DEATH only after the DYING animation is finished (in OnUpdate)
 	}
 	else if (CurHP >= MaxHP) {

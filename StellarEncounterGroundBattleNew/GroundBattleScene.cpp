@@ -1,6 +1,6 @@
 #include "GroundBattleScene.h"
 
-GroundBattleScene::GroundBattleScene() : tilemap(this), stackblock(this) {
+GroundBattleScene::GroundBattleScene() : tilemap(this), stackblock(this), ingamemenu() {
 
 	StartDemo1();
 
@@ -11,18 +11,36 @@ void GroundBattleScene::StartDemo1() {
 	tilemap.Init(level1tilemap, xTileSize, xTileSize);
 
 	units.push_back(ResourceManager::CreateUnit(hero_source));
-	tilemap.PutOnTile(units[0], 1, 3);
+	tilemap.PutOnTile(units[0], 1, 2);
 	units[0]->Team = 0;
+	units.push_back(ResourceManager::CreateUnit(hero_source));
+	tilemap.PutOnTile(units[1], 1, 4);
+	units[1]->Team = 0;
+	units.push_back(ResourceManager::CreateUnit(hero_source));
+	tilemap.PutOnTile(units[2], 1, 6);
+	units[2]->Team = 0;
 	units.push_back(ResourceManager::CreateUnit(skeleton_source));
-	tilemap.PutOnTile(units[1], 5, 3);
-	units[1]->Team = 1;
+	tilemap.PutOnTile(units[3], 6, 4);
+	units[3]->Team = 1;
 	units.push_back(ResourceManager::CreateUnit(wizard_source));
-	tilemap.PutOnTile(units[2], 4, 4);
-	units[2]->Team = 1;
+	tilemap.PutOnTile(units[4], 6, 3);
+	units[4]->Team = 1;
+	units.push_back(ResourceManager::CreateUnit(wizard_source));
+	tilemap.PutOnTile(units[5], 5, 4);
+	units[5]->Team = 1;
+	units.push_back(ResourceManager::CreateUnit(wizard_source));
+	tilemap.PutOnTile(units[6], 6, 5);
+	units[6]->Team = 1;
 	stackblock.Populate(); 
+
 }
 
 void GroundBattleScene::ResolveInput(SDL_Event & e) {
+
+	ingamemenu.ResolveInput(e);
+	if (ingamemenu.IsShown()) {
+		return;
+	}
 
 	if (e.type == SDL_USEREVENT) {
 		if (e.user.code == RC_UNIT_STAT_CHANGE) {
@@ -134,14 +152,20 @@ void GroundBattleScene::OnUpdate(double delta) {
 void GroundBattleScene::EndTurn()
 {
 	currentUnit++;
-	if (currentUnit >= units.size())
+	if (currentUnit >= units.size()) {
 		currentUnit = 0;
+		for (auto& unit : units) {
+			if(unit->IsAlive())
+				unit->ChangeAP(unit->GetMaxAP());
+		}
+	}
 }
 
 
 void GroundBattleScene::OnRender() {
 	tilemap.OnRender();
 	stackblock.OnRender();
+	ingamemenu.OnRender();
 }
 
 bool GroundBattleScene::CheckEndGame()

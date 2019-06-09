@@ -8,6 +8,7 @@
 #include "UnitActionBlock.h"
 #include "UnitStackBlock.h"
 #include "Tilemap.h"
+#include "InGameMenu.h"
 
 class GroundBattleScene : public Scene {
 public:
@@ -48,6 +49,8 @@ private:
 
 	// UnitActionBlock actionblock;	// unused because units don't have any special skills
 	UnitStackBlock stackblock;
+
+	InGameMenu ingamemenu;
 
 	// UnitStackBlock frequently loops through units, I don't know if this is the best solution...
 	friend class UnitStackBlock;
