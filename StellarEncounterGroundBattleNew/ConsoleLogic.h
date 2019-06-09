@@ -53,6 +53,7 @@ void ReadConsole() {
 		std::cout << "EXAMPLE: " << std::endl;
 		std::cout << "make unit 3 3 HP=10,SP=5,Name=Big Little Joe";
 		std::cout << "    ----    ----    ----    ----" << std::endl;
+		return;
 	}
 
 	// bind groundbattlescene for easier access
@@ -72,6 +73,7 @@ void ReadConsole() {
 			Global_show_tilenums = false;
 		else
 			std::cout << "New value not recognized." << std::endl;
+		return;
 	}
 
 	// pre-check tx,ty tile position (mandatory in all following commands)

@@ -43,12 +43,12 @@ public:
 	// getters
 	small GetCurrentAction() { return currentAction; }
 	small GetNextAction() { return nextAction; }
-	small GetCurHP() { return CurHP; }
-	small GetMaxHP() { return MaxHP; }
-	small GetCurSP() { return CurSP; }
-	small GetMaxSP() { return MaxSP; }
-	small GetCurAP() { return CurAP; }
-	small GetMaxAP() { return MaxAP; }
+	big GetCurHP() { return CurHP; }
+	big GetMaxHP() { return MaxHP; }
+	big GetCurSP() { return CurSP; }
+	big GetMaxSP() { return MaxSP; }
+	big GetCurAP() { return CurAP; }
+	big GetMaxAP() { return MaxAP; }
 	bool IsAlive() { return CurHP > 0; }
 	SDL_Texture* GetCurrentTex() { return textures[currentTexture]; }
 	std::map<small, std::pair<small, small>> textureSets; // indicates ranges where different texture sets are (eg. idle_animation from 0 to 5, attack_animation from 6 to 9, etc.)

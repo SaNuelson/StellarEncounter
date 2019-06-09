@@ -48,9 +48,6 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>Source Files\GameObjects</Filter>
-    </ClCompile>
     <ClCompile Include="Tile.cpp">
       <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
@@ -63,9 +60,6 @@
     <ClCompile Include="ResourceManager.cpp">
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
-    <ClCompile Include="Scene.cpp">
-      <Filter>Source Files\Scenes</Filter>
-    </ClCompile>
     <ClCompile Include="GroundBattleScene.cpp">
       <Filter>Source Files\Scenes</Filter>
     </ClCompile>
@@ -73,12 +67,6 @@
       <Filter>Source Files\Scenes</Filter>
     </ClCompile>
     <ClCompile Include="Item.cpp">
-      <Filter>Source Files\NotImplemented</Filter>
-    </ClCompile>
-    <ClCompile Include="OptionScene.cpp">
-      <Filter>Source Files\NotImplemented</Filter>
-    </ClCompile>
-    <ClCompile Include="UnitActionBlock.cpp">
       <Filter>Source Files\NotImplemented</Filter>
     </ClCompile>
     <ClCompile Include="UnitStackBlock.cpp">

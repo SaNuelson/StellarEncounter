@@ -124,18 +124,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GroundBattleScene.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenuScene.cpp" />
-    <ClCompile Include="OptionScene.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
-    <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="Tilemap.cpp" />
     <ClCompile Include="Unit.cpp" />
-    <ClCompile Include="UnitActionBlock.cpp" />
     <ClCompile Include="UnitStackBlock.cpp" />
   </ItemGroup>
   <ItemGroup>

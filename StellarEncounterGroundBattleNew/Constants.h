@@ -66,9 +66,13 @@ const std::string PATH_INGAME_MENU_RECT = "Graphics/UI/buttonhover.png";
 
 // DEMO UNIT SOURCE STRINGS
 // more on their composition in Unit::ParseSource()
-const std::string skeleton_source = "HP=100,MaxSP=30,CurSP=15,AP=6,Name=Lord Farquad,Weapon=50,TextureSpeed=200,Textures=Graphics/GameObjects/Skeleton";
-const std::string hero_source = "HP=80,SP=20,AP=8,Name=A Little Humble Hero,Weapon=100,TextureSpeed=200,Textures=Graphics/GameObjects/Hero";
-const std::string wizard_source = "HP=50,SP=50,AP=6,Flip=true,Name=Soldier o' Fortune,Weapon=65,TextureSpeed=200,Textures=Graphics/GameObjects/LightSoldier";
+const std::string hero1_source = "HP=120,SP=40,AP=4,Name=The Big,Weapon=25,TextureSpeed=200,Textures=Graphics/GameObjects/Hero";
+const std::string hero2_source = "HP=50,SP=0,AP=6,Name=The Bad,Weapon=100,TextureSpeed=200,Textures=Graphics/GameObjects/Hero";
+const std::string hero3_source = "HP=80,SP=20,AP=5,Name=The Ugly,Weapon=40,TextureSpeed=200,Textures=Graphics/GameObjects/Hero";
+const std::string skeleton_source = "HP=150,SP=100,AP=4,Name=Lord Farquad,Weapon=60,TextureSpeed=200,Textures=Graphics/GameObjects/Skeleton";
+const std::string mercenary1_source = "HP=60,SP=15,AP=5,Flip=true,Name=Al'Jazeer,Weapon=40,TextureSpeed=200,Textures=Graphics/GameObjects/LightSoldier";
+const std::string mercenary2_source = "HP=50,SP=30,AP=6,Flip=true,Name=She'Baal,Weapon=35,TextureSpeed=200,Textures=Graphics/GameObjects/LightSoldier";
+const std::string mercenary3_source = "HP=80,SP=20,AP=4,Flip=true,Name=Ma'Ghuul,Weapon=30,TextureSpeed=200,Textures=Graphics/GameObjects/LightSoldier";
 
 
 // WINDOW INFO

@@ -54,9 +54,19 @@ void UnitStackBlock::Populate() {
 	// fill widths and captions
 	for (auto& unit : scene->units) {
 		std::vector<int> line;
-		line.push_back(unit->GetCurHP() * rect_unit_hp.w / unit->GetMaxHP());
-		line.push_back(unit->GetCurSP() * rect_unit_sp.w / unit->GetMaxSP());
-		line.push_back(unit->GetCurAP() * rect_unit_ap.w / unit->GetMaxAP());
+
+		if (unit->GetMaxHP() > 0)
+			line.push_back(unit->GetCurHP() * rect_unit_hp.w / unit->GetMaxHP());
+		else
+			line.push_back(0);
+		if (unit->GetMaxSP() > 0)
+			line.push_back(unit->GetCurSP() * rect_unit_sp.w / unit->GetMaxSP());
+		else
+			line.push_back(0);
+		if (unit->GetMaxAP() > 0)
+			line.push_back(unit->GetCurAP() * rect_unit_ap.w / unit->GetMaxAP());
+		else
+			line.push_back(0);
 		widths.push_back(line);
 
 		std::vector<SDL_Texture*> caption_line;
@@ -79,9 +89,19 @@ void UnitStackBlock::ResolveInput(SDL_Event& e)
 		else{
 			for (int i = 0; i < scene->units.size(); i++) {
 				if (scene->units[i] == (Unit*)e.user.data1) {
-					widths[i][0] = scene->units[i]->GetCurHP() * rect_unit_hp.w / scene->units[i]->GetMaxHP();
-					widths[i][1] = scene->units[i]->GetCurSP() * rect_unit_sp.w / scene->units[i]->GetMaxSP();
-					widths[i][2] = scene->units[i]->GetCurAP() * rect_unit_ap.w / scene->units[i]->GetMaxAP();
+
+					if (scene->units[i]->GetMaxHP() > 0)
+						widths[i][0] = scene->units[i]->GetCurHP() * rect_unit_hp.w / scene->units[i]->GetMaxHP();
+					else
+						widths[i][0] = rect_unit_hp.w;
+					if (scene->units[i]->GetMaxSP() > 0)
+						widths[i][1] = scene->units[i]->GetCurSP() * rect_unit_sp.w / scene->units[i]->GetMaxSP();
+					else
+						widths[i][1] = rect_unit_sp.w;
+					if (scene->units[i]->GetMaxAP() > 0)
+						widths[i][2] = scene->units[i]->GetCurAP() * rect_unit_ap.w / scene->units[i]->GetMaxAP();
+					else
+						widths[i][2] = rect_unit_ap.w;
 
 					captions[i][0] = ResourceManager::LoadCaption(std::to_string(scene->units[i]->GetCurHP()) + "/" + std::to_string(scene->units[i]->GetMaxHP()));
 					captions[i][1] = ResourceManager::LoadCaption(std::to_string(scene->units[i]->GetCurSP()) + "/" + std::to_string(scene->units[i]->GetMaxSP()));

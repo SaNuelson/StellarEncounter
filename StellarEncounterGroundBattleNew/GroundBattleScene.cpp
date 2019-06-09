@@ -10,25 +10,25 @@ void GroundBattleScene::StartDemo1() {
 
 	tilemap.Init(level1tilemap, xTileSize, xTileSize);
 
-	units.push_back(ResourceManager::CreateUnit(hero_source));
+	units.push_back(ResourceManager::CreateUnit(hero1_source));
 	tilemap.PutOnTile(units[0], 1, 2);
 	units[0]->Team = 0;
-	units.push_back(ResourceManager::CreateUnit(hero_source));
+	units.push_back(ResourceManager::CreateUnit(hero2_source));
 	tilemap.PutOnTile(units[1], 1, 4);
 	units[1]->Team = 0;
-	units.push_back(ResourceManager::CreateUnit(hero_source));
+	units.push_back(ResourceManager::CreateUnit(hero3_source));
 	tilemap.PutOnTile(units[2], 1, 6);
 	units[2]->Team = 0;
 	units.push_back(ResourceManager::CreateUnit(skeleton_source));
 	tilemap.PutOnTile(units[3], 6, 4);
 	units[3]->Team = 1;
-	units.push_back(ResourceManager::CreateUnit(wizard_source));
+	units.push_back(ResourceManager::CreateUnit(mercenary1_source));
 	tilemap.PutOnTile(units[4], 6, 3);
 	units[4]->Team = 1;
-	units.push_back(ResourceManager::CreateUnit(wizard_source));
+	units.push_back(ResourceManager::CreateUnit(mercenary2_source));
 	tilemap.PutOnTile(units[5], 5, 4);
 	units[5]->Team = 1;
-	units.push_back(ResourceManager::CreateUnit(wizard_source));
+	units.push_back(ResourceManager::CreateUnit(mercenary3_source));
 	tilemap.PutOnTile(units[6], 6, 5);
 	units[6]->Team = 1;
 	stackblock.Populate(); 
